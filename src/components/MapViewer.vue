@@ -52,6 +52,10 @@ const props = defineProps({
   selectedDate: {
     type: String,
     required: true
+  },
+  isDarkMode: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -62,6 +66,34 @@ const emit = defineEmits(['update:siteCount'])
 const mapData = ref(null)
 const map = ref(null)
 const markers = ref([])
+const tileLayer = ref(null)
+
+// Tile layer URLs
+const LIGHT_TILE_URL = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
+const DARK_TILE_URL = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+
+// Update the map tile layer based on the current mode
+const updateTileLayer = () => {
+  if (!map.value) return
+  
+  // Remove existing tile layer if it exists
+  if (tileLayer.value) {
+    map.value.removeLayer(tileLayer.value)
+  }
+  
+  // Add the appropriate new tile layer based on mode
+  const currentTileUrl = props.isDarkMode ? DARK_TILE_URL : LIGHT_TILE_URL
+  tileLayer.value = L.tileLayer(currentTileUrl, {
+    attribution: '',
+    maxZoom: 19,
+    subdomains: 'abcd'
+  }).addTo(map.value)
+}
+
+// Watch for changes in dark mode setting
+watch(() => props.isDarkMode, () => {
+  updateTileLayer()
+})
 
 // Watch for changes in selected date
 watch(() => props.selectedDate, async (newDate) => {
@@ -124,12 +156,8 @@ onMounted(() => {
   // Initialize map
   map.value = L.map('map').setView([40.7128, -74.0060], 12)
   
-  // Add minimal CartoDB Positron basemap (light, grayscale)
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-    attribution: '',  // Removed attribution
-    maxZoom: 19,
-    subdomains: 'abcd'
-  }).addTo(map.value)
+  // Initialize tile layer using our updateTileLayer function
+  updateTileLayer()
   
   // Remove zoom control
   map.value.removeControl(map.value.zoomControl)

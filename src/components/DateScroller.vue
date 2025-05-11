@@ -1,9 +1,17 @@
 <template>
   <div class="absolute bottom-16 left-1/2 transform -translate-x-1/2 z-30">
-    <div class="inline-flex items-center bg-white bg-opacity-90 rounded-full px-4 py-2 shadow-md">
+    <div 
+      :class="[
+        'inline-flex items-center rounded-full px-4 py-2 shadow-md transition-colors duration-300',
+        isDarkMode ? 'bg-gray-800 bg-opacity-90' : 'bg-white bg-opacity-90'
+      ]"
+    >
       <button 
         @click="selectPrevious"
-        class="w-8 h-8 flex items-center justify-center mr-2 text-gray-600 hover:text-black disabled:opacity-30 focus:outline-none"
+        :class="[
+          'w-8 h-8 flex items-center justify-center mr-2 disabled:opacity-30 focus:outline-none transition-colors duration-300',
+          isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-black'
+        ]"
         :disabled="!hasPrevious"
         aria-label="Previous date"
       >
@@ -11,12 +19,22 @@
       </button>
       
       <div class="px-2 text-center">
-        <span class="text-sm font-medium text-gray-800">{{ formattedModelValue }}</span>
+        <span 
+          :class="[
+            'text-sm font-medium transition-colors duration-300',
+            isDarkMode ? 'text-gray-200' : 'text-gray-800'
+          ]"
+        >
+          {{ formattedModelValue }}
+        </span>
       </div>
       
       <button 
         @click="selectNext"
-        class="w-8 h-8 flex items-center justify-center ml-2 text-gray-600 hover:text-black disabled:opacity-30 focus:outline-none"
+        :class="[
+          'w-8 h-8 flex items-center justify-center ml-2 disabled:opacity-30 focus:outline-none transition-colors duration-300',
+          isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-black'
+        ]"
         :disabled="!hasNext"
         aria-label="Next date"
       >
@@ -38,6 +56,10 @@ const props = defineProps({
   modelValue: {
     type: String,
     required: true
+  },
+  isDarkMode: {
+    type: Boolean,
+    default: false
   }
 })
 
