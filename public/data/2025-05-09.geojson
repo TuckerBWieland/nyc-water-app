@@ -1,0 +1,21 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "site": "Dutch Kills", "mpn": 25 },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.946, 40.742]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "site": "Gowanus Canal", "mpn": 130 },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.995, 40.673]
+      }
+    }
+  ]
+}

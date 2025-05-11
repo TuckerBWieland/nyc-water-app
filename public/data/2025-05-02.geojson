@@ -1,0 +1,29 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "site": "Dutch Kills", "mpn": 42 },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.946, 40.742]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "site": "Gowanus Canal", "mpn": 180 },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.995, 40.673]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "site": "Newtown Creek", "mpn": 75 },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.944, 40.725]
+      }
+    }
+  ]
+}
