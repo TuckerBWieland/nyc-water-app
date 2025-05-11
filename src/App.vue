@@ -5,6 +5,7 @@
       @update:siteCount="updateSiteCount" 
     />
     <HeaderOverlay :latestDate="selectedDate" :siteCount="siteCount" />
+    <!-- Bottom navigation elements stacked in proper order -->
     <DateScroller :dates="dates" v-model="selectedDate" />
     <InfoPopup />
   </div>

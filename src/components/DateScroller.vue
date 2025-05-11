@@ -1,27 +1,27 @@
 <template>
-  <div class="absolute bottom-0 left-0 right-0 p-4 bg-black bg-opacity-50 text-white z-20">
-    <div class="container mx-auto">
-      <div class="flex items-center justify-center">
-        <button 
-          @click="selectPrevious"
-          class="px-3 py-1 mr-2 bg-gray-700 hover:bg-gray-600 rounded"
-          :disabled="!hasPrevious"
-        >
-          &larr;
-        </button>
-        
-        <div class="flex-1 text-center">
-          <span class="text-lg font-semibold">{{ formattedModelValue }}</span>
-        </div>
-        
-        <button 
-          @click="selectNext"
-          class="px-3 py-1 ml-2 bg-gray-700 hover:bg-gray-600 rounded"
-          :disabled="!hasNext"
-        >
-          &rarr;
-        </button>
+  <div class="absolute bottom-16 left-1/2 transform -translate-x-1/2 z-30">
+    <div class="inline-flex items-center bg-white bg-opacity-90 rounded-full px-4 py-2 shadow-md">
+      <button 
+        @click="selectPrevious"
+        class="w-8 h-8 flex items-center justify-center mr-2 text-gray-600 hover:text-black disabled:opacity-30 focus:outline-none"
+        :disabled="!hasPrevious"
+        aria-label="Previous date"
+      >
+        &larr;
+      </button>
+      
+      <div class="px-2 text-center">
+        <span class="text-sm font-medium text-gray-800">{{ formattedModelValue }}</span>
       </div>
+      
+      <button 
+        @click="selectNext"
+        class="w-8 h-8 flex items-center justify-center ml-2 text-gray-600 hover:text-black disabled:opacity-30 focus:outline-none"
+        :disabled="!hasNext"
+        aria-label="Next date"
+      >
+        &rarr;
+      </button>
     </div>
   </div>
 </template>
