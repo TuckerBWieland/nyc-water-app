@@ -5,7 +5,7 @@
       v-if="isExpanded" 
       :class="[
         'absolute top-0 left-0 right-0 p-4 shadow-md z-30 transition-colors duration-300',
-        isDarkMode ? 'bg-gray-900 bg-opacity-90 text-white' : 'bg-white bg-opacity-90 text-gray-800'
+        isDarkMode ? 'bg-gray-800 text-white' : 'bg-white bg-opacity-90 text-gray-800'
       ]"
     >
       <div class="container mx-auto max-w-3xl relative">
@@ -14,14 +14,14 @@
           <h1 class="text-2xl font-bold">NYC Water Quality</h1>
         </div>
         
-        <div class="space-y-1 text-sm">
+        <div class="space-y-1 text-sm" :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'">
           <p><span class="font-medium">Date of current view:</span> {{ formattedDate }}</p>
           <p><span class="font-medium">Total sites sampled:</span> {{ siteCount }}</p>
           <p><span class="font-medium">7-day rainfall:</span> 1.25 inches</p>
           <p class="mt-2">
-            <a 
-              href="https://data.cityofnewyork.us/Environment/Harbor-Water-Quality/5uug-f49n" 
-              target="_blank" 
+            <a
+              href="https://data.cityofnewyork.us/Environment/Harbor-Water-Quality/5uug-f49n"
+              target="_blank"
               rel="noopener noreferrer"
               :class="isDarkMode ? 'text-blue-400 hover:underline' : 'text-blue-600 hover:underline'"
             >
@@ -33,38 +33,23 @@
     </div>
   </transition>
   
-  <!-- Toggle Button positioned below panel instead of overlapping -->
-  <div 
-    v-if="isExpanded" 
-    class="absolute left-1/2 transform -translate-x-1/2 z-30 top-full mt-1"
+  <!-- Toggle Button always positioned at bottom of header -->
+  <div
+    class="absolute left-1/2 transform -translate-x-1/2 z-40"
+    :class="isExpanded ? 'top-full -mt-4' : 'top-4'"
   >
-    <button 
+    <button
       @click="toggleExpanded"
       :class="[
-        'rounded-full w-8 h-8 flex items-center justify-center shadow-md focus:outline-none transition-colors duration-300',
-        isDarkMode ? 'bg-gray-800 text-gray-300' : 'bg-white text-gray-600'
+        'rounded-full w-10 h-10 flex items-center justify-center shadow-md focus:outline-none transition-colors duration-300',
+        isDarkMode ? 'bg-gray-800 text-gray-200' : 'bg-white text-gray-800'
       ]"
-      aria-label="Collapse header"
+      :aria-label="isExpanded ? 'Collapse header' : 'Expand header'"
+      title="Toggle header"
     >
-      <span>▲</span>
+      <span class="font-semibold text-lg">{{ isExpanded ? '▲' : '▼' }}</span>
     </button>
   </div>
-  
-  <!-- Collapsed State Button -->
-  <transition name="fade">
-    <div v-if="!isExpanded" class="absolute top-4 left-1/2 transform -translate-x-1/2 z-30">
-      <button 
-        @click="toggleExpanded"
-        :class="[
-          'rounded-full w-10 h-10 flex items-center justify-center shadow-md focus:outline-none transition-colors duration-300',
-          isDarkMode ? 'bg-gray-800 text-gray-300' : 'bg-white text-gray-600'
-        ]"
-        aria-label="Expand header"
-      >
-        <span>▼</span>
-      </button>
-    </div>
-  </transition>
 </template>
 
 <script setup>
@@ -72,7 +57,6 @@ import { computed, ref } from 'vue'
 
 // State
 const isExpanded = ref(true)
-const isDarkMode = ref(false)
 
 // Emit events
 const emit = defineEmits(['toggleMapMode'])
@@ -84,8 +68,7 @@ const toggleExpanded = () => {
 
 // Toggle map mode and emit event to parent
 const toggleMapMode = () => {
-  isDarkMode.value = !isDarkMode.value
-  emit('toggleMapMode', isDarkMode.value)
+  emit('toggleMapMode', !props.isDarkMode)
 }
 
 // Props
@@ -97,6 +80,10 @@ const props = defineProps({
   siteCount: {
     type: Number,
     default: 0
+  },
+  isDarkMode: {
+    type: Boolean,
+    default: false
   }
 })
 

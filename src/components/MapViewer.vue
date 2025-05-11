@@ -75,12 +75,12 @@ const DARK_TILE_URL = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}
 // Update the map tile layer based on the current mode
 const updateTileLayer = () => {
   if (!map.value) return
-  
+
   // Remove existing tile layer if it exists
   if (tileLayer.value) {
     map.value.removeLayer(tileLayer.value)
   }
-  
+
   // Add the appropriate new tile layer based on mode
   const currentTileUrl = props.isDarkMode ? DARK_TILE_URL : LIGHT_TILE_URL
   tileLayer.value = L.tileLayer(currentTileUrl, {
@@ -88,6 +88,29 @@ const updateTileLayer = () => {
     maxZoom: 19,
     subdomains: 'abcd'
   }).addTo(map.value)
+
+  // Update existing popups if any
+  updatePopupStyles()
+}
+
+// Update popup styles based on dark mode
+const updatePopupStyles = () => {
+  if (!map.value) return
+
+  // Re-apply popups to all markers with updated styling
+  markers.value.forEach(marker => {
+    const popup = marker.getPopup()
+    if (popup) {
+      // Get the current content
+      const content = popup.getContent()
+      // Close and unbind the current popup
+      marker.closePopup().unbindPopup()
+      // Bind a new popup with the same content but updated class
+      marker.bindPopup(content, {
+        className: props.isDarkMode ? 'dark-mode-popup' : ''
+      })
+    }
+  })
 }
 
 // Watch for changes in dark mode setting
@@ -138,9 +161,11 @@ const updateMap = (data) => {
       // Create marker with custom water bottle icon based on water quality
       const bottleIcon = createWaterBottleIcon(mpn);
       const marker = L.marker([coordinates[1], coordinates[0]], { icon: bottleIcon })
-        .bindPopup(`<strong>${site}</strong><br>Water Quality: ${mpn} MPN/100mL`)
+        .bindPopup(`<strong>${site}</strong><br>Water Quality: ${mpn} MPN/100mL`, {
+          className: props.isDarkMode ? 'dark-mode-popup' : ''
+        })
         .addTo(map.value)
-      
+
       markers.value.push(marker)
     })
     
@@ -202,9 +227,9 @@ onUnmounted(() => {
 }
 
 /* Style the popup to match the app design */
+/* Dark mode popup styles will be applied via JS in updatePopupStyle */
 .leaflet-popup-content-wrapper {
   border-radius: 8px;
-  background-color: rgba(255, 255, 255, 0.95);
   box-shadow: 0 3px 14px rgba(0, 0, 0, 0.2);
 }
 
@@ -212,6 +237,22 @@ onUnmounted(() => {
   margin: 10px 14px;
   font-family: inherit;
   line-height: 1.5;
+}
+
+/* Light mode styles (default) */
+.leaflet-popup-content-wrapper {
+  background-color: rgba(255, 255, 255, 0.95);
+  color: #1f2937;
+}
+
+/* Dark mode styles (applied via JS) */
+.dark-mode-popup .leaflet-popup-content-wrapper {
+  background-color: rgb(31, 41, 55);
+  color: rgb(209, 213, 219);
+}
+
+.dark-mode-popup .leaflet-popup-tip {
+  background-color: rgb(31, 41, 55);
 }
 
 /* Hide or minimize any remaining attribution text */
