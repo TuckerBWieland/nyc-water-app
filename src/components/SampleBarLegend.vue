@@ -1,34 +1,37 @@
 <template>
-  <div class="sample-bar-legend p-2 rounded shadow-md" :class="isDarkMode ? 'bg-gray-800 text-gray-200' : 'bg-white text-gray-800'">
+  <div
+    class="sample-bar-legend p-2 rounded shadow-md"
+    :class="isDarkMode ? 'bg-gray-800 text-gray-200' : 'bg-white text-gray-800'"
+  >
     <h3 class="text-xs font-medium mb-1">Sample Quality</h3>
-    
+
     <!-- Sample Bar -->
     <div class="w-full h-4 rounded-full overflow-hidden flex">
       <!-- Green section -->
-      <div 
+      <div
         v-if="greenCount > 0"
         class="h-full bg-green-500 transition-all duration-500 ease-out"
         :style="{ width: `${greenPercentage}%` }"
         :title="`${greenCount} Good samples`"
       ></div>
-      
+
       <!-- Yellow section -->
-      <div 
+      <div
         v-if="yellowCount > 0"
         class="h-full bg-yellow-400 transition-all duration-500 ease-out"
         :style="{ width: `${yellowPercentage}%` }"
         :title="`${yellowCount} Moderate samples`"
       ></div>
-      
+
       <!-- Red section -->
-      <div 
+      <div
         v-if="redCount > 0"
         class="h-full bg-red-500 transition-all duration-500 ease-out"
         :style="{ width: `${redPercentage}%` }"
         :title="`${redCount} Poor samples`"
       ></div>
     </div>
-    
+
     <!-- Sample counts -->
     <div class="flex justify-between text-xs mt-1">
       <div class="flex items-center">
@@ -55,12 +58,12 @@ const props = defineProps({
   samples: {
     type: Array,
     required: true,
-    default: () => []
+    default: () => [],
   },
   isDarkMode: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
 // Compute counts for each category

@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Development server: `npm run dev`
 - Production build: `npm run build`
 - Preview build: `npm run preview`
+- Lint code: `npm run lint`
+- Format code: `npm run format`
 
 ## Code Style Guidelines
 - Vue 3 Composition API with `<script setup>` syntax

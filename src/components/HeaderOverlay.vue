@@ -6,7 +6,7 @@
       ref="headerRef"
       :class="[
         'absolute top-0 left-0 right-0 p-4 shadow-md z-30 transition-colors duration-300',
-        isDarkMode ? 'bg-gray-800 text-white' : 'bg-white bg-opacity-90 text-gray-800'
+        isDarkMode ? 'bg-gray-800 text-white' : 'bg-white bg-opacity-90 text-gray-800',
       ]"
     >
       <div class="container mx-auto max-w-3xl relative flex flex-col items-center">
@@ -26,7 +26,9 @@
                 href="https://docs.google.com/spreadsheets/d/12wNiul0QSymg3gO9OdwKkvAms-iHkz2i0hyxl6AP8eQ/edit?gid=0#gid=0"
                 target="_blank"
                 rel="noopener noreferrer"
-                :class="isDarkMode ? 'text-blue-400 hover:underline' : 'text-blue-600 hover:underline'"
+                :class="
+                  isDarkMode ? 'text-blue-400 hover:underline' : 'text-blue-600 hover:underline'
+                "
               >
                 Detailed Source Data
               </a>
@@ -36,39 +38,36 @@
       </div>
     </div>
   </transition>
-  
+
   <!-- Toggle Button for expanded state - attached to the bottom of header -->
   <div
     v-if="isExpanded"
     class="absolute left-1/2 transform -translate-x-1/2 z-40"
-    style="top: calc(var(--header-height, 0px) - 5px);"
+    style="top: calc(var(--header-height, 0px) - 5px)"
   >
     <button
-      @click="toggleExpanded"
       :class="[
         'rounded-full w-10 h-10 flex items-center justify-center shadow-md focus:outline-none transition-colors duration-300',
-        isDarkMode ? 'bg-gray-800 text-gray-200' : 'bg-white text-gray-800'
+        isDarkMode ? 'bg-gray-800 text-gray-200' : 'bg-white text-gray-800',
       ]"
       aria-label="Collapse header"
       title="Toggle header"
+      @click="toggleExpanded"
     >
       <span class="font-semibold text-lg">▲</span>
     </button>
   </div>
 
   <!-- Collapsed state toggle button - fixed at top of screen -->
-  <div
-    v-if="!isExpanded"
-    class="absolute top-4 left-1/2 transform -translate-x-1/2 z-40"
-  >
+  <div v-if="!isExpanded" class="absolute top-4 left-1/2 transform -translate-x-1/2 z-40">
     <button
-      @click="toggleExpanded"
       :class="[
         'rounded-full w-10 h-10 flex items-center justify-center shadow-md focus:outline-none transition-colors duration-300',
-        isDarkMode ? 'bg-gray-800 text-gray-200' : 'bg-white text-gray-800'
+        isDarkMode ? 'bg-gray-800 text-gray-200' : 'bg-white text-gray-800',
       ]"
       aria-label="Expand header"
       title="Toggle header"
+      @click="toggleExpanded"
     >
       <span class="font-semibold text-lg">▼</span>
     </button>
@@ -76,94 +75,97 @@
 </template>
 
 <script setup>
-import { computed, ref, nextTick, onMounted, watch } from 'vue'
+import { computed, ref, nextTick, onMounted, watch } from 'vue';
 
 // State
-const isExpanded = ref(false)
+const isExpanded = ref(false);
 
 // Emit events
-const emit = defineEmits(['toggleMapMode', 'update:isExpanded'])
+const emit = defineEmits(['toggleMapMode', 'update:isExpanded']);
 
 // References
-const headerRef = ref(null)
+const headerRef = ref(null);
 
 // Toggle header expanded state
 const toggleExpanded = () => {
-  isExpanded.value = !isExpanded.value
+  isExpanded.value = !isExpanded.value;
 
   // Emit the expanded state to parent
-  emit('update:isExpanded', isExpanded.value)
+  emit('update:isExpanded', isExpanded.value);
 
   // If expanding, wait for next tick then measure and set header height
   if (isExpanded.value) {
     nextTick(() => {
-      updateHeaderHeight()
-    })
+      updateHeaderHeight();
+    });
   }
-}
+};
 
 // Update the CSS variable for header height
 const updateHeaderHeight = () => {
   if (headerRef.value) {
-    const height = headerRef.value.offsetHeight
-    document.documentElement.style.setProperty('--header-height', `${height}px`)
+    const height = headerRef.value.offsetHeight;
+    document.documentElement.style.setProperty('--header-height', `${height}px`);
   }
-}
+};
 
 // Toggle map mode and emit event to parent
 const toggleMapMode = () => {
-  emit('toggleMapMode', !props.isDarkMode)
-}
+  emit('toggleMapMode', !props.isDarkMode);
+};
 
 // Props
 const props = defineProps({
   latestDate: {
     type: String,
-    required: true
+    required: true,
   },
   siteCount: {
     type: Number,
-    default: 0
+    default: 0,
   },
   isDarkMode: {
     type: Boolean,
-    default: false
-  }
-})
+    default: false,
+  },
+});
 
 // Computed properties
 const formattedDate = computed(() => {
-  if (!props.latestDate) return ''
+  if (!props.latestDate) return '';
 
   try {
     // Parse the date string and adjust for timezone
-    const [year, month, day] = props.latestDate.split('-').map(Number)
+    const [year, month, day] = props.latestDate.split('-').map(Number);
     // Create date using UTC to prevent timezone issues (months are 0-indexed in JS Date)
-    const date = new Date(Date.UTC(year, month - 1, day))
+    const date = new Date(Date.UTC(year, month - 1, day));
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
-      timeZone: 'UTC' // Use UTC to avoid timezone shifts
-    })
+      timeZone: 'UTC', // Use UTC to avoid timezone shifts
+    });
   } catch (e) {
-    return props.latestDate
+    return props.latestDate;
   }
-})
+});
 
 // Initialize header height on mount and when content changes
 onMounted(() => {
   nextTick(() => {
-    updateHeaderHeight()
-  })
-})
+    updateHeaderHeight();
+  });
+});
 
 // Update height when site count changes (content might change size)
-watch(() => props.siteCount, () => {
-  nextTick(() => {
-    updateHeaderHeight()
-  })
-})
+watch(
+  () => props.siteCount,
+  () => {
+    nextTick(() => {
+      updateHeaderHeight();
+    });
+  }
+);
 </script>
 
 <style scoped>

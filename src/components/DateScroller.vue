@@ -1,42 +1,44 @@
 <template>
-  <div class="fixed bottom-[calc(4rem+env(safe-area-inset-bottom,0px))] left-1/2 transform -translate-x-1/2 z-30">
-    <div 
+  <div
+    class="fixed bottom-[calc(4rem+env(safe-area-inset-bottom,0px))] left-1/2 transform -translate-x-1/2 z-30"
+  >
+    <div
       :class="[
         'inline-flex items-center rounded-full px-4 py-2 shadow-md transition-colors duration-300',
-        isDarkMode ? 'bg-gray-800 bg-opacity-90' : 'bg-white bg-opacity-90'
+        isDarkMode ? 'bg-gray-800 bg-opacity-90' : 'bg-white bg-opacity-90',
       ]"
     >
-      <button 
-        @click="selectPrevious"
+      <button
         :class="[
           'w-8 h-8 flex items-center justify-center mr-2 disabled:opacity-30 focus:outline-none transition-colors duration-300',
-          isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-black'
+          isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-black',
         ]"
         :disabled="!hasPrevious"
         aria-label="Previous date"
+        @click="selectPrevious"
       >
         &larr;
       </button>
-      
+
       <div class="px-2 text-center">
-        <span 
+        <span
           :class="[
             'text-sm font-medium transition-colors duration-300',
-            isDarkMode ? 'text-gray-200' : 'text-gray-800'
+            isDarkMode ? 'text-gray-200' : 'text-gray-800',
           ]"
         >
           {{ formattedModelValue }}
         </span>
       </div>
-      
-      <button 
-        @click="selectNext"
+
+      <button
         :class="[
           'w-8 h-8 flex items-center justify-center ml-2 disabled:opacity-30 focus:outline-none transition-colors duration-300',
-          isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-black'
+          isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-black',
         ]"
         :disabled="!hasNext"
         aria-label="Next date"
+        @click="selectNext"
       >
         &rarr;
       </button>
@@ -45,69 +47,69 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed } from 'vue';
 
 // Props
 const props = defineProps({
   dates: {
     type: Array,
-    required: true
+    required: true,
   },
   modelValue: {
     type: String,
-    required: true
+    required: true,
   },
   isDarkMode: {
     type: Boolean,
-    default: false
-  }
-})
+    default: false,
+  },
+});
 
 // Emits
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue']);
 
 // Computed properties
 const currentIndex = computed(() => {
-  return props.dates.indexOf(props.modelValue)
-})
+  return props.dates.indexOf(props.modelValue);
+});
 
 const hasPrevious = computed(() => {
-  return currentIndex.value > 0
-})
+  return currentIndex.value > 0;
+});
 
 const hasNext = computed(() => {
-  return currentIndex.value < props.dates.length - 1
-})
+  return currentIndex.value < props.dates.length - 1;
+});
 
 const formattedModelValue = computed(() => {
-  if (!props.modelValue) return ''
+  if (!props.modelValue) return '';
 
   try {
     // Parse the date string and adjust for timezone
-    const [year, month, day] = props.modelValue.split('-').map(Number)
+    const [year, month, day] = props.modelValue.split('-').map(Number);
     // Create date using UTC to prevent timezone issues (months are 0-indexed in JS Date)
-    const date = new Date(Date.UTC(year, month - 1, day))
+    const date = new Date(Date.UTC(year, month - 1, day));
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
-      timeZone: 'UTC' // Use UTC to avoid timezone shifts
-    })
+      timeZone: 'UTC', // Use UTC to avoid timezone shifts
+    });
   } catch (e) {
-    return props.modelValue
+    return props.modelValue;
   }
-})
+});
 
 // Methods
 const selectPrevious = () => {
   if (hasPrevious.value) {
-    emit('update:modelValue', props.dates[currentIndex.value - 1])
+    emit('update:modelValue', props.dates[currentIndex.value - 1]);
   }
-}
+};
 
 const selectNext = () => {
   if (hasNext.value) {
-    emit('update:modelValue', props.dates[currentIndex.value + 1])
+    emit('update:modelValue', props.dates[currentIndex.value + 1]);
   }
-}
+};
 </script>

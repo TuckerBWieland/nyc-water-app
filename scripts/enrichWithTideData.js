@@ -1,17 +1,19 @@
 const fs = require('fs');
 const path = require('path');
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 // Haversine distance formula to calculate distance between two lat/lon points in kilometers
 function calculateDistance(lat1, lon1, lat2, lon2) {
   const R = 6371; // Radius of the Earth in km
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
   const a =
-    Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-    Math.sin(dLon/2) * Math.sin(dLon/2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c; // Distance in km
 }
 
@@ -19,14 +21,14 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
 function formatDate(date) {
   // Ensure we have a Date object
   const d = new Date(date);
-  
+
   // Get date components (all UTC-based)
   const year = d.getUTCFullYear();
   const month = String(d.getUTCMonth() + 1).padStart(2, '0'); // +1 because months are 0-indexed
   const day = String(d.getUTCDate()).padStart(2, '0');
   const hours = String(d.getUTCHours()).padStart(2, '0');
   const minutes = String(d.getUTCMinutes()).padStart(2, '0');
-  
+
   // Return formatted string: yyyy-MM-dd HH:mm
   return `${year}-${month}-${day} ${hours}:${minutes}`;
 }
@@ -36,7 +38,7 @@ function parseDateUTC(dateString) {
   if (dateString instanceof Date) {
     return dateString;
   }
-  
+
   // If it's a string without T/Z, it needs special handling to avoid timezone issues
   if (typeof dateString === 'string' && !dateString.includes('T') && !dateString.includes('Z')) {
     // Parse timestamp parts
@@ -45,7 +47,7 @@ function parseDateUTC(dateString) {
       const [datePart, timePart] = dateString.split(' ');
       const [year, month, day] = datePart.split('-').map(Number);
       const [hours, minutes] = timePart.split(':').map(Number);
-      
+
       // Create a UTC Date object
       return new Date(Date.UTC(year, month - 1, day, hours, minutes));
     } else if (dateString.includes('-')) {
@@ -54,7 +56,7 @@ function parseDateUTC(dateString) {
       return new Date(Date.UTC(year, month - 1, day));
     }
   }
-  
+
   // Default to standard Date constructor for all other formats
   return new Date(dateString);
 }
@@ -63,7 +65,9 @@ function parseDateUTC(dateString) {
 async function findNearestTideStation(lat, lon) {
   try {
     // NOAA CO-OPS API endpoint for listing all stations
-    const response = await fetch('https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations.json');
+    const response = await fetch(
+      'https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations.json'
+    );
     const data = await response.json();
 
     if (!data.stations) {
@@ -111,7 +115,7 @@ function findNearestStationWithinRadius(stations, lat, lon, maxDistanceKm) {
         name: station.name,
         lat: station.lat,
         lng: station.lng,
-        distance: distance.toFixed(2)
+        distance: distance.toFixed(2),
       };
     }
   }
@@ -124,34 +128,36 @@ async function getTideData(stationId, sampleTime) {
   try {
     // Parse the sample time with explicit UTC handling to avoid timezone ambiguity
     const sampleDate = parseDateUTC(sampleTime);
-    
+
     // Set the begin and end dates for the API call (90 minutes before and after the sample time)
     const beginDate = new Date(sampleDate.getTime() - 90 * 60 * 1000);
     const endDate = new Date(sampleDate.getTime() + 90 * 60 * 1000);
-    
+
     // Format dates for the API using the helper function
     const begin = formatDate(beginDate);
     const end = formatDate(endDate);
-    
+
     // Log the time window being used
     console.log(`Fetching tide data from ${begin} to ${end} (3-hour window)`);
-    
+
     // NOAA CO-OPS API endpoint for water level data - ensure URL encoding for date parameters
-    const url = `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?station=${stationId}&product=water_level&datum=MLLW&time_zone=GMT&units=english&format=json&date_time=true&begin_date=${encodeURIComponent(begin)}&end_date=${encodeURIComponent(end)}`;
-    
+    const url = `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?station=${stationId}&product=water_level&datum=MLLW&time_zone=GMT&units=english&format=json&date_time=true&begin_date=${encodeURIComponent(
+      begin
+    )}&end_date=${encodeURIComponent(end)}`;
+
     const response = await fetch(url);
     const data = await response.json();
-    
+
     if (data.error) {
       console.error(`Error from NOAA API for station ${stationId}:`, data.error);
       return null;
     }
-    
+
     // Log number of data points received
     if (data.data && Array.isArray(data.data)) {
       console.log(`Received ${data.data.length} tide data points from NOAA API`);
     }
-    
+
     return data.data || [];
   } catch (error) {
     console.error(`Error fetching tide data for station ${stationId}:`, error);
@@ -173,10 +179,12 @@ function determineTideStatus(tideData, sampleDate) {
   }
 
   // Convert all readings to objects with parsed dates and values using proper UTC parsing
-  const readings = tideData.map(reading => ({
-    time: parseDateUTC(reading.t),
-    height: parseFloat(reading.v)
-  })).sort((a, b) => a.time - b.time); // Sort by time
+  const readings = tideData
+    .map(reading => ({
+      time: parseDateUTC(reading.t),
+      height: parseFloat(reading.v),
+    }))
+    .sort((a, b) => a.time - b.time); // Sort by time
 
   // Find closest reading to the sample time
   let closestIndex = 0;
@@ -262,7 +270,7 @@ function determineTideStatus(tideData, sampleDate) {
     isRising,
     currentHeight,
     minHeight,
-    maxHeight
+    maxHeight,
   };
 }
 
@@ -286,7 +294,9 @@ function analyzeTideData(tideData, stationName, sampleTime) {
   const directionIcon = tideStatus.isRising ? '⬆️' : '⬇️';
 
   // Construct the tide summary with icon and station name
-  return `${tideStatus.state} – ${directionIcon} ${tideStatus.isRising ? 'Rising' : 'Falling'} (${stationName})`;
+  return `${tideStatus.state} – ${directionIcon} ${
+    tideStatus.isRising ? 'Rising' : 'Falling'
+  } (${stationName})`;
 }
 
 // Main function to enrich samples with tide data
@@ -295,23 +305,23 @@ async function enrichSamplesWithTideData(inputFilePath) {
     // Read the input file
     const rawData = fs.readFileSync(inputFilePath, 'utf8');
     const sampleData = JSON.parse(rawData);
-    
+
     // Check if it's a GeoJSON file or a regular JSON array
     const isGeoJSON = sampleData.type === 'FeatureCollection' && Array.isArray(sampleData.features);
     const samples = isGeoJSON ? sampleData.features : sampleData;
-    
+
     console.log(`Processing ${samples.length} samples...`);
-    
+
     // Process each sample
     let processedCount = 0;
     let enrichedCount = 0;
-    
+
     for (const sample of samples) {
       processedCount++;
-      
+
       // Extract coordinates and sample time based on data format
       let lat, lon, sampleTime, properties;
-      
+
       if (isGeoJSON) {
         // GeoJSON format
         lon = sample.geometry.coordinates[0];
@@ -325,83 +335,101 @@ async function enrichSamplesWithTideData(inputFilePath) {
         sampleTime = sample.sampleTime || sample.timestamp;
         properties = sample;
       }
-      
+
       // Standardize sample time format if it's not already a full ISO string
       if (sampleTime && !sampleTime.includes('T')) {
         // If it's just a time like "9:02", assume it's for the sample date
         if (/^\d{1,2}:\d{2}(:\d{2})?(\s*[AP]M)?$/i.test(sampleTime)) {
-          const [hours, minutes] = sampleTime.replace(/\s*[AP]M/i, '').split(':').map(Number);
+          const [hours, minutes] = sampleTime
+            .replace(/\s*[AP]M/i, '')
+            .split(':')
+            .map(Number);
           const isPM = /PM/i.test(sampleTime);
-          
+
           // Get the date from the file name or a specified date
           const dateFromFilename = path.basename(inputFilePath).split('.')[0]; // e.g., "2025-05-09"
-          
+
           // Use Date.UTC to create a date in UTC
           const year = parseInt(dateFromFilename.split('-')[0], 10);
           const month = parseInt(dateFromFilename.split('-')[1], 10) - 1; // 0-based months
           const day = parseInt(dateFromFilename.split('-')[2], 10);
           const adjustedHours = isPM && hours < 12 ? hours + 12 : hours;
-          
+
           // Create a UTC Date directly to avoid timezone offsets
           const sampleDate = new Date(Date.UTC(year, month, day, adjustedHours, minutes));
-          
+
           // Format to consistent string format
           sampleTime = formatDate(sampleDate);
-          console.log(`Converted sample time "${hours}:${minutes}${isPM ? ' PM' : ''}" to "${sampleTime}" (UTC)`);
+          console.log(
+            `Converted sample time "${hours}:${minutes}${
+              isPM ? ' PM' : ''
+            }" to "${sampleTime}" (UTC)`
+          );
         }
       }
-      
+
       if (!lat || !lon || !sampleTime) {
-        console.warn(`Sample #${processedCount} doesn't have valid coordinates or timestamp, skipping...`);
+        console.warn(
+          `Sample #${processedCount} doesn't have valid coordinates or timestamp, skipping...`
+        );
         continue;
       }
-      
+
       console.log(`Processing sample #${processedCount}: ${lat}, ${lon} at ${sampleTime}`);
-      
+
       // Find the nearest tide station
       const nearestStation = await findNearestTideStation(lat, lon);
-      
+
       if (!nearestStation) {
-        console.log(`WARNING: No tide station found within 25km of ${lat}, ${lon} - skipping sample`);
+        console.log(
+          `WARNING: No tide station found within 25km of ${lat}, ${lon} - skipping sample`
+        );
         properties.tideSummary = null;
         continue;
       }
 
-      console.log(`SUCCESS: Using tide station: ${nearestStation.name} (${nearestStation.distance}km away)`);
-      
+      console.log(
+        `SUCCESS: Using tide station: ${nearestStation.name} (${nearestStation.distance}km away)`
+      );
+
       // Get tide data for the station
       const tideData = await getTideData(nearestStation.id, sampleTime);
-      
+
       if (!tideData) {
         console.log(`No tide data available for station ${nearestStation.id}`);
         properties.tideSummary = null;
         continue;
       }
-      
+
       // Analyze the tide data
       const tideSummary = analyzeTideData(tideData, nearestStation.name, sampleTime);
-      
+
       if (tideSummary) {
         properties.tideSummary = tideSummary;
         enrichedCount++;
-        console.log(`SUCCESS: Sample enriched with tide data: ${tideSummary} from ${nearestStation.name}`);
+        console.log(
+          `SUCCESS: Sample enriched with tide data: ${tideSummary} from ${nearestStation.name}`
+        );
       } else {
         properties.tideSummary = null;
         console.log(`WARNING: Could not determine tide status from station ${nearestStation.name}`);
       }
-      
+
       // Add a small delay to avoid hitting API rate limits
       await new Promise(resolve => setTimeout(resolve, 100));
     }
-    
-    console.log(`\nProcessing complete: ${enrichedCount} of ${processedCount} samples enriched with tide data.`);
-    
+
+    console.log(
+      `\nProcessing complete: ${enrichedCount} of ${processedCount} samples enriched with tide data.`
+    );
+
     // Write the updated data to output file
-    const outputFilePath = inputFilePath.replace('.json', '.enriched.json').replace('.geojson', '.enriched.geojson');
+    const outputFilePath = inputFilePath
+      .replace('.json', '.enriched.json')
+      .replace('.geojson', '.enriched.geojson');
     fs.writeFileSync(outputFilePath, JSON.stringify(sampleData, null, 2), 'utf8');
-    
+
     console.log(`\nEnriched data saved to: ${outputFilePath}`);
-    
   } catch (error) {
     console.error('Error processing samples:', error);
   }
