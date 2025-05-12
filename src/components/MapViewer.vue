@@ -136,8 +136,24 @@ watch(mapData, (newData) => {
 // Methods
 const loadMapData = async (date) => {
   try {
+    // Always load the regular version first to ensure we have data
     const response = await fetch(`${import.meta.env.BASE_URL}data/${date}.geojson`)
+    if (!response.ok) {
+      throw new Error(`Failed to load data for ${date}`)
+    }
     mapData.value = await response.json()
+
+    // Then try to load the enriched version if available
+    try {
+      const enrichedResponse = await fetch(`${import.meta.env.BASE_URL}data/${date}.enriched.geojson`)
+      if (enrichedResponse.ok) {
+        const enrichedData = await enrichedResponse.json()
+        console.log(`Loaded enriched data for ${date} with tide information`)
+        mapData.value = enrichedData
+      }
+    } catch (enrichedError) {
+      console.log(`Using regular data (enriched not available): ${enrichedError.message}`)
+    }
 
     // Update parent component with the site count and sample data
     if (mapData.value && mapData.value.features) {
@@ -191,6 +207,36 @@ const updateMap = (data) => {
         qualityMessage = 'Unacceptable for swimming';
       }
 
+      // Extract tide information if present
+      const tideSummary = feature.properties.tideSummary;
+
+      // If we have tideSummary, use it directly for display
+      let tideInfoHtml = '';
+      console.log("Tide summary:", tideSummary);
+      if (tideSummary) {
+        tideInfoHtml = `<div class="text-xs opacity-75 mt-1">${tideSummary}</div>`;
+      } else {
+        // If no tideSummary, try to use individual tide fields
+        const tideState = feature.properties.tide_state;
+        const tideDirection = feature.properties.tide_direction;
+        const tideStation = feature.properties.tide_station;
+
+        // Only add tide info if we have state or direction
+        if (tideState || tideDirection) {
+          const tideIcon = tideDirection && tideDirection.toLowerCase().includes('rising') ? '⬆️' :
+                          tideDirection && tideDirection.toLowerCase().includes('falling') ? '⬇️' : '';
+
+          tideInfoHtml = `<div class="text-xs opacity-75 mt-1">
+            ${tideIcon} ${tideState || ''} ${tideDirection && !tideState?.includes(tideDirection) ? tideDirection : ''}
+          </div>`;
+        }
+
+        // Add station information if available
+        if (tideStation) {
+          tideInfoHtml += `<div class="text-xs opacity-75">Station: ${tideStation}</div>`;
+        }
+      }
+
       // Create enhanced popup content with more styling
       const popupContent = `
         <div class="site-popup">
@@ -202,7 +248,8 @@ const updateMap = (data) => {
             ${qualityMessage}
           </div>
           ${sampleTime ? `<div class="text-xs opacity-75 mt-1">Sampled at ${sampleTime}</div>` : ''}
-          ${feature.properties.tideSummary ? `<div class="text-xs opacity-75 mt-1">${feature.properties.tideSummary.includes('Rising') ? '⬆️' : '⬇️'} ${feature.properties.tideSummary}</div>` : ''}
+          ${tideInfoHtml}
+          ${stationInfoHtml}
         </div>
       `;
 
