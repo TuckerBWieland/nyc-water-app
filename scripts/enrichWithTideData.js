@@ -1,6 +1,9 @@
-const fs = require('fs');
-const path = require('path');
-const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import nodeFetch from 'node-fetch';
+
+const fetch = nodeFetch;
 
 // Haversine distance formula to calculate distance between two lat/lon points in kilometers
 function calculateDistance(lat1, lon1, lat2, lon2) {
@@ -434,6 +437,10 @@ async function enrichSamplesWithTideData(inputFilePath) {
     console.error('Error processing samples:', error);
   }
 }
+
+// Get __dirname equivalent in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Check for input file argument
 if (process.argv.length < 3) {

@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "enrich-data": "node scripts/enrichAllGeojson.js",
+    "prebuild": "npm run enrich-data",
     "build": "vite build",
     "preview": "vite preview",
     "deploy": "gh-pages -d dist",
