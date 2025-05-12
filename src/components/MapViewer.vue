@@ -136,66 +136,110 @@ watch(mapData, (newData) => {
 // Methods
 const loadMapData = async (date) => {
   try {
-    // Always load the regular version first to ensure we have data
-    const response = await fetch(`${import.meta.env.BASE_URL}data/${date}.geojson`)
+    console.log(`Loading data for date: ${date}`);
+    
+    // Always use the non-enriched version first to ensure we get data
+    const response = await fetch(`${import.meta.env.BASE_URL}data/${date}.geojson`);
     if (!response.ok) {
-      throw new Error(`Failed to load data for ${date}`)
+      console.error(`Error: Failed to fetch ${date}.geojson, status: ${response.status}`);
+      return;
     }
-    mapData.value = await response.json()
-
-    // Then try to load the enriched version if available
+    
     try {
-      const enrichedResponse = await fetch(`${import.meta.env.BASE_URL}data/${date}.enriched.geojson`)
-      if (enrichedResponse.ok) {
-        const enrichedData = await enrichedResponse.json()
-        console.log(`Loaded enriched data for ${date} with tide information`)
-        mapData.value = enrichedData
+      mapData.value = await response.json();
+      console.log(`Successfully loaded basic data with ${mapData.value.features.length} features`);
+      
+      // Update parent component with the site count and sample data
+      if (mapData.value && mapData.value.features) {
+        emit('update:siteCount', mapData.value.features.length);
+  
+        // Extract the sample data for the legend
+        const samples = mapData.value.features.map(feature => ({
+          site: feature.properties.site,
+          mpn: feature.properties.mpn
+        }));
+        emit('update:sampleData', samples);
       }
-    } catch (enrichedError) {
-      console.log(`Using regular data (enriched not available): ${enrichedError.message}`)
-    }
-
-    // Update parent component with the site count and sample data
-    if (mapData.value && mapData.value.features) {
-      emit('update:siteCount', mapData.value.features.length)
-
-      // Extract the sample data for the legend
-      const samples = mapData.value.features.map(feature => ({
-        site: feature.properties.site,
-        mpn: feature.properties.mpn
-      }))
-      emit('update:sampleData', samples)
+      
+      // Try to load the enriched version if available
+      try {
+        const enrichedResponse = await fetch(`${import.meta.env.BASE_URL}data/${date}.enriched.geojson`);
+        if (enrichedResponse.ok) {
+          const enrichedData = await enrichedResponse.json();
+          console.log(`Successfully loaded enriched data with ${enrichedData.features.length} features and tide info`);
+          mapData.value = enrichedData;
+        }
+      } catch (enrichedError) {
+        console.log(`Using regular data (enriched not available): ${enrichedError.message}`);
+      }
+    } catch (jsonError) {
+      console.error("Error parsing JSON:", jsonError);
     }
   } catch (error) {
-    console.error('Error loading map data:', error)
+    console.error('Error loading map data:', error);
   }
 }
 
 const updateMap = (data) => {
-  // Store current view state before updating markers
-  let previousCenter, previousZoom;
-  if (map.value) {
-    previousCenter = map.value.getCenter();
-    previousZoom = map.value.getZoom();
+  console.log("Updating map with data:", data.type, "containing", data.features?.length || 0, "features");
+  
+  if (!map.value) {
+    console.error("Map not initialized!");
+    return;
   }
+  
+  // Store current view state before updating markers
+  let previousCenter = map.value.getCenter();
+  let previousZoom = map.value.getZoom();
+  console.log("Previous map center:", previousCenter, "zoom:", previousZoom);
 
   // Clear existing markers
-  markers.value.forEach(marker => marker.remove())
-  markers.value = []
+  console.log("Clearing existing markers:", markers.value.length);
+  for (const marker of markers.value) {
+    marker.remove();
+  }
+  markers.value = [];
   
   // Add new markers
-  if (data.features && data.features.length > 0) {
-    data.features.forEach(feature => {
-      const { coordinates } = feature.geometry
-      const { site, mpn, sampleTime } = feature.properties
-
-      // Create marker with custom water bottle icon based on water quality
+  if (!data.features || data.features.length === 0) {
+    console.warn("No features found in data!");
+    return;
+  }
+  
+  console.log(`Adding ${data.features.length} features to map`);
+  let markersAdded = 0;
+  
+  for (const feature of data.features) {
+    try {
+      if (!feature.geometry || !feature.geometry.coordinates || feature.geometry.coordinates.length < 2) {
+        console.warn("Invalid feature geometry:", feature);
+        continue;
+      }
+      
+      if (!feature.properties || !feature.properties.mpn) {
+        console.warn("Invalid feature properties:", feature);
+        continue;
+      }
+      
+      const coords = feature.geometry.coordinates;
+      const lat = coords[1];
+      const lng = coords[0];
+      
+      if (isNaN(lat) || isNaN(lng)) {
+        console.warn(`Invalid coordinates: [${lat}, ${lng}]`);
+        continue;
+      }
+      
+      const { site, mpn, sampleTime } = feature.properties;
+      console.log(`Creating marker for ${site} at [${lat}, ${lng}]`);
+      
+      // Create water bottle icon
       const bottleIcon = createWaterBottleIcon(mpn);
-
-      // Determine quality category and message
+      
+      // Determine quality message
       let qualityColor, qualityMessage;
       const mpnValue = Number(mpn);
-
+      
       if (mpnValue < 35) {
         qualityColor = 'text-lime-500';
         qualityMessage = 'Acceptable for swimming';
@@ -206,39 +250,9 @@ const updateMap = (data) => {
         qualityColor = 'text-red-500';
         qualityMessage = 'Unacceptable for swimming';
       }
-
-      // Extract tide information if present
-      const tideSummary = feature.properties.tideSummary;
-
-      // If we have tideSummary, use it directly for display
-      let tideInfoHtml = '';
-      console.log("Tide summary:", tideSummary);
-      if (tideSummary) {
-        tideInfoHtml = `<div class="text-xs opacity-75 mt-1">${tideSummary}</div>`;
-      } else {
-        // If no tideSummary, try to use individual tide fields
-        const tideState = feature.properties.tide_state;
-        const tideDirection = feature.properties.tide_direction;
-        const tideStation = feature.properties.tide_station;
-
-        // Only add tide info if we have state or direction
-        if (tideState || tideDirection) {
-          const tideIcon = tideDirection && tideDirection.toLowerCase().includes('rising') ? '⬆️' :
-                          tideDirection && tideDirection.toLowerCase().includes('falling') ? '⬇️' : '';
-
-          tideInfoHtml = `<div class="text-xs opacity-75 mt-1">
-            ${tideIcon} ${tideState || ''} ${tideDirection && !tideState?.includes(tideDirection) ? tideDirection : ''}
-          </div>`;
-        }
-
-        // Add station information if available
-        if (tideStation) {
-          tideInfoHtml += `<div class="text-xs opacity-75">Station: ${tideStation}</div>`;
-        }
-      }
-
-      // Create enhanced popup content with more styling
-      const popupContent = `
+      
+      // Create simple popup content
+      let popupContent = `
         <div class="site-popup">
           <div class="font-semibold text-lg site-name">${site}</div>
           <div class="mt-2 ${qualityColor} font-medium text-base">
@@ -247,56 +261,94 @@ const updateMap = (data) => {
           <div class="mt-1 text-sm opacity-75">
             ${qualityMessage}
           </div>
-          ${sampleTime ? `<div class="text-xs opacity-75 mt-1">Sampled at ${sampleTime}</div>` : ''}
-          ${tideInfoHtml}
-          ${stationInfoHtml}
-        </div>
       `;
+      
+      // Add sample time if available
+      if (sampleTime) {
+        popupContent += `<div class="text-xs opacity-75 mt-1">Sampled at ${sampleTime}</div>`;
+      }
+      
+      // Add tide info if available - with conditional formatting
+      if (feature.properties.tideSummary) {
+        // Parse the tide summary
+        const tideSummary = feature.properties.tideSummary;
+        let displaySummary = tideSummary;
 
-      const marker = L.marker([coordinates[1], coordinates[0]], { icon: bottleIcon })
+        // For intuitive combinations, show only the tide state (no direction at all)
+        if (tideSummary.includes('Low Tide – ⬇️ Falling')) {
+          // Extract just the "Low Tide" part and the station
+          const stationInfo = tideSummary.includes('(') ?
+            tideSummary.substring(tideSummary.indexOf('(')) : '';
+          displaySummary = `Low Tide ${stationInfo}`;
+        } else if (tideSummary.includes('High Tide – ⬆️ Rising')) {
+          // Extract just the "High Tide" part and the station
+          const stationInfo = tideSummary.includes('(') ?
+            tideSummary.substring(tideSummary.indexOf('(')) : '';
+          displaySummary = `High Tide ${stationInfo}`;
+        }
+
+        popupContent += `<div class="text-xs opacity-75 mt-1" title="Tidal data is taken from nearest NOAA station and is only approximate">${displaySummary}</div>`;
+      }
+      
+      // Close the popup div
+      popupContent += `</div>`;
+      
+      // Create and add the marker
+      const marker = L.marker([lat, lng], { icon: bottleIcon })
         .bindPopup(popupContent, {
           className: props.isDarkMode ? 'dark-mode-popup' : ''
         })
-        .addTo(map.value)
-
-      markers.value.push(marker)
-    })
-    
-    // Handle map positioning
-    if (markers.value.length > 0) {
-      if (!hasAutoFitted.value) {
-        // First load: auto-fit to bounds
-        const group = L.featureGroup(markers.value)
-        map.value.fitBounds(group.getBounds(), { padding: [30, 30] })
-        hasAutoFitted.value = true
-      } else if (previousCenter && previousZoom) {
-        // Subsequent loads: maintain previous view
-        map.value.setView(previousCenter, previousZoom)
-      }
+        .addTo(map.value);
+        
+      markers.value.push(marker);
+      markersAdded++;
+    } catch (error) {
+      console.error("Error adding marker:", error);
     }
+  }
+  
+  console.log(`Successfully added ${markersAdded} markers to the map`);
+  
+  // Handle map positioning
+  if (markers.value.length > 0) {
+    if (!hasAutoFitted.value) {
+      console.log("First load - fitting map to bounds");
+      // First load: auto-fit to bounds
+      const group = L.featureGroup(markers.value);
+      map.value.fitBounds(group.getBounds(), { padding: [30, 30] });
+      hasAutoFitted.value = true;
+    } else {
+      console.log("Subsequent load - maintaining previous view");
+      // Subsequent loads: maintain previous view
+      map.value.setView(previousCenter, previousZoom);
+    }
+  } else {
+    console.warn("No markers were created on the map!");
   }
 }
 
 onMounted(() => {
+  console.log("Initializing map");
   // Initialize map
-  map.value = L.map('map').setView([40.7128, -74.0060], 12)
+  map.value = L.map('map').setView([40.7128, -74.0060], 12);
   
   // Initialize tile layer using our updateTileLayer function
-  updateTileLayer()
+  updateTileLayer();
   
   // Remove zoom control
-  map.value.removeControl(map.value.zoomControl)
+  map.value.removeControl(map.value.zoomControl);
   
   // Load map data if we have a selected date
   if (props.selectedDate) {
-    loadMapData(props.selectedDate)
+    console.log(`Initial load for date: ${props.selectedDate}`);
+    loadMapData(props.selectedDate);
   }
 })
 
 onUnmounted(() => {
   // Clean up map instance when component is unmounted
   if (map.value) {
-    map.value.remove()
+    map.value.remove();
   }
 })
 </script>
