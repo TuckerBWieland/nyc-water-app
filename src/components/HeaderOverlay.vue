@@ -1,8 +1,9 @@
 <template>
   <!-- Full Header Panel -->
   <transition name="slide-fade">
-    <div 
-      v-if="isExpanded" 
+    <div
+      v-if="isExpanded"
+      ref="headerRef"
       :class="[
         'absolute top-0 left-0 right-0 p-4 shadow-md z-30 transition-colors duration-300',
         isDarkMode ? 'bg-gray-800 text-white' : 'bg-white bg-opacity-90 text-gray-800'
@@ -20,7 +21,7 @@
           <p><span class="font-medium">7-day rainfall:</span> 1.25 inches</p>
           <p class="mt-2">
             <a
-              href="https://data.cityofnewyork.us/Environment/Harbor-Water-Quality/5uug-f49n"
+              href="https://docs.google.com/spreadsheets/d/12wNiul0QSymg3gO9OdwKkvAms-iHkz2i0hyxl6AP8eQ/edit?gid=0#gid=0"
               target="_blank"
               rel="noopener noreferrer"
               :class="isDarkMode ? 'text-blue-400 hover:underline' : 'text-blue-600 hover:underline'"
@@ -33,10 +34,11 @@
     </div>
   </transition>
   
-  <!-- Toggle Button always positioned at bottom of header -->
+  <!-- Toggle Button for expanded state - attached to the bottom of header -->
   <div
+    v-if="isExpanded"
     class="absolute left-1/2 transform -translate-x-1/2 z-40"
-    :class="isExpanded ? 'top-full -mt-4' : 'top-4'"
+    style="top: calc(var(--header-height, 0px) - 5px);"
   >
     <button
       @click="toggleExpanded"
@@ -44,16 +46,34 @@
         'rounded-full w-10 h-10 flex items-center justify-center shadow-md focus:outline-none transition-colors duration-300',
         isDarkMode ? 'bg-gray-800 text-gray-200' : 'bg-white text-gray-800'
       ]"
-      :aria-label="isExpanded ? 'Collapse header' : 'Expand header'"
+      aria-label="Collapse header"
       title="Toggle header"
     >
-      <span class="font-semibold text-lg">{{ isExpanded ? '▲' : '▼' }}</span>
+      <span class="font-semibold text-lg">▲</span>
+    </button>
+  </div>
+
+  <!-- Collapsed state toggle button - fixed at top of screen -->
+  <div
+    v-if="!isExpanded"
+    class="absolute top-4 left-1/2 transform -translate-x-1/2 z-40"
+  >
+    <button
+      @click="toggleExpanded"
+      :class="[
+        'rounded-full w-10 h-10 flex items-center justify-center shadow-md focus:outline-none transition-colors duration-300',
+        isDarkMode ? 'bg-gray-800 text-gray-200' : 'bg-white text-gray-800'
+      ]"
+      aria-label="Expand header"
+      title="Toggle header"
+    >
+      <span class="font-semibold text-lg">▼</span>
     </button>
   </div>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, nextTick, onMounted, watch } from 'vue'
 
 // State
 const isExpanded = ref(true)
@@ -61,9 +81,27 @@ const isExpanded = ref(true)
 // Emit events
 const emit = defineEmits(['toggleMapMode'])
 
+// References
+const headerRef = ref(null)
+
 // Toggle header expanded state
 const toggleExpanded = () => {
   isExpanded.value = !isExpanded.value
+
+  // If expanding, wait for next tick then measure and set header height
+  if (isExpanded.value) {
+    nextTick(() => {
+      updateHeaderHeight()
+    })
+  }
+}
+
+// Update the CSS variable for header height
+const updateHeaderHeight = () => {
+  if (headerRef.value) {
+    const height = headerRef.value.offsetHeight
+    document.documentElement.style.setProperty('--header-height', `${height}px`)
+  }
 }
 
 // Toggle map mode and emit event to parent
@@ -90,17 +128,31 @@ const props = defineProps({
 // Computed properties
 const formattedDate = computed(() => {
   if (!props.latestDate) return ''
-  
+
   try {
     const date = new Date(props.latestDate)
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
     })
   } catch (e) {
     return props.latestDate
   }
+})
+
+// Initialize header height on mount and when content changes
+onMounted(() => {
+  nextTick(() => {
+    updateHeaderHeight()
+  })
+})
+
+// Update height when site count changes (content might change size)
+watch(() => props.siteCount, () => {
+  nextTick(() => {
+    updateHeaderHeight()
+  })
 })
 </script>
 
