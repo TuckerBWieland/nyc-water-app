@@ -32,10 +32,10 @@
     </div>
   </div>
   
-  <button 
+  <button
     @click="isOpen = !isOpen"
     :class="[
-      'absolute bottom-4 left-1/2 transform -translate-x-1/2 z-40 rounded-full w-10 h-10 flex items-center justify-center shadow-md transition-colors duration-300',
+      'fixed bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] left-1/2 transform -translate-x-1/2 z-40 rounded-full w-10 h-10 flex items-center justify-center shadow-lg transition-colors duration-300',
       isDarkMode ? 'bg-gray-800 text-gray-200' : 'bg-white text-gray-800'
     ]"
     title="Information"
