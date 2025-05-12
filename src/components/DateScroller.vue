@@ -1,5 +1,5 @@
 <template>
-  <div class="absolute bottom-16 left-1/2 transform -translate-x-1/2 z-30">
+  <div class="fixed bottom-[calc(4rem+env(safe-area-inset-bottom,0px))] left-1/2 transform -translate-x-1/2 z-30">
     <div 
       :class="[
         'inline-flex items-center rounded-full px-4 py-2 shadow-md transition-colors duration-300',
