@@ -15,47 +15,64 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
   return R * c; // Distance in km
 }
 
-// Find the nearest NOAA tide station within 5km of the given lat/lon
+// Find the nearest NOAA tide station within configurable distance of the given lat/lon
 async function findNearestTideStation(lat, lon) {
   try {
     // NOAA CO-OPS API endpoint for listing all stations
     const response = await fetch('https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations.json');
     const data = await response.json();
-    
+
     if (!data.stations) {
       console.error('No stations data available from NOAA API');
       return null;
     }
-    
-    let nearestStation = null;
-    let minDistance = Infinity;
-    
-    // Find the nearest water level station within 5km
-    for (const station of data.stations) {
-      // Skip stations that don't measure water levels
-      if (!station.sensors || !station.sensors.some(sensor => sensor.type === 'water_level')) {
-        continue;
-      }
-      
-      const distance = calculateDistance(lat, lon, station.lat, station.lng);
-      
-      if (distance <= 5 && distance < minDistance) {
-        minDistance = distance;
-        nearestStation = {
-          id: station.id,
-          name: station.name,
-          lat: station.lat,
-          lng: station.lng,
-          distance: distance.toFixed(2)
-        };
-      }
+
+    // First try with a 10km radius
+    const stationWithin10km = findNearestStationWithinRadius(data.stations, lat, lon, 10);
+    if (stationWithin10km) {
+      console.log(`Found station within 10km radius: ${stationWithin10km.name}`);
+      return stationWithin10km;
     }
-    
-    return nearestStation;
+
+    // If no station within 10km, try with a 25km radius
+    console.log('No stations within 10km, expanding search to 25km...');
+    const stationWithin25km = findNearestStationWithinRadius(data.stations, lat, lon, 25);
+    if (stationWithin25km) {
+      console.log(`Found station within extended 25km radius: ${stationWithin25km.name}`);
+      return stationWithin25km;
+    }
+
+    console.log('No tide stations found within 25km radius.');
+    return null;
   } catch (error) {
     console.error('Error fetching tide stations:', error);
     return null;
   }
+}
+
+// Helper function to find the nearest station within a given radius
+function findNearestStationWithinRadius(stations, lat, lon, maxDistanceKm) {
+  let nearestStation = null;
+  let minDistance = Infinity;
+
+  for (const station of stations) {
+    // Calculate distance between sample location and this station
+    const distance = calculateDistance(lat, lon, station.lat, station.lng);
+
+    // Update nearest station if this one is closer and within the radius
+    if (distance <= maxDistanceKm && distance < minDistance) {
+      minDistance = distance;
+      nearestStation = {
+        id: station.id,
+        name: station.name,
+        lat: station.lat,
+        lng: station.lng,
+        distance: distance.toFixed(2)
+      };
+    }
+  }
+
+  return nearestStation;
 }
 
 // Get tide data for a specific station around a specific time
@@ -221,12 +238,12 @@ async function enrichSamplesWithTideData(inputFilePath) {
       const nearestStation = await findNearestTideStation(lat, lon);
       
       if (!nearestStation) {
-        console.log(`No tide station found within 5km of ${lat}, ${lon}`);
+        console.log(`WARNING: No tide station found within 25km of ${lat}, ${lon} - skipping sample`);
         properties.tideSummary = null;
         continue;
       }
-      
-      console.log(`Found nearest station: ${nearestStation.name} (${nearestStation.distance}km away)`);
+
+      console.log(`SUCCESS: Using tide station: ${nearestStation.name} (${nearestStation.distance}km away)`);
       
       // Get tide data for the station
       const tideData = await getTideData(nearestStation.id, sampleTime);
@@ -243,10 +260,10 @@ async function enrichSamplesWithTideData(inputFilePath) {
       if (tideSummary) {
         properties.tideSummary = tideSummary;
         enrichedCount++;
-        console.log(`Added tide summary: ${tideSummary}`);
+        console.log(`SUCCESS: Sample enriched with tide data: ${tideSummary} from ${nearestStation.name}`);
       } else {
         properties.tideSummary = null;
-        console.log('Could not determine tide status');
+        console.log(`WARNING: Could not determine tide status from station ${nearestStation.name}`);
       }
       
       // Add a small delay to avoid hitting API rate limits
