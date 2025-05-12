@@ -136,9 +136,9 @@ watch(mapData, (newData) => {
 // Methods
 const loadMapData = async (date) => {
   try {
-    const response = await fetch(`/data/${date}.geojson`)
+    const response = await fetch(`${import.meta.env.BASE_URL}data/${date}.geojson`)
     mapData.value = await response.json()
-    
+
     // Update parent component with the site count and sample data
     if (mapData.value && mapData.value.features) {
       emit('update:siteCount', mapData.value.features.length)
