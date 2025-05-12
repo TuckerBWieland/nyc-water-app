@@ -7,12 +7,28 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
   const R = 6371; // Radius of the Earth in km
   const dLat = (lat2 - lat1) * Math.PI / 180;
   const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a = 
+  const a =
     Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
     Math.sin(dLon/2) * Math.sin(dLon/2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
   return R * c; // Distance in km
+}
+
+// Helper function to format dates for NOAA CO-OPS API (yyyy-MM-dd HH:mm)
+function formatDate(date) {
+  // Ensure we have a Date object
+  const d = new Date(date);
+
+  // Get date components (all UTC-based)
+  const year = d.getUTCFullYear();
+  const month = String(d.getUTCMonth() + 1).padStart(2, '0'); // +1 because months are 0-indexed
+  const day = String(d.getUTCDate()).padStart(2, '0');
+  const hours = String(d.getUTCHours()).padStart(2, '0');
+  const minutes = String(d.getUTCMinutes()).padStart(2, '0');
+
+  // Return formatted string: yyyy-MM-dd HH:mm
+  return `${year}-${month}-${day} ${hours}:${minutes}`;
 }
 
 // Find the nearest NOAA tide station within configurable distance of the given lat/lon
@@ -80,15 +96,15 @@ async function getTideData(stationId, sampleTime) {
   try {
     // Parse the sample time
     const sampleDate = new Date(sampleTime);
-    
+
     // Set the begin and end dates for the API call (1 hour before and after the sample time)
     const beginDate = new Date(sampleDate.getTime() - 60 * 60 * 1000);
     const endDate = new Date(sampleDate.getTime() + 60 * 60 * 1000);
-    
-    // Format dates for the API
-    const begin = beginDate.toISOString().replace(/[:-]/g, '').split('.')[0] + 'Z';
-    const end = endDate.toISOString().replace(/[:-]/g, '').split('.')[0] + 'Z';
-    
+
+    // Format dates for the API using the helper function
+    const begin = formatDate(beginDate);
+    const end = formatDate(endDate);
+
     // NOAA CO-OPS API endpoint for water level data
     const url = `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?station=${stationId}&product=water_level&datum=MLLW&time_zone=GMT&units=english&format=json&date_time=true&begin_date=${begin}&end_date=${end}`;
     
@@ -222,8 +238,8 @@ async function enrichSamplesWithTideData(inputFilePath) {
           const sampleDate = new Date(dateFromFilename);
           sampleDate.setUTCHours(isPM && hours < 12 ? hours + 12 : hours);
           sampleDate.setUTCMinutes(minutes);
-          
-          sampleTime = sampleDate.toISOString();
+
+          sampleTime = formatDate(sampleDate);
         }
       }
       
