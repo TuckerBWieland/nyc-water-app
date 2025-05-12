@@ -136,11 +136,15 @@ const formattedDate = computed(() => {
   if (!props.latestDate) return ''
 
   try {
-    const date = new Date(props.latestDate)
+    // Parse the date string and adjust for timezone
+    const [year, month, day] = props.latestDate.split('-').map(Number)
+    // Create date using UTC to prevent timezone issues (months are 0-indexed in JS Date)
+    const date = new Date(Date.UTC(year, month - 1, day))
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
+      timeZone: 'UTC' // Use UTC to avoid timezone shifts
     })
   } catch (e) {
     return props.latestDate

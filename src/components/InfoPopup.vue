@@ -2,7 +2,7 @@
   <div 
     v-if="isOpen" 
     :class="[
-      'fixed bottom-20 left-1/2 transform -translate-x-1/2 p-4 rounded-lg shadow-lg z-40 max-w-sm mx-auto transition-colors duration-300',
+      'fixed bottom-20 left-1/2 transform -translate-x-1/2 p-4 rounded-lg shadow-lg z-40 max-w-md w-[90%] mx-auto transition-colors duration-300',
       isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'
     ]"
   >
@@ -56,5 +56,5 @@ const props = defineProps({
 })
 
 // State
-const isOpen = ref(false)
+const isOpen = ref(true)
 </script>
