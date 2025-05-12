@@ -63,7 +63,7 @@ const dates = ref([])
 const selectedDate = ref('')
 const siteCount = ref(0)
 const isDarkMode = ref(true) // Default to dark mode
-const isHeaderExpanded = ref(true) // Track header state
+const isHeaderExpanded = ref(false) // Track header state
 const sampleData = ref([]) // Sample data for legend
 const rainfall = ref(1.25) // Rainfall data
 

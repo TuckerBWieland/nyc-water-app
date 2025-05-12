@@ -16,9 +16,19 @@
       </button>
     </div>
     <div class="prose text-sm" :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'">
-      <p>This application displays water quality data for New York City water sampling sites.</p>
-      <p>Data is collected daily and includes various measurements related to water quality and safety.</p>
-      <p>Use the date navigation above to switch between sampling dates.</p>
+      <p>This interactive map displays weekly water quality data collected by community scientists through the Billion Oyster Project's Community Water Quality Testing (CWQT) program.</p>
+      <br>
+      <p>Each dot represents a sampling site across NYC's waterways, color-coded based on the presence of enterococcus bacteria—an indicator of water safety for recreational activities.</p>
+      <p class="mt-2">
+        <a
+          href="https://www.billionoysterproject.org/water-quality"
+          target="_blank"
+          rel="noopener noreferrer"
+          :class="isDarkMode ? 'text-blue-400 hover:underline' : 'text-blue-600 hover:underline'"
+        >
+          Learn more about the program
+        </a>
+      </p>
     </div>
   </div>
   

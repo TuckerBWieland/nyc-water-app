@@ -9,26 +9,29 @@
         isDarkMode ? 'bg-gray-800 text-white' : 'bg-white bg-opacity-90 text-gray-800'
       ]"
     >
-      <div class="container mx-auto max-w-3xl relative">
-        <!-- Header content with flex layout to position title -->
-        <div class="mb-2">
-          <h1 class="text-2xl font-bold">NYC Water Quality</h1>
-        </div>
-        
-        <div class="space-y-1 text-sm" :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'">
-          <p><span class="font-medium">Date of current view:</span> {{ formattedDate }}</p>
-          <p><span class="font-medium">Total sites sampled:</span> {{ siteCount }}</p>
-          <p><span class="font-medium">7-day rainfall:</span> 1.25 inches</p>
-          <p class="mt-2">
-            <a
-              href="https://docs.google.com/spreadsheets/d/12wNiul0QSymg3gO9OdwKkvAms-iHkz2i0hyxl6AP8eQ/edit?gid=0#gid=0"
-              target="_blank"
-              rel="noopener noreferrer"
-              :class="isDarkMode ? 'text-blue-400 hover:underline' : 'text-blue-600 hover:underline'"
-            >
-              Detailed Source Data
-            </a>
-          </p>
+      <div class="container mx-auto max-w-3xl relative flex flex-col items-center">
+        <!-- Content container with all centered text -->
+        <div class="w-full max-w-lg text-center">
+          <!-- Header content -->
+          <div class="mb-2">
+            <h1 class="text-2xl font-bold">NYC Water Quality</h1>
+          </div>
+
+          <div class="space-y-1 text-sm" :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'">
+            <p><span class="font-medium">Date of current view:</span> {{ formattedDate }}</p>
+            <p><span class="font-medium">Total sites sampled:</span> {{ siteCount }}</p>
+            <p><span class="font-medium">7-day rainfall:</span> 1.25 inches</p>
+            <p class="mt-2">
+              <a
+                href="https://docs.google.com/spreadsheets/d/12wNiul0QSymg3gO9OdwKkvAms-iHkz2i0hyxl6AP8eQ/edit?gid=0#gid=0"
+                target="_blank"
+                rel="noopener noreferrer"
+                :class="isDarkMode ? 'text-blue-400 hover:underline' : 'text-blue-600 hover:underline'"
+              >
+                Detailed Source Data
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -76,7 +79,7 @@
 import { computed, ref, nextTick, onMounted, watch } from 'vue'
 
 // State
-const isExpanded = ref(true)
+const isExpanded = ref(false)
 
 // Emit events
 const emit = defineEmits(['toggleMapMode', 'update:isExpanded'])
