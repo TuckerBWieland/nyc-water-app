@@ -60,7 +60,7 @@ const props = defineProps({
 })
 
 // Emits
-const emit = defineEmits(['update:siteCount'])
+const emit = defineEmits(['update:siteCount', 'update:sampleData'])
 
 // Reactive references
 const mapData = ref(null)
@@ -138,9 +138,16 @@ const loadMapData = async (date) => {
     const response = await fetch(`/data/${date}.geojson`)
     mapData.value = await response.json()
     
-    // Update parent component with the site count
+    // Update parent component with the site count and sample data
     if (mapData.value && mapData.value.features) {
       emit('update:siteCount', mapData.value.features.length)
+
+      // Extract the sample data for the legend
+      const samples = mapData.value.features.map(feature => ({
+        site: feature.properties.site,
+        mpn: feature.properties.mpn
+      }))
+      emit('update:sampleData', samples)
     }
   } catch (error) {
     console.error('Error loading map data:', error)

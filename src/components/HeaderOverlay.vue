@@ -79,7 +79,7 @@ import { computed, ref, nextTick, onMounted, watch } from 'vue'
 const isExpanded = ref(true)
 
 // Emit events
-const emit = defineEmits(['toggleMapMode'])
+const emit = defineEmits(['toggleMapMode', 'update:isExpanded'])
 
 // References
 const headerRef = ref(null)
@@ -87,6 +87,9 @@ const headerRef = ref(null)
 // Toggle header expanded state
 const toggleExpanded = () => {
   isExpanded.value = !isExpanded.value
+
+  // Emit the expanded state to parent
+  emit('update:isExpanded', isExpanded.value)
 
   // If expanding, wait for next tick then measure and set header height
   if (isExpanded.value) {
