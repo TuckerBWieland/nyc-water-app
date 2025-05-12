@@ -67,6 +67,7 @@ const mapData = ref(null)
 const map = ref(null)
 const markers = ref([])
 const tileLayer = ref(null)
+const hasAutoFitted = ref(false)
 
 // Tile layer URLs
 const LIGHT_TILE_URL = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
@@ -155,6 +156,13 @@ const loadMapData = async (date) => {
 }
 
 const updateMap = (data) => {
+  // Store current view state before updating markers
+  let previousCenter, previousZoom;
+  if (map.value) {
+    previousCenter = map.value.getCenter();
+    previousZoom = map.value.getZoom();
+  }
+
   // Clear existing markers
   markers.value.forEach(marker => marker.remove())
   markers.value = []
@@ -206,10 +214,17 @@ const updateMap = (data) => {
       markers.value.push(marker)
     })
     
-    // Fit map to markers if we have any
+    // Handle map positioning
     if (markers.value.length > 0) {
-      const group = L.featureGroup(markers.value)
-      map.value.fitBounds(group.getBounds(), { padding: [30, 30] })
+      if (!hasAutoFitted.value) {
+        // First load: auto-fit to bounds
+        const group = L.featureGroup(markers.value)
+        map.value.fitBounds(group.getBounds(), { padding: [30, 30] })
+        hasAutoFitted.value = true
+      } else if (previousCenter && previousZoom) {
+        // Subsequent loads: maintain previous view
+        map.value.setView(previousCenter, previousZoom)
+      }
     }
   }
 }
