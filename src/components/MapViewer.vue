@@ -198,10 +198,11 @@ const updateMap = (data) => {
           <div class="mt-2 ${qualityColor} font-medium text-base">
             ${mpn} MPN/100mL
           </div>
-          ${sampleTime ? `<div class="text-xs opacity-75 mt-1">Sampled at ${sampleTime}</div>` : ''}
           <div class="mt-1 text-sm opacity-75">
             ${qualityMessage}
           </div>
+          ${sampleTime ? `<div class="text-xs opacity-75 mt-1">Sampled at ${sampleTime}</div>` : ''}
+          ${feature.properties.tideSummary ? `<div class="text-xs opacity-75 mt-1">${feature.properties.tideSummary.includes('Rising') ? '⬆️' : '⬇️'} ${feature.properties.tideSummary}</div>` : ''}
         </div>
       `;
 
