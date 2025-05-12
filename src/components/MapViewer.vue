@@ -163,12 +163,42 @@ const updateMap = (data) => {
   if (data.features && data.features.length > 0) {
     data.features.forEach(feature => {
       const { coordinates } = feature.geometry
-      const { site, mpn } = feature.properties
-      
+      const { site, mpn, sampleTime } = feature.properties
+
       // Create marker with custom water bottle icon based on water quality
       const bottleIcon = createWaterBottleIcon(mpn);
+
+      // Determine quality category and message
+      let qualityColor, qualityMessage;
+      const mpnValue = Number(mpn);
+
+      if (mpnValue < 35) {
+        qualityColor = 'text-lime-500';
+        qualityMessage = 'Acceptable for swimming';
+      } else if (mpnValue <= 104) {
+        qualityColor = 'text-yellow-400';
+        qualityMessage = 'Unacceptable if levels persist';
+      } else {
+        qualityColor = 'text-red-500';
+        qualityMessage = 'Unacceptable for swimming';
+      }
+
+      // Create enhanced popup content with more styling
+      const popupContent = `
+        <div class="site-popup">
+          <div class="font-semibold text-lg site-name">${site}</div>
+          <div class="mt-2 ${qualityColor} font-medium text-base">
+            ${mpn} MPN/100mL
+          </div>
+          ${sampleTime ? `<div class="text-xs opacity-75 mt-1">Sampled at ${sampleTime}</div>` : ''}
+          <div class="mt-1 text-sm opacity-75">
+            ${qualityMessage}
+          </div>
+        </div>
+      `;
+
       const marker = L.marker([coordinates[1], coordinates[0]], { icon: bottleIcon })
-        .bindPopup(`<strong>${site}</strong><br>Water Quality: ${mpn} MPN/100mL`, {
+        .bindPopup(popupContent, {
           className: props.isDarkMode ? 'dark-mode-popup' : ''
         })
         .addTo(map.value)
@@ -238,18 +268,76 @@ onUnmounted(() => {
 .leaflet-popup-content-wrapper {
   border-radius: 8px;
   box-shadow: 0 3px 14px rgba(0, 0, 0, 0.2);
+  padding: 0;
 }
 
 .leaflet-popup-content {
-  margin: 10px 14px;
+  margin: 14px 16px;
   font-family: inherit;
   line-height: 1.5;
+  min-width: 180px;
+}
+
+/* Fix close button position */
+.leaflet-popup-close-button {
+  top: 8px !important;
+  right: 8px !important;
+  color: inherit !important;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+  width: 18px !important;
+  height: 18px !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.leaflet-popup-close-button:hover {
+  opacity: 1;
+  background: transparent !important;
+}
+
+/* Site popup styling */
+.site-popup {
+  padding: 2px 0;
+}
+
+.site-popup .site-name {
+  word-wrap: break-word;
+  max-width: 250px;
+}
+
+/* Quality indicators */
+.site-popup .text-lime-500 {
+  color: #84cc16;
+}
+
+.site-popup .text-yellow-400 {
+  color: #facc15;
+}
+
+.site-popup .text-red-500 {
+  color: #ef4444;
 }
 
 /* Light mode styles (default) */
 .leaflet-popup-content-wrapper {
   background-color: rgba(255, 255, 255, 0.95);
   color: #1f2937;
+}
+
+.site-popup .opacity-75 {
+  color: #6b7280; /* text-gray-500 */
+}
+
+/* Ensure consistent spacing between popup elements */
+.site-popup .mt-1 {
+  margin-top: 0.25rem;
+}
+
+.site-popup .mt-2 {
+  margin-top: 0.5rem;
 }
 
 /* Dark mode styles (applied via JS) */
@@ -260,6 +348,14 @@ onUnmounted(() => {
 
 .dark-mode-popup .leaflet-popup-tip {
   background-color: rgb(31, 41, 55);
+}
+
+.dark-mode-popup .site-popup .opacity-75 {
+  color: #9ca3af; /* text-gray-400 */
+}
+
+.dark-mode-popup .leaflet-popup-close-button {
+  color: rgb(209, 213, 219) !important;
 }
 
 /* Hide or minimize any remaining attribution text */

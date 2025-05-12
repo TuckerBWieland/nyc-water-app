@@ -6,6 +6,7 @@
       "properties": {
         "site": "Hudson River, JFK Marina (Yonkers)",
         "mpn": 10.0,
+        "sampleTime": "9:02",
         "rainfall": 2.1
       },
       "geometry": {
@@ -21,6 +22,7 @@
       "properties": {
         "site": "Hudson River, Yonkers Paddling and Rowing Club",
         "mpn": 97.0,
+        "sampleTime": "1:14 PM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -36,6 +38,7 @@
       "properties": {
         "site": "Saw Mill River, daylighted section (Yonkers)",
         "mpn": 368.0,
+        "sampleTime": "11:20 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -51,6 +54,7 @@
       "properties": {
         "site": "Hudson River, Dyckman Marina",
         "mpn": 10.0,
+        "sampleTime": "8:40 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -66,6 +70,7 @@
       "properties": {
         "site": "Bronx Kill, west end",
         "mpn": 20.0,
+        "sampleTime": "9:02 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -81,6 +86,7 @@
       "properties": {
         "site": "Bronx Kill, east end",
         "mpn": 10.0,
+        "sampleTime": "8:53 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -96,6 +102,7 @@
       "properties": {
         "site": "Harlem River, Little Hell Gate",
         "mpn": 41.0,
+        "sampleTime": "9:20 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -111,6 +118,7 @@
       "properties": {
         "site": "Harlem River, Water's Edge Garden Beach",
         "mpn": 30.0,
+        "sampleTime": "9:26 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -126,6 +134,7 @@
       "properties": {
         "site": "Harlem River, Lincoln Avenue 2",
         "mpn": 10.0,
+        "sampleTime": "9:47 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -141,6 +150,7 @@
       "properties": {
         "site": "Hudson River, Pier 99 Boat Launch",
         "mpn": 41.0,
+        "sampleTime": "2:10 PM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -156,6 +166,7 @@
       "properties": {
         "site": "Hudson River, Pier 96",
         "mpn": 31.0,
+        "sampleTime": "9:43 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -171,6 +182,7 @@
       "properties": {
         "site": "Hudson River, Pier 84",
         "mpn": 30.0,
+        "sampleTime": "9:33 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -186,6 +198,7 @@
       "properties": {
         "site": "Hudson River, Pier 66",
         "mpn": 20.0,
+        "sampleTime": "10:16 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -201,6 +214,7 @@
       "properties": {
         "site": "Hudson River, Gansevoort Peninsula, North",
         "mpn": 20.0,
+        "sampleTime": "10:46 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -216,6 +230,7 @@
       "properties": {
         "site": "Hudson River, Gansevoort Peninsula, South",
         "mpn": 10.0,
+        "sampleTime": "10:51 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -231,6 +246,7 @@
       "properties": {
         "site": "Hudson River, Pier 40",
         "mpn": 20.0,
+        "sampleTime": "10:21 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -246,6 +262,7 @@
       "properties": {
         "site": "Hudson River, Pier 26",
         "mpn": 10.0,
+        "sampleTime": "10:31 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -261,6 +278,7 @@
       "properties": {
         "site": "Hudson River, Battery Park City, Rockefeller Park",
         "mpn": 10.0,
+        "sampleTime": "9:33 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -276,6 +294,7 @@
       "properties": {
         "site": "Hudson River, Weehawken Cove, Hoboken NJ",
         "mpn": 10.0,
+        "sampleTime": "9:33 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -291,6 +310,7 @@
       "properties": {
         "site": "Hudson River, Pier 13, Hoboken, NJ",
         "mpn": 31.0,
+        "sampleTime": "9:27 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -306,6 +326,7 @@
       "properties": {
         "site": "Hudson River, Hoboken Cove Beach, Hoboken NJ",
         "mpn": 146.0,
+        "sampleTime": "9:35 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -321,6 +342,7 @@
       "properties": {
         "site": "Hudson River, Frank Sinatra Park, Hoboken NJ",
         "mpn": 10.0,
+        "sampleTime": "9:45 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -336,6 +358,7 @@
       "properties": {
         "site": "Flushing Bay, 28th Avenue (Big Rock Beach)",
         "mpn": 28.0,
+        "sampleTime": "11:05 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -351,6 +374,7 @@
       "properties": {
         "site": "Flushing Bay, World's Fair Marina Boat Ramp",
         "mpn": 2809.0,
+        "sampleTime": "9:20 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -366,6 +390,7 @@
       "properties": {
         "site": "Flushing Creek",
         "mpn": 1510.0,
+        "sampleTime": "8:55 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -381,6 +406,7 @@
       "properties": {
         "site": "Meadow Lake (Flushing Meadows-Corona Park)",
         "mpn": 4786.0,
+        "sampleTime": "11:24 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -396,6 +422,7 @@
       "properties": {
         "site": "Little Neck Bay",
         "mpn": 41.0,
+        "sampleTime": "8:45 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -411,6 +438,7 @@
       "properties": {
         "site": "East River, E 90th St Ferry",
         "mpn": 41.0,
+        "sampleTime": "9:04 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -426,6 +454,7 @@
       "properties": {
         "site": "East River, Hallets Cove",
         "mpn": 51.0,
+        "sampleTime": "8:58 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -441,6 +470,7 @@
       "properties": {
         "site": "East River, Gantry State Park",
         "mpn": 98.0,
+        "sampleTime": "11:17 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -456,6 +486,7 @@
       "properties": {
         "site": "Newtown Creek, Second Street Kayak Launch",
         "mpn": 9139.0,
+        "sampleTime": "10:57 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -471,6 +502,7 @@
       "properties": {
         "site": "Newtown Creek, Pulaski Bridge, Queens",
         "mpn": 20.0,
+        "sampleTime": "7:08 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -486,6 +518,7 @@
       "properties": {
         "site": "Newtown Creek, Dutch Kills (head)",
         "mpn": 344.8,
+        "sampleTime": "6:57 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -501,6 +534,7 @@
       "properties": {
         "site": "Newtown Creek, Apollo Street",
         "mpn": 20.0,
+        "sampleTime": "9:47 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -516,6 +550,7 @@
       "properties": {
         "site": "Newtown Creek, East Branch",
         "mpn": 259.0,
+        "sampleTime": "9:18 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -531,6 +566,7 @@
       "properties": {
         "site": "Newtown Creek, English Kills",
         "mpn": 214.0,
+        "sampleTime": "6:54 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -546,6 +582,7 @@
       "properties": {
         "site": "East River, Stuy Cove Park",
         "mpn": 10.0,
+        "sampleTime": "9:45 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -561,6 +598,7 @@
       "properties": {
         "site": "East River, India Street",
         "mpn": 20.0,
+        "sampleTime": "8:08 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -576,6 +614,7 @@
       "properties": {
         "site": "East River, WNYC Transmitter Park",
         "mpn": 41.0,
+        "sampleTime": "6:52 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -591,6 +630,7 @@
       "properties": {
         "site": "East River, Marsha P Johnson State Park",
         "mpn": 52.0,
+        "sampleTime": "9:50 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -606,6 +646,7 @@
       "properties": {
         "site": "Bushwick Inlet",
         "mpn": 74.0,
+        "sampleTime": "8:45 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -621,6 +662,7 @@
       "properties": {
         "site": "East River, Bushwick Inlet Park Beach",
         "mpn": 97.0,
+        "sampleTime": "8:31 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -636,6 +678,7 @@
       "properties": {
         "site": "East River, North 3rd Street",
         "mpn": 119.0,
+        "sampleTime": "10:01 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -651,6 +694,7 @@
       "properties": {
         "site": "East River, Grand Ferry Park",
         "mpn": 20.0,
+        "sampleTime": "10:15 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -666,6 +710,7 @@
       "properties": {
         "site": "East River, South 5th Street/Domino Park",
         "mpn": 31.0,
+        "sampleTime": "8:19 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -681,6 +726,7 @@
       "properties": {
         "site": "East River, South 8th St",
         "mpn": 74.0,
+        "sampleTime": "7:33 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -696,6 +742,7 @@
       "properties": {
         "site": "Wallabout Channel (Brooklyn Navy Yard)",
         "mpn": 130.0,
+        "sampleTime": "9:37 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -711,6 +758,7 @@
       "properties": {
         "site": "East River, Brooklyn Bridge Beach (Manhattan)",
         "mpn": 84.0,
+        "sampleTime": "10:50 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -726,6 +774,7 @@
       "properties": {
         "site": "East River, Dumbo Cove",
         "mpn": 74.0,
+        "sampleTime": "8:15 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -741,6 +790,7 @@
       "properties": {
         "site": "East River, Pier 2 Kayak Dock (Brooklyn Bridge Park)",
         "mpn": 85.0,
+        "sampleTime": "9:50 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -756,6 +806,7 @@
       "properties": {
         "site": "East River, Pier 4 Beach (Brooklyn Bridge Park)",
         "mpn": 21.0,
+        "sampleTime": "8:12 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -771,6 +822,7 @@
       "properties": {
         "site": "Buttermilk Channel, Pier 101 (Governors Island)",
         "mpn": 41.0,
+        "sampleTime": "8:33 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -786,6 +838,7 @@
       "properties": {
         "site": "Buttermilk Channel, Valentino Pier",
         "mpn": 10.0,
+        "sampleTime": "9:23 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -801,6 +854,7 @@
       "properties": {
         "site": "Gowanus Canal, Second Street Sponge Park",
         "mpn": 171.0,
+        "sampleTime": "7:37 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -816,6 +870,7 @@
       "properties": {
         "site": "Upper Harbor, Bush Terminal Park (Inner Lagoon)",
         "mpn": 63.0,
+        "sampleTime": "7:00 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -831,6 +886,7 @@
       "properties": {
         "site": "Upper Harbor, Bush Terminal Park (North Embayment)",
         "mpn": 10.0,
+        "sampleTime": "7:05 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -846,6 +902,7 @@
       "properties": {
         "site": "Prospect Park Lake",
         "mpn": 275.0,
+        "sampleTime": "7:05 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -861,6 +918,7 @@
       "properties": {
         "site": "Coney Island Creek, Kaiser Park",
         "mpn": 41.0,
+        "sampleTime": "7:20 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -876,6 +934,7 @@
       "properties": {
         "site": "Gravesend Bay, Calvert Vaux Cove",
         "mpn": 10.0,
+        "sampleTime": "11:25 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -891,6 +950,7 @@
       "properties": {
         "site": "Gravesend Bay, OH-015",
         "mpn": 74.0,
+        "sampleTime": "11:55 AM",
         "rainfall": 2.1
       },
       "geometry": {
@@ -906,6 +966,7 @@
       "properties": {
         "site": "Arthur Kill, Conference House Park",
         "mpn": 10.0,
+        "sampleTime": "3:00 PM",
         "rainfall": 2.1
       },
       "geometry": {
