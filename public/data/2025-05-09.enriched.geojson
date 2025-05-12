@@ -8,7 +8,7 @@
         "mpn": 10,
         "sampleTime": "9:02",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Low Tide – ⬇️ Falling (Kings Point)"
       },
       "geometry": {
         "type": "Point",
@@ -25,7 +25,7 @@
         "mpn": 97,
         "sampleTime": "1:14 PM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "High Tide – ⬆️ Rising (Kings Point)"
       },
       "geometry": {
         "type": "Point",
@@ -42,7 +42,7 @@
         "mpn": 368,
         "sampleTime": "11:20 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬆️ Rising (Kings Point)"
       },
       "geometry": {
         "type": "Point",
@@ -59,7 +59,7 @@
         "mpn": 10,
         "sampleTime": "8:40 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Low Tide – ⬇️ Falling (Kings Point)"
       },
       "geometry": {
         "type": "Point",
@@ -76,7 +76,7 @@
         "mpn": 20,
         "sampleTime": "9:02 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Low Tide – ⬇️ Falling (Kings Point)"
       },
       "geometry": {
         "type": "Point",
@@ -93,7 +93,7 @@
         "mpn": 10,
         "sampleTime": "8:53 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Low Tide – ⬇️ Falling (Kings Point)"
       },
       "geometry": {
         "type": "Point",
@@ -110,7 +110,7 @@
         "mpn": 41,
         "sampleTime": "9:20 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -127,7 +127,7 @@
         "mpn": 30,
         "sampleTime": "9:26 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -144,7 +144,7 @@
         "mpn": 10,
         "sampleTime": "9:47 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "High Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -161,7 +161,7 @@
         "mpn": 41,
         "sampleTime": "2:10 PM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬇️ Falling (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -178,7 +178,7 @@
         "mpn": 31,
         "sampleTime": "9:43 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "High Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -195,7 +195,7 @@
         "mpn": 30,
         "sampleTime": "9:33 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -212,7 +212,7 @@
         "mpn": 20,
         "sampleTime": "10:16 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "High Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -229,7 +229,7 @@
         "mpn": 20,
         "sampleTime": "10:46 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "High Tide – ⬇️ Falling (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -246,7 +246,7 @@
         "mpn": 10,
         "sampleTime": "10:51 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "High Tide – ⬇️ Falling (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -263,7 +263,7 @@
         "mpn": 20,
         "sampleTime": "10:21 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "High Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -280,7 +280,7 @@
         "mpn": 10,
         "sampleTime": "10:31 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "High Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -297,7 +297,7 @@
         "mpn": 10,
         "sampleTime": "9:33 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -314,7 +314,7 @@
         "mpn": 10,
         "sampleTime": "9:33 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -331,7 +331,7 @@
         "mpn": 31,
         "sampleTime": "9:27 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -348,7 +348,7 @@
         "mpn": 146,
         "sampleTime": "9:35 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -365,7 +365,7 @@
         "mpn": 10,
         "sampleTime": "9:45 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "High Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -382,7 +382,7 @@
         "mpn": 28,
         "sampleTime": "11:05 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬆️ Rising (Kings Point)"
       },
       "geometry": {
         "type": "Point",
@@ -399,7 +399,7 @@
         "mpn": 2809,
         "sampleTime": "9:20 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Low Tide – ⬆️ Rising (Kings Point)"
       },
       "geometry": {
         "type": "Point",
@@ -416,7 +416,7 @@
         "mpn": 1510,
         "sampleTime": "8:55 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Low Tide – ⬇️ Falling (Kings Point)"
       },
       "geometry": {
         "type": "Point",
@@ -433,7 +433,7 @@
         "mpn": 4786,
         "sampleTime": "11:24 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬆️ Rising (Kings Point)"
       },
       "geometry": {
         "type": "Point",
@@ -450,7 +450,7 @@
         "mpn": 41,
         "sampleTime": "8:45 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Low Tide – ⬇️ Falling (Kings Point)"
       },
       "geometry": {
         "type": "Point",
@@ -467,7 +467,7 @@
         "mpn": 41,
         "sampleTime": "9:04 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -484,7 +484,7 @@
         "mpn": 51,
         "sampleTime": "8:58 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -501,7 +501,7 @@
         "mpn": 98,
         "sampleTime": "11:17 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "High Tide – ⬇️ Falling (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -518,7 +518,7 @@
         "mpn": 9139,
         "sampleTime": "10:57 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "High Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -535,7 +535,7 @@
         "mpn": 20,
         "sampleTime": "7:08 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -552,7 +552,7 @@
         "mpn": 344.8,
         "sampleTime": "6:57 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -569,7 +569,7 @@
         "mpn": 20,
         "sampleTime": "9:47 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "High Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -586,7 +586,7 @@
         "mpn": 259,
         "sampleTime": "9:18 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -603,7 +603,7 @@
         "mpn": 214,
         "sampleTime": "6:54 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -620,7 +620,7 @@
         "mpn": 10,
         "sampleTime": "9:45 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "High Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -637,7 +637,7 @@
         "mpn": 20,
         "sampleTime": "8:08 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -654,7 +654,7 @@
         "mpn": 41,
         "sampleTime": "6:52 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -671,7 +671,7 @@
         "mpn": 52,
         "sampleTime": "9:50 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "High Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -688,7 +688,7 @@
         "mpn": 74,
         "sampleTime": "8:45 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -705,7 +705,7 @@
         "mpn": 97,
         "sampleTime": "8:31 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -722,7 +722,7 @@
         "mpn": 119,
         "sampleTime": "10:01 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "High Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -739,7 +739,7 @@
         "mpn": 20,
         "sampleTime": "10:15 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "High Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -756,7 +756,7 @@
         "mpn": 31,
         "sampleTime": "8:19 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -773,7 +773,7 @@
         "mpn": 74,
         "sampleTime": "7:33 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -790,7 +790,7 @@
         "mpn": 130,
         "sampleTime": "9:37 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -807,7 +807,7 @@
         "mpn": 84,
         "sampleTime": "10:50 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "High Tide – ⬇️ Falling (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -824,7 +824,7 @@
         "mpn": 74,
         "sampleTime": "8:15 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -841,7 +841,7 @@
         "mpn": 85,
         "sampleTime": "9:50 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "High Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -858,7 +858,7 @@
         "mpn": 21,
         "sampleTime": "8:12 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -875,7 +875,7 @@
         "mpn": 41,
         "sampleTime": "8:33 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -892,7 +892,7 @@
         "mpn": 10,
         "sampleTime": "9:23 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -909,7 +909,7 @@
         "mpn": 171,
         "sampleTime": "7:37 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -926,7 +926,7 @@
         "mpn": 63,
         "sampleTime": "7:00 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -943,7 +943,7 @@
         "mpn": 10,
         "sampleTime": "7:05 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -960,7 +960,7 @@
         "mpn": 275,
         "sampleTime": "7:05 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -977,7 +977,7 @@
         "mpn": 41,
         "sampleTime": "7:20 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬆️ Rising (Sandy Hook)"
       },
       "geometry": {
         "type": "Point",
@@ -994,7 +994,7 @@
         "mpn": 10,
         "sampleTime": "11:25 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "High Tide – ⬇️ Falling (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -1011,7 +1011,7 @@
         "mpn": 74,
         "sampleTime": "11:55 AM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "High Tide – ⬇️ Falling (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -1028,7 +1028,7 @@
         "mpn": 10,
         "sampleTime": "3:00 PM",
         "rainfall": 2.1,
-        "tideSummary": null
+        "tideSummary": "Mid Tide – ⬇️ Falling (Sandy Hook)"
       },
       "geometry": {
         "type": "Point",

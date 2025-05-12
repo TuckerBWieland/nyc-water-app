@@ -19,16 +19,44 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
 function formatDate(date) {
   // Ensure we have a Date object
   const d = new Date(date);
-
+  
   // Get date components (all UTC-based)
   const year = d.getUTCFullYear();
   const month = String(d.getUTCMonth() + 1).padStart(2, '0'); // +1 because months are 0-indexed
   const day = String(d.getUTCDate()).padStart(2, '0');
   const hours = String(d.getUTCHours()).padStart(2, '0');
   const minutes = String(d.getUTCMinutes()).padStart(2, '0');
-
+  
   // Return formatted string: yyyy-MM-dd HH:mm
   return `${year}-${month}-${day} ${hours}:${minutes}`;
+}
+
+// Helper function to ensure a Date object is created with proper UTC interpretation
+function parseDateUTC(dateString) {
+  if (dateString instanceof Date) {
+    return dateString;
+  }
+  
+  // If it's a string without T/Z, it needs special handling to avoid timezone issues
+  if (typeof dateString === 'string' && !dateString.includes('T') && !dateString.includes('Z')) {
+    // Parse timestamp parts
+    if (dateString.includes('-') && dateString.includes(':')) {
+      // Format: YYYY-MM-DD HH:MM
+      const [datePart, timePart] = dateString.split(' ');
+      const [year, month, day] = datePart.split('-').map(Number);
+      const [hours, minutes] = timePart.split(':').map(Number);
+      
+      // Create a UTC Date object
+      return new Date(Date.UTC(year, month - 1, day, hours, minutes));
+    } else if (dateString.includes('-')) {
+      // Just date without time (e.g., 2025-05-09)
+      const [year, month, day] = dateString.split('-').map(Number);
+      return new Date(Date.UTC(year, month - 1, day));
+    }
+  }
+  
+  // Default to standard Date constructor for all other formats
+  return new Date(dateString);
 }
 
 // Find the nearest NOAA tide station within configurable distance of the given lat/lon
@@ -94,19 +122,22 @@ function findNearestStationWithinRadius(stations, lat, lon, maxDistanceKm) {
 // Get tide data for a specific station around a specific time
 async function getTideData(stationId, sampleTime) {
   try {
-    // Parse the sample time
-    const sampleDate = new Date(sampleTime);
-
-    // Set the begin and end dates for the API call (1 hour before and after the sample time)
-    const beginDate = new Date(sampleDate.getTime() - 60 * 60 * 1000);
-    const endDate = new Date(sampleDate.getTime() + 60 * 60 * 1000);
-
+    // Parse the sample time with explicit UTC handling to avoid timezone ambiguity
+    const sampleDate = parseDateUTC(sampleTime);
+    
+    // Set the begin and end dates for the API call (90 minutes before and after the sample time)
+    const beginDate = new Date(sampleDate.getTime() - 90 * 60 * 1000);
+    const endDate = new Date(sampleDate.getTime() + 90 * 60 * 1000);
+    
     // Format dates for the API using the helper function
     const begin = formatDate(beginDate);
     const end = formatDate(endDate);
-
-    // NOAA CO-OPS API endpoint for water level data
-    const url = `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?station=${stationId}&product=water_level&datum=MLLW&time_zone=GMT&units=english&format=json&date_time=true&begin_date=${begin}&end_date=${end}`;
+    
+    // Log the time window being used
+    console.log(`Fetching tide data from ${begin} to ${end} (3-hour window)`);
+    
+    // NOAA CO-OPS API endpoint for water level data - ensure URL encoding for date parameters
+    const url = `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?station=${stationId}&product=water_level&datum=MLLW&time_zone=GMT&units=english&format=json&date_time=true&begin_date=${encodeURIComponent(begin)}&end_date=${encodeURIComponent(end)}`;
     
     const response = await fetch(url);
     const data = await response.json();
@@ -116,6 +147,11 @@ async function getTideData(stationId, sampleTime) {
       return null;
     }
     
+    // Log number of data points received
+    if (data.data && Array.isArray(data.data)) {
+      console.log(`Received ${data.data.length} tide data points from NOAA API`);
+    }
+    
     return data.data || [];
   } catch (error) {
     console.error(`Error fetching tide data for station ${stationId}:`, error);
@@ -123,57 +159,95 @@ async function getTideData(stationId, sampleTime) {
   }
 }
 
-// Analyze tide data to determine if tide is rising or falling, and if it's near high or low tide
-function analyzeTideData(tideData, stationName, sampleTime) {
-  if (!tideData || tideData.length < 2) {
+/**
+ * Determine tide status by analyzing tide data points
+ * @param {Array} tideData - Array of tide data points from NOAA (each with 't' timestamp and 'v' water level)
+ * @param {Date} sampleDate - Date object representing the sample time
+ * @return {Object|null} - Object with tide status information or null if analysis fails
+ */
+function determineTideStatus(tideData, sampleDate) {
+  // Ensure we have sufficient tide data
+  if (!tideData || tideData.length < 4) {
+    console.log('Insufficient tide data for analysis (need at least 4 data points)');
     return null;
   }
-  
-  // Convert sample time to Date object
-  const sampleDate = new Date(sampleTime);
-  
-  // Find the readings closest to the sample time
-  let closestBefore = null;
-  let secondClosestBefore = null;
-  
-  for (const reading of tideData) {
-    const readingDate = new Date(reading.t);
-    
-    if (readingDate <= sampleDate) {
-      if (!closestBefore || readingDate > new Date(closestBefore.t)) {
-        secondClosestBefore = closestBefore;
-        closestBefore = reading;
-      } else if (!secondClosestBefore || readingDate > new Date(secondClosestBefore.t)) {
-        secondClosestBefore = reading;
-      }
+
+  // Convert all readings to objects with parsed dates and values using proper UTC parsing
+  const readings = tideData.map(reading => ({
+    time: parseDateUTC(reading.t),
+    height: parseFloat(reading.v)
+  })).sort((a, b) => a.time - b.time); // Sort by time
+
+  // Find closest reading to the sample time
+  let closestIndex = 0;
+  let minTimeDiff = Infinity;
+
+  for (let i = 0; i < readings.length; i++) {
+    const timeDiff = Math.abs(readings[i].time - sampleDate);
+    if (timeDiff < minTimeDiff) {
+      minTimeDiff = timeDiff;
+      closestIndex = i;
     }
   }
-  
-  // If we don't have two readings before the sample time, we can't determine trend
-  if (!closestBefore || !secondClosestBefore) {
+
+  // Ensure we have enough points before and after
+  if (closestIndex < 1 || closestIndex >= readings.length - 1) {
+    console.log('Cannot determine tide trend - sample time too close to edge of data window');
     return null;
   }
-  
+
+  // Get surrounding readings (±6-12 min)
+  // Find points before the closest reading
+  const pointsBefore = [];
+  for (let i = closestIndex - 1; i >= 0; i--) {
+    const timeDiffMinutes = (readings[closestIndex].time - readings[i].time) / (1000 * 60);
+    if (timeDiffMinutes <= 12) {
+      pointsBefore.unshift(readings[i]);
+    }
+    if (timeDiffMinutes > 12 || pointsBefore.length >= 2) {
+      break;
+    }
+  }
+
+  // Find points after the closest reading
+  const pointsAfter = [];
+  for (let i = closestIndex + 1; i < readings.length; i++) {
+    const timeDiffMinutes = (readings[i].time - readings[closestIndex].time) / (1000 * 60);
+    if (timeDiffMinutes <= 12) {
+      pointsAfter.push(readings[i]);
+    }
+    if (timeDiffMinutes > 12 || pointsAfter.length >= 2) {
+      break;
+    }
+  }
+
+  if (pointsBefore.length === 0 || pointsAfter.length === 0) {
+    console.log('Cannot find surrounding tide data points for trend analysis');
+    return null;
+  }
+
   // Determine if tide is rising or falling
-  const currentHeight = parseFloat(closestBefore.v);
-  const previousHeight = parseFloat(secondClosestBefore.v);
-  const isRising = currentHeight > previousHeight;
-  
-  // Determine if tide is high or low
-  // Find the max and min heights in the dataset
+  // Compare heights from before to after
+  const beforeAvg = pointsBefore.reduce((sum, p) => sum + p.height, 0) / pointsBefore.length;
+  const afterAvg = pointsAfter.reduce((sum, p) => sum + p.height, 0) / pointsAfter.length;
+  const isRising = afterAvg > beforeAvg;
+
+  // Calculate overall tide height statistics
   let maxHeight = -Infinity;
   let minHeight = Infinity;
-  
-  for (const reading of tideData) {
-    const height = parseFloat(reading.v);
-    if (height > maxHeight) maxHeight = height;
-    if (height < minHeight) minHeight = height;
+
+  for (const reading of readings) {
+    if (reading.height > maxHeight) maxHeight = reading.height;
+    if (reading.height < minHeight) minHeight = reading.height;
   }
-  
-  // Define thresholds for high and low tide (within 20% of max or min)
+
+  const currentHeight = readings[closestIndex].height;
+
+  // Define thresholds for high and low tide (top/bottom 20%)
   const highThreshold = maxHeight - (maxHeight - minHeight) * 0.2;
   const lowThreshold = minHeight + (maxHeight - minHeight) * 0.2;
-  
+
+  // Determine tide state
   let tideState = '';
   if (currentHeight >= highThreshold) {
     tideState = 'High Tide';
@@ -182,9 +256,37 @@ function analyzeTideData(tideData, stationName, sampleTime) {
   } else {
     tideState = 'Mid Tide';
   }
-  
-  // Construct the tide summary
-  return `${tideState} – ${isRising ? 'Rising' : 'Falling'} (${stationName})`;
+
+  return {
+    state: tideState,
+    isRising,
+    currentHeight,
+    minHeight,
+    maxHeight
+  };
+}
+
+// Analyze tide data and format a tide summary string
+function analyzeTideData(tideData, stationName, sampleTime) {
+  if (!tideData || tideData.length < 2) {
+    return null;
+  }
+
+  // Convert sample time to Date object with proper UTC handling
+  const sampleDate = parseDateUTC(sampleTime);
+
+  // Get detailed tide status
+  const tideStatus = determineTideStatus(tideData, sampleDate);
+
+  if (!tideStatus) {
+    return null;
+  }
+
+  // Add arrow icon based on tide direction
+  const directionIcon = tideStatus.isRising ? '⬆️' : '⬇️';
+
+  // Construct the tide summary with icon and station name
+  return `${tideStatus.state} – ${directionIcon} ${tideStatus.isRising ? 'Rising' : 'Falling'} (${stationName})`;
 }
 
 // Main function to enrich samples with tide data
@@ -232,14 +334,20 @@ async function enrichSamplesWithTideData(inputFilePath) {
           const isPM = /PM/i.test(sampleTime);
           
           // Get the date from the file name or a specified date
-          // For this example, we'll use a fixed date. Replace with your logic if needed.
           const dateFromFilename = path.basename(inputFilePath).split('.')[0]; // e.g., "2025-05-09"
           
-          const sampleDate = new Date(dateFromFilename);
-          sampleDate.setUTCHours(isPM && hours < 12 ? hours + 12 : hours);
-          sampleDate.setUTCMinutes(minutes);
-
+          // Use Date.UTC to create a date in UTC
+          const year = parseInt(dateFromFilename.split('-')[0], 10);
+          const month = parseInt(dateFromFilename.split('-')[1], 10) - 1; // 0-based months
+          const day = parseInt(dateFromFilename.split('-')[2], 10);
+          const adjustedHours = isPM && hours < 12 ? hours + 12 : hours;
+          
+          // Create a UTC Date directly to avoid timezone offsets
+          const sampleDate = new Date(Date.UTC(year, month, day, adjustedHours, minutes));
+          
+          // Format to consistent string format
           sampleTime = formatDate(sampleDate);
+          console.log(`Converted sample time "${hours}:${minutes}${isPM ? ' PM' : ''}" to "${sampleTime}" (UTC)`);
         }
       }
       
