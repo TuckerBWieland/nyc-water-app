@@ -14,8 +14,13 @@
       @toggle-map-mode="updateMapMode"
     />
 
-    <!-- Dark/Light Mode Toggle Button -->
-    <div class="absolute right-2 sm:right-4 top-4 z-40">
+    <!-- Dark/Light Mode Toggle Button - lower z-index (20) when header is expanded -->
+    <div
+      class="absolute right-2 sm:right-4 top-4 transition-opacity duration-300"
+      :class="[
+        isHeaderExpanded ? 'z-20 opacity-0' : 'z-40 opacity-100'
+      ]"
+    >
       <button
         :class="[
           'rounded-full p-2 shadow-md focus:outline-none transition-colors duration-300',

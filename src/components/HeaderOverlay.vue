@@ -21,7 +21,7 @@
             <p><span class="font-medium">Date of current view:</span> {{ formattedDate }}</p>
             <p><span class="font-medium">Total sites sampled:</span> {{ siteCount }}</p>
             <p><span class="font-medium">7-day rainfall:</span> 1.25 inches</p>
-            <p class="mt-2">
+            <div class="mt-2 flex justify-center gap-4 items-center">
               <a
                 href="https://docs.google.com/spreadsheets/d/12wNiul0QSymg3gO9OdwKkvAms-iHkz2i0hyxl6AP8eQ/edit?gid=0#gid=0"
                 target="_blank"
@@ -32,7 +32,20 @@
               >
                 Detailed Source Data
               </a>
-            </p>
+
+              <!-- Mode switch in header -->
+              <button
+                class="rounded-full p-2 shadow-md focus:outline-none transition-colors duration-300"
+                :class="isDarkMode
+                  ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  : 'bg-gray-100 text-gray-800 hover:bg-white'"
+                :title="isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'"
+                aria-label="Toggle dark mode"
+                @click="toggleMapMode"
+              >
+                <span class="text-lg">{{ isDarkMode ? '🌞' : '🌙' }}</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>

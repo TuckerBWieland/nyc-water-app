@@ -51,9 +51,10 @@
       </div>
 
       <!-- Rainfall text -->
-      <div class="text-center">
+      <div class="flex flex-col text-center">
         <span class="text-lg font-bold">{{ rainfall }}</span>
         <span class="text-xs">in</span>
+        <span class="text-xs text-gray-500 mt-1">{{ getRainfallLabel }}</span>
       </div>
     </div>
   </div>
@@ -77,16 +78,26 @@ const props = defineProps({
 // Generate a unique ID for the clip-path
 const _uid = ref(`rain-${Math.random().toString(36).substring(2, 9)}`);
 
-// Calculate fill height (0-160 based on rainfall 0-10)
+// Calculate fill height (0-160 based on rainfall 0-15)
 const fillHeight = computed(() => {
-  // Cap rainfall at 10 inches (100%)
-  const percentage = Math.min(props.rainfall / 10, 1);
+  // Cap rainfall at 15 inches (100%)
+  const percentage = Math.min(props.rainfall / 15, 1);
   return percentage * 160;
+});
+
+// Get rainfall category label
+const getRainfallLabel = computed(() => {
+  if (props.rainfall < 0.1) return 'Dry';
+  if (props.rainfall < 1) return 'Light';
+  if (props.rainfall < 3) return 'Moderate';
+  if (props.rainfall < 6) return 'Heavy';
+  if (props.rainfall < 10) return 'Very Heavy';
+  return 'Extreme';
 });
 </script>
 
 <style scoped>
 .rain-drop-legend {
-  min-width: 80px;
+  min-width: 90px;
 }
 </style>
