@@ -84,7 +84,7 @@ const updateMapMode = (darkMode) => {
 }
 
 onMounted(async () => {
-  const res = await fetch('/data/index.json')
+  const res = await fetch(`${import.meta.env.BASE_URL}data/index.json`)
   const index = await res.json()
   dates.value = index.dates
   selectedDate.value = index.latest
