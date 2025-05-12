@@ -5,8 +5,10 @@
       "type": "Feature",
       "properties": {
         "site": "Hudson River, JFK Marina (Yonkers)",
-        "mpn": 16.0,
-        "rainfall": 1.92
+        "mpn": 10,
+        "sampleTime": "9:02",
+        "rainfall": 2.1,
+        "tideSummary": "Low Tide – ⬇️ Falling (Kings Point)"
       },
       "geometry": {
         "type": "Point",
@@ -20,8 +22,10 @@
       "type": "Feature",
       "properties": {
         "site": "Hudson River, Yonkers Paddling and Rowing Club",
-        "mpn": 108.0,
-        "rainfall": 1.46
+        "mpn": 97,
+        "sampleTime": "1:14 PM",
+        "rainfall": 2.1,
+        "tideSummary": "High Tide – ⬆️ Rising (Kings Point)"
       },
       "geometry": {
         "type": "Point",
@@ -35,8 +39,10 @@
       "type": "Feature",
       "properties": {
         "site": "Saw Mill River, daylighted section (Yonkers)",
-        "mpn": 391.0,
-        "rainfall": 3.5
+        "mpn": 368,
+        "sampleTime": "11:20 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (Kings Point)"
       },
       "geometry": {
         "type": "Point",
@@ -50,8 +56,10 @@
       "type": "Feature",
       "properties": {
         "site": "Hudson River, Dyckman Marina",
-        "mpn": 6.0,
-        "rainfall": 1.84
+        "mpn": 10,
+        "sampleTime": "8:40 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Low Tide – ⬇️ Falling (Kings Point)"
       },
       "geometry": {
         "type": "Point",
@@ -65,8 +73,10 @@
       "type": "Feature",
       "properties": {
         "site": "Bronx Kill, west end",
-        "mpn": 7.0,
-        "rainfall": 2.15
+        "mpn": 20,
+        "sampleTime": "9:02 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Low Tide – ⬇️ Falling (Kings Point)"
       },
       "geometry": {
         "type": "Point",
@@ -80,8 +90,10 @@
       "type": "Feature",
       "properties": {
         "site": "Bronx Kill, east end",
-        "mpn": 33.0,
-        "rainfall": 3.17
+        "mpn": 10,
+        "sampleTime": "8:53 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Low Tide – ⬇️ Falling (Kings Point)"
       },
       "geometry": {
         "type": "Point",
@@ -95,8 +107,10 @@
       "type": "Feature",
       "properties": {
         "site": "Harlem River, Little Hell Gate",
-        "mpn": 17.0,
-        "rainfall": 0.79
+        "mpn": 41,
+        "sampleTime": "9:20 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -110,8 +124,10 @@
       "type": "Feature",
       "properties": {
         "site": "Harlem River, Water's Edge Garden Beach",
-        "mpn": 31.0,
-        "rainfall": 3.32
+        "mpn": 30,
+        "sampleTime": "9:26 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -125,8 +141,10 @@
       "type": "Feature",
       "properties": {
         "site": "Harlem River, Lincoln Avenue 2",
-        "mpn": 0,
-        "rainfall": 2.01
+        "mpn": 10,
+        "sampleTime": "9:47 AM",
+        "rainfall": 2.1,
+        "tideSummary": "High Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -140,8 +158,10 @@
       "type": "Feature",
       "properties": {
         "site": "Hudson River, Pier 99 Boat Launch",
-        "mpn": 21.0,
-        "rainfall": 1.69
+        "mpn": 41,
+        "sampleTime": "2:10 PM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬇️ Falling (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -155,8 +175,10 @@
       "type": "Feature",
       "properties": {
         "site": "Hudson River, Pier 96",
-        "mpn": 20.0,
-        "rainfall": 1.83
+        "mpn": 31,
+        "sampleTime": "9:43 AM",
+        "rainfall": 2.1,
+        "tideSummary": "High Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -170,8 +192,10 @@
       "type": "Feature",
       "properties": {
         "site": "Hudson River, Pier 84",
-        "mpn": 33.0,
-        "rainfall": 3.36
+        "mpn": 30,
+        "sampleTime": "9:33 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -185,8 +209,10 @@
       "type": "Feature",
       "properties": {
         "site": "Hudson River, Pier 66",
-        "mpn": 46.0,
-        "rainfall": 1.88
+        "mpn": 20,
+        "sampleTime": "10:16 AM",
+        "rainfall": 2.1,
+        "tideSummary": "High Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -200,8 +226,10 @@
       "type": "Feature",
       "properties": {
         "site": "Hudson River, Gansevoort Peninsula, North",
-        "mpn": 28.0,
-        "rainfall": 0.27
+        "mpn": 20,
+        "sampleTime": "10:46 AM",
+        "rainfall": 2.1,
+        "tideSummary": "High Tide – ⬇️ Falling (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -215,8 +243,10 @@
       "type": "Feature",
       "properties": {
         "site": "Hudson River, Gansevoort Peninsula, South",
-        "mpn": 36.0,
-        "rainfall": 1.62
+        "mpn": 10,
+        "sampleTime": "10:51 AM",
+        "rainfall": 2.1,
+        "tideSummary": "High Tide – ⬇️ Falling (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -230,8 +260,10 @@
       "type": "Feature",
       "properties": {
         "site": "Hudson River, Pier 40",
-        "mpn": 0,
-        "rainfall": 2.51
+        "mpn": 20,
+        "sampleTime": "10:21 AM",
+        "rainfall": 2.1,
+        "tideSummary": "High Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -245,8 +277,10 @@
       "type": "Feature",
       "properties": {
         "site": "Hudson River, Pier 26",
-        "mpn": 0,
-        "rainfall": 0.45
+        "mpn": 10,
+        "sampleTime": "10:31 AM",
+        "rainfall": 2.1,
+        "tideSummary": "High Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -260,8 +294,10 @@
       "type": "Feature",
       "properties": {
         "site": "Hudson River, Battery Park City, Rockefeller Park",
-        "mpn": 15.0,
-        "rainfall": 0.42
+        "mpn": 10,
+        "sampleTime": "9:33 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -275,8 +311,10 @@
       "type": "Feature",
       "properties": {
         "site": "Hudson River, Weehawken Cove, Hoboken NJ",
-        "mpn": 0,
-        "rainfall": 3.36
+        "mpn": 10,
+        "sampleTime": "9:33 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -290,8 +328,10 @@
       "type": "Feature",
       "properties": {
         "site": "Hudson River, Pier 13, Hoboken, NJ",
-        "mpn": 25.0,
-        "rainfall": 1.96
+        "mpn": 31,
+        "sampleTime": "9:27 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -305,8 +345,10 @@
       "type": "Feature",
       "properties": {
         "site": "Hudson River, Hoboken Cove Beach, Hoboken NJ",
-        "mpn": 126.0,
-        "rainfall": 2.29
+        "mpn": 146,
+        "sampleTime": "9:35 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -320,8 +362,10 @@
       "type": "Feature",
       "properties": {
         "site": "Hudson River, Frank Sinatra Park, Hoboken NJ",
-        "mpn": 13.0,
-        "rainfall": 1.82
+        "mpn": 10,
+        "sampleTime": "9:45 AM",
+        "rainfall": 2.1,
+        "tideSummary": "High Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -335,8 +379,10 @@
       "type": "Feature",
       "properties": {
         "site": "Flushing Bay, 28th Avenue (Big Rock Beach)",
-        "mpn": 19.0,
-        "rainfall": 2.28
+        "mpn": 28,
+        "sampleTime": "11:05 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (Kings Point)"
       },
       "geometry": {
         "type": "Point",
@@ -350,8 +396,10 @@
       "type": "Feature",
       "properties": {
         "site": "Flushing Bay, World's Fair Marina Boat Ramp",
-        "mpn": 2836.0,
-        "rainfall": 0.95
+        "mpn": 2809,
+        "sampleTime": "9:20 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Low Tide – ⬆️ Rising (Kings Point)"
       },
       "geometry": {
         "type": "Point",
@@ -365,8 +413,10 @@
       "type": "Feature",
       "properties": {
         "site": "Flushing Creek",
-        "mpn": 1520.0,
-        "rainfall": 0.42
+        "mpn": 1510,
+        "sampleTime": "8:55 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Low Tide – ⬇️ Falling (Kings Point)"
       },
       "geometry": {
         "type": "Point",
@@ -380,8 +430,10 @@
       "type": "Feature",
       "properties": {
         "site": "Meadow Lake (Flushing Meadows-Corona Park)",
-        "mpn": 4776.0,
-        "rainfall": 3.36
+        "mpn": 4786,
+        "sampleTime": "11:24 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (Kings Point)"
       },
       "geometry": {
         "type": "Point",
@@ -395,8 +447,10 @@
       "type": "Feature",
       "properties": {
         "site": "Little Neck Bay",
-        "mpn": 33.0,
-        "rainfall": 0.65
+        "mpn": 41,
+        "sampleTime": "8:45 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Low Tide – ⬇️ Falling (Kings Point)"
       },
       "geometry": {
         "type": "Point",
@@ -410,8 +464,10 @@
       "type": "Feature",
       "properties": {
         "site": "East River, E 90th St Ferry",
-        "mpn": 67.0,
-        "rainfall": 2.97
+        "mpn": 41,
+        "sampleTime": "9:04 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -425,8 +481,10 @@
       "type": "Feature",
       "properties": {
         "site": "East River, Hallets Cove",
-        "mpn": 34.0,
-        "rainfall": 1.98
+        "mpn": 51,
+        "sampleTime": "8:58 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -440,8 +498,10 @@
       "type": "Feature",
       "properties": {
         "site": "East River, Gantry State Park",
-        "mpn": 99.0,
-        "rainfall": 0.41
+        "mpn": 98,
+        "sampleTime": "11:17 AM",
+        "rainfall": 2.1,
+        "tideSummary": "High Tide – ⬇️ Falling (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -455,8 +515,10 @@
       "type": "Feature",
       "properties": {
         "site": "Newtown Creek, Second Street Kayak Launch",
-        "mpn": 9158.0,
-        "rainfall": 2.35
+        "mpn": 9139,
+        "sampleTime": "10:57 AM",
+        "rainfall": 2.1,
+        "tideSummary": "High Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -470,8 +532,10 @@
       "type": "Feature",
       "properties": {
         "site": "Newtown Creek, Pulaski Bridge, Queens",
-        "mpn": 12.0,
-        "rainfall": 3.5
+        "mpn": 20,
+        "sampleTime": "7:08 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -485,8 +549,10 @@
       "type": "Feature",
       "properties": {
         "site": "Newtown Creek, Dutch Kills (head)",
-        "mpn": 342.8,
-        "rainfall": 3.14
+        "mpn": 344.8,
+        "sampleTime": "6:57 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -500,8 +566,10 @@
       "type": "Feature",
       "properties": {
         "site": "Newtown Creek, Apollo Street",
-        "mpn": 37.0,
-        "rainfall": 3.42
+        "mpn": 20,
+        "sampleTime": "9:47 AM",
+        "rainfall": 2.1,
+        "tideSummary": "High Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -515,8 +583,10 @@
       "type": "Feature",
       "properties": {
         "site": "Newtown Creek, East Branch",
-        "mpn": 236.0,
-        "rainfall": 1.84
+        "mpn": 259,
+        "sampleTime": "9:18 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -530,8 +600,10 @@
       "type": "Feature",
       "properties": {
         "site": "Newtown Creek, English Kills",
-        "mpn": 208.0,
-        "rainfall": 0.65
+        "mpn": 214,
+        "sampleTime": "6:54 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -545,8 +617,10 @@
       "type": "Feature",
       "properties": {
         "site": "East River, Stuy Cove Park",
-        "mpn": 0,
-        "rainfall": 3.05
+        "mpn": 10,
+        "sampleTime": "9:45 AM",
+        "rainfall": 2.1,
+        "tideSummary": "High Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -560,8 +634,10 @@
       "type": "Feature",
       "properties": {
         "site": "East River, India Street",
-        "mpn": 0,
-        "rainfall": 1.18
+        "mpn": 20,
+        "sampleTime": "8:08 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -575,8 +651,10 @@
       "type": "Feature",
       "properties": {
         "site": "East River, WNYC Transmitter Park",
-        "mpn": 52.0,
-        "rainfall": 1.11
+        "mpn": 41,
+        "sampleTime": "6:52 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -590,8 +668,10 @@
       "type": "Feature",
       "properties": {
         "site": "East River, Marsha P Johnson State Park",
-        "mpn": 53.0,
-        "rainfall": 0.65
+        "mpn": 52,
+        "sampleTime": "9:50 AM",
+        "rainfall": 2.1,
+        "tideSummary": "High Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -605,8 +685,10 @@
       "type": "Feature",
       "properties": {
         "site": "Bushwick Inlet",
-        "mpn": 97.0,
-        "rainfall": 1.0
+        "mpn": 74,
+        "sampleTime": "8:45 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -620,8 +702,10 @@
       "type": "Feature",
       "properties": {
         "site": "East River, Bushwick Inlet Park Beach",
-        "mpn": 87.0,
-        "rainfall": 2.28
+        "mpn": 97,
+        "sampleTime": "8:31 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -635,8 +719,10 @@
       "type": "Feature",
       "properties": {
         "site": "East River, North 3rd Street",
-        "mpn": 94.0,
-        "rainfall": 1.78
+        "mpn": 119,
+        "sampleTime": "10:01 AM",
+        "rainfall": 2.1,
+        "tideSummary": "High Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -650,8 +736,10 @@
       "type": "Feature",
       "properties": {
         "site": "East River, Grand Ferry Park",
-        "mpn": 0,
-        "rainfall": 3.4
+        "mpn": 20,
+        "sampleTime": "10:15 AM",
+        "rainfall": 2.1,
+        "tideSummary": "High Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -665,8 +753,10 @@
       "type": "Feature",
       "properties": {
         "site": "East River, South 5th Street/Domino Park",
-        "mpn": 11.0,
-        "rainfall": 2.65
+        "mpn": 31,
+        "sampleTime": "8:19 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -680,8 +770,10 @@
       "type": "Feature",
       "properties": {
         "site": "East River, South 8th St",
-        "mpn": 104.0,
-        "rainfall": 1.5
+        "mpn": 74,
+        "sampleTime": "7:33 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -695,8 +787,10 @@
       "type": "Feature",
       "properties": {
         "site": "Wallabout Channel (Brooklyn Navy Yard)",
-        "mpn": 133.0,
-        "rainfall": 3.24
+        "mpn": 130,
+        "sampleTime": "9:37 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -710,8 +804,10 @@
       "type": "Feature",
       "properties": {
         "site": "East River, Brooklyn Bridge Beach (Manhattan)",
-        "mpn": 63.0,
-        "rainfall": 2.41
+        "mpn": 84,
+        "sampleTime": "10:50 AM",
+        "rainfall": 2.1,
+        "tideSummary": "High Tide – ⬇️ Falling (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -725,8 +821,10 @@
       "type": "Feature",
       "properties": {
         "site": "East River, Dumbo Cove",
-        "mpn": 51.0,
-        "rainfall": 1.53
+        "mpn": 74,
+        "sampleTime": "8:15 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -740,8 +838,10 @@
       "type": "Feature",
       "properties": {
         "site": "East River, Pier 2 Kayak Dock (Brooklyn Bridge Park)",
-        "mpn": 95.0,
-        "rainfall": 2.09
+        "mpn": 85,
+        "sampleTime": "9:50 AM",
+        "rainfall": 2.1,
+        "tideSummary": "High Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -755,8 +855,10 @@
       "type": "Feature",
       "properties": {
         "site": "East River, Pier 4 Beach (Brooklyn Bridge Park)",
-        "mpn": 32.0,
-        "rainfall": 1.46
+        "mpn": 21,
+        "sampleTime": "8:12 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -770,8 +872,10 @@
       "type": "Feature",
       "properties": {
         "site": "Buttermilk Channel, Pier 101 (Governors Island)",
-        "mpn": 69.0,
-        "rainfall": 1.7
+        "mpn": 41,
+        "sampleTime": "8:33 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -785,8 +889,10 @@
       "type": "Feature",
       "properties": {
         "site": "Buttermilk Channel, Valentino Pier",
-        "mpn": 18.0,
-        "rainfall": 0.95
+        "mpn": 10,
+        "sampleTime": "9:23 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -800,8 +906,10 @@
       "type": "Feature",
       "properties": {
         "site": "Gowanus Canal, Second Street Sponge Park",
-        "mpn": 148.0,
-        "rainfall": 3.07
+        "mpn": 171,
+        "sampleTime": "7:37 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -815,8 +923,10 @@
       "type": "Feature",
       "properties": {
         "site": "Upper Harbor, Bush Terminal Park (Inner Lagoon)",
-        "mpn": 40.0,
-        "rainfall": 0.8
+        "mpn": 63,
+        "sampleTime": "7:00 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -830,8 +940,10 @@
       "type": "Feature",
       "properties": {
         "site": "Upper Harbor, Bush Terminal Park (North Embayment)",
-        "mpn": 18.0,
-        "rainfall": 0.29
+        "mpn": 10,
+        "sampleTime": "7:05 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -845,8 +957,10 @@
       "type": "Feature",
       "properties": {
         "site": "Prospect Park Lake",
-        "mpn": 281.0,
-        "rainfall": 1.91
+        "mpn": 275,
+        "sampleTime": "7:05 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -860,8 +974,10 @@
       "type": "Feature",
       "properties": {
         "site": "Coney Island Creek, Kaiser Park",
-        "mpn": 24.0,
-        "rainfall": 3.27
+        "mpn": 41,
+        "sampleTime": "7:20 AM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (Sandy Hook)"
       },
       "geometry": {
         "type": "Point",
@@ -875,8 +991,10 @@
       "type": "Feature",
       "properties": {
         "site": "Gravesend Bay, Calvert Vaux Cove",
-        "mpn": 5.0,
-        "rainfall": 3.02
+        "mpn": 10,
+        "sampleTime": "11:25 AM",
+        "rainfall": 2.1,
+        "tideSummary": "High Tide – ⬇️ Falling (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -890,8 +1008,10 @@
       "type": "Feature",
       "properties": {
         "site": "Gravesend Bay, OH-015",
-        "mpn": 85.0,
-        "rainfall": 1.02
+        "mpn": 74,
+        "sampleTime": "11:55 AM",
+        "rainfall": 2.1,
+        "tideSummary": "High Tide – ⬇️ Falling (The Battery)"
       },
       "geometry": {
         "type": "Point",
@@ -905,8 +1025,10 @@
       "type": "Feature",
       "properties": {
         "site": "Arthur Kill, Conference House Park",
-        "mpn": 0,
-        "rainfall": 0.1
+        "mpn": 10,
+        "sampleTime": "3:00 PM",
+        "rainfall": 2.1,
+        "tideSummary": "Mid Tide – ⬇️ Falling (Sandy Hook)"
       },
       "geometry": {
         "type": "Point",
