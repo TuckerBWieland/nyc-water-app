@@ -257,6 +257,9 @@ const updateMap = data => {
       // Create water bottle icon
       const bottleIcon = createWaterBottleIcon(mpn);
 
+      // Update the popupAnchor to increase distance from the icon
+      bottleIcon.options.popupAnchor = [0, -40];
+
       // Determine quality message
       let qualityColor, qualityMessage;
       const mpnValue = Number(mpn);
@@ -410,7 +413,7 @@ onUnmounted(() => {
 }
 
 .leaflet-popup-content {
-  margin: 14px 16px;
+  margin: 18px 20px;
   font-family: inherit;
   line-height: 1.5;
   min-width: 180px;
@@ -438,7 +441,7 @@ onUnmounted(() => {
 
 /* Site popup styling */
 .site-popup {
-  padding: 2px 0;
+  padding: 4px 2px;
 }
 
 .site-popup .site-name {
@@ -471,11 +474,11 @@ onUnmounted(() => {
 
 /* Ensure consistent spacing between popup elements */
 .site-popup .mt-1 {
-  margin-top: 0.25rem;
+  margin-top: 0.375rem;
 }
 
 .site-popup .mt-2 {
-  margin-top: 0.5rem;
+  margin-top: 0.75rem;
 }
 
 /* Dark mode styles (applied via JS) */

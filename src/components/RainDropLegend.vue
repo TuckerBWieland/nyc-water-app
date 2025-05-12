@@ -28,32 +28,17 @@
 
           <!-- Clip path for water level -->
           <clipPath :id="'rainClip' + _uid">
-            <rect
-              x="0"
-              y="0"
-              width="100"
-              height="160"
-              :transform="`translate(0, ${160 - fillHeight})`"
-              class="transform transition-transform duration-1000 ease-out"
-            />
+            <rect x="0" :y="160 - fillHeight" width="100" :height="fillHeight" />
           </clipPath>
-
-          <!-- Highlight/shine effect -->
-          <path
-            d="M25,60 Q50,95 25,130"
-            stroke="white"
-            stroke-width="4"
-            stroke-linecap="round"
-            fill="none"
-            opacity="0.25"
-          />
         </svg>
       </div>
 
       <!-- Rainfall text -->
-      <div class="flex flex-col text-center">
-        <span class="text-lg font-bold">{{ rainfall }}</span>
-        <span class="text-xs">in</span>
+      <div class="flex flex-col items-center">
+        <div class="flex items-baseline gap-1 text-lg font-bold">
+          <span>{{ rainfall.toFixed(2) }}</span
+          ><span class="text-xs">in</span>
+        </div>
         <span class="text-xs text-gray-500 mt-1">{{ getRainfallLabel }}</span>
       </div>
     </div>
@@ -63,7 +48,6 @@
 <script setup>
 import { computed, ref } from 'vue';
 
-// Props
 const props = defineProps({
   rainfall: {
     type: Number,
@@ -75,17 +59,14 @@ const props = defineProps({
   },
 });
 
-// Generate a unique ID for the clip-path
 const _uid = ref(`rain-${Math.random().toString(36).substring(2, 9)}`);
 
-// Calculate fill height (0-160 based on rainfall 0-15)
+// Clip fill height: max 160px for 15 inches
 const fillHeight = computed(() => {
-  // Cap rainfall at 15 inches (100%)
   const percentage = Math.min(props.rainfall / 15, 1);
   return percentage * 160;
 });
 
-// Get rainfall category label
 const getRainfallLabel = computed(() => {
   if (props.rainfall < 0.1) return 'Dry';
   if (props.rainfall < 1) return 'Light';

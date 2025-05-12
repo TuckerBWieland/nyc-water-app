@@ -17,9 +17,7 @@
     <!-- Dark/Light Mode Toggle Button - lower z-index (20) when header is expanded -->
     <div
       class="absolute right-2 sm:right-4 top-4 transition-opacity duration-300"
-      :class="[
-        isHeaderExpanded ? 'z-20 opacity-0' : 'z-40 opacity-100'
-      ]"
+      :class="[isHeaderExpanded ? 'z-20 opacity-0' : 'z-40 opacity-100']"
     >
       <button
         :class="[

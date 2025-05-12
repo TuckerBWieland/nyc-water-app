@@ -36,9 +36,11 @@
               <!-- Mode switch in header -->
               <button
                 class="rounded-full p-2 shadow-md focus:outline-none transition-colors duration-300"
-                :class="isDarkMode
-                  ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                  : 'bg-gray-100 text-gray-800 hover:bg-white'"
+                :class="
+                  isDarkMode
+                    ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                    : 'bg-gray-100 text-gray-800 hover:bg-white'
+                "
                 :title="isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'"
                 aria-label="Toggle dark mode"
                 @click="toggleMapMode"
