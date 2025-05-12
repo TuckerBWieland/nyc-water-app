@@ -28,7 +28,7 @@ function checkNodeExists() {
     execSync('node --version', { stdio: 'ignore' });
     return true;
   } catch (error) {
-    console.error('Error: Node.js is not available in the PATH.');
+    console.error('Error: Node.js is not available in the PATH.', error.message);
     return false;
   }
 }
