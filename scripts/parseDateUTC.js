@@ -21,8 +21,3 @@ function parseDateUTC(dateString) {
   // Default to standard Date constructor for all other formats
   return new Date(dateString);
 }
-
-console.log('Testing parseDateUTC function');
-console.log('Original date: 2025-05-09 08:30');
-console.log('Parsed as UTC:', parseDateUTC('2025-05-09 08:30'));
-console.log('Regular Date constructor:', new Date('2025-05-09 08:30'));

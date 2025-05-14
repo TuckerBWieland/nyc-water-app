@@ -33,7 +33,6 @@ function checkNodeExists() {
     execSync('node --version', { stdio: 'ignore' });
     return true;
   } catch (error) {
-    console.error('Error: Node.js is not available in the PATH.', error.message);
     return false;
   }
 }
@@ -41,7 +40,6 @@ function checkNodeExists() {
 // Function to check if the enrichment script exists
 function checkEnrichmentScriptExists() {
   if (!fs.existsSync(ENRICHMENT_SCRIPT)) {
-    console.error(`Error: Enrichment script not found at ${ENRICHMENT_SCRIPT}`);
     return false;
   }
   return true;
@@ -52,7 +50,6 @@ function getGeojsonFiles() {
   try {
     // Check if data directory exists
     if (!fs.existsSync(DATA_DIR)) {
-      console.error(`Error: Data directory not found at ${DATA_DIR}`);
       return [];
     }
 
@@ -62,7 +59,6 @@ function getGeojsonFiles() {
     // Filter to only include .geojson files
     return files.filter(file => file.endsWith('.geojson') && !file.endsWith('.enriched.geojson'));
   } catch (error) {
-    console.error('Error reading data directory:', error);
     return [];
   }
 }
@@ -75,7 +71,6 @@ function enrichedVersionExists(filename) {
 
 // Main function to enrich all GeoJSON files
 function enrichAllGeoJsonFiles() {
-  console.log('Starting GeoJSON enrichment process...');
 
   // Check prerequisites
   if (!checkNodeExists() || !checkEnrichmentScriptExists()) {
@@ -86,11 +81,9 @@ function enrichAllGeoJsonFiles() {
   const geojsonFiles = getGeojsonFiles();
 
   if (geojsonFiles.length === 0) {
-    console.log('No GeoJSON files found to process.');
     return;
   }
 
-  console.log(`Found ${geojsonFiles.length} GeoJSON files to process.`);
 
   // Process each file
   let processedCount = 0;
@@ -101,12 +94,10 @@ function enrichAllGeoJsonFiles() {
 
     // Check if enriched version already exists
     if (enrichedVersionExists(file)) {
-      console.log(`Skipping ${file} - enriched version already exists.`);
       skippedCount++;
       continue;
     }
 
-    console.log(`\nProcessing ${file}...`);
 
     try {
       // Run the enrichment script on the file
@@ -116,9 +107,7 @@ function enrichAllGeoJsonFiles() {
       });
 
       processedCount++;
-      console.log(`Successfully processed ${file}.`);
     } catch (error) {
-      console.error(`Error processing ${file}:`, error.message);
     }
   }
 

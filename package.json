@@ -16,6 +16,7 @@
   "dependencies": {
     "leaflet": "^1.9.4",
     "node-fetch": "^3.3.2",
+    "posthog-js": "^1.242.0",
     "vue": "^3.3.4"
   },
   "devDependencies": {

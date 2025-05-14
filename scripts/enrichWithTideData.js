@@ -74,29 +74,23 @@ async function findNearestTideStation(lat, lon) {
     const data = await response.json();
 
     if (!data.stations) {
-      console.error('No stations data available from NOAA API');
       return null;
     }
 
     // First try with a 10km radius
     const stationWithin10km = findNearestStationWithinRadius(data.stations, lat, lon, 10);
     if (stationWithin10km) {
-      console.log(`Found station within 10km radius: ${stationWithin10km.name}`);
       return stationWithin10km;
     }
 
     // If no station within 10km, try with a 25km radius
-    console.log('No stations within 10km, expanding search to 25km...');
     const stationWithin25km = findNearestStationWithinRadius(data.stations, lat, lon, 25);
     if (stationWithin25km) {
-      console.log(`Found station within extended 25km radius: ${stationWithin25km.name}`);
       return stationWithin25km;
     }
 
-    console.log('No tide stations found within 25km radius.');
     return null;
   } catch (error) {
-    console.error('Error fetching tide stations:', error);
     return null;
   }
 }
@@ -141,7 +135,6 @@ async function getTideData(stationId, sampleTime) {
     const end = formatDate(endDate);
 
     // Log the time window being used
-    console.log(`Fetching tide data from ${begin} to ${end} (3-hour window)`);
 
     // NOAA CO-OPS API endpoint for water level data - ensure URL encoding for date parameters
     const url = `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?station=${stationId}&product=water_level&datum=MLLW&time_zone=GMT&units=english&format=json&date_time=true&begin_date=${encodeURIComponent(
@@ -152,18 +145,15 @@ async function getTideData(stationId, sampleTime) {
     const data = await response.json();
 
     if (data.error) {
-      console.error(`Error from NOAA API for station ${stationId}:`, data.error);
       return null;
     }
 
     // Log number of data points received
     if (data.data && Array.isArray(data.data)) {
-      console.log(`Received ${data.data.length} tide data points from NOAA API`);
     }
 
     return data.data || [];
   } catch (error) {
-    console.error(`Error fetching tide data for station ${stationId}:`, error);
     return null;
   }
 }
@@ -177,7 +167,6 @@ async function getTideData(stationId, sampleTime) {
 function determineTideStatus(tideData, sampleDate) {
   // Ensure we have sufficient tide data
   if (!tideData || tideData.length < 4) {
-    console.log('Insufficient tide data for analysis (need at least 4 data points)');
     return null;
   }
 
@@ -203,7 +192,6 @@ function determineTideStatus(tideData, sampleDate) {
 
   // Ensure we have enough points before and after
   if (closestIndex < 1 || closestIndex >= readings.length - 1) {
-    console.log('Cannot determine tide trend - sample time too close to edge of data window');
     return null;
   }
 
@@ -233,7 +221,6 @@ function determineTideStatus(tideData, sampleDate) {
   }
 
   if (pointsBefore.length === 0 || pointsAfter.length === 0) {
-    console.log('Cannot find surrounding tide data points for trend analysis');
     return null;
   }
 
@@ -313,7 +300,6 @@ async function enrichSamplesWithTideData(inputFilePath) {
     const isGeoJSON = sampleData.type === 'FeatureCollection' && Array.isArray(sampleData.features);
     const samples = isGeoJSON ? sampleData.features : sampleData;
 
-    console.log(`Processing ${samples.length} samples...`);
 
     // Process each sample
     let processedCount = 0;
@@ -372,34 +358,23 @@ async function enrichSamplesWithTideData(inputFilePath) {
       }
 
       if (!lat || !lon || !sampleTime) {
-        console.warn(
-          `Sample #${processedCount} doesn't have valid coordinates or timestamp, skipping...`
-        );
         continue;
       }
 
-      console.log(`Processing sample #${processedCount}: ${lat}, ${lon} at ${sampleTime}`);
 
       // Find the nearest tide station
       const nearestStation = await findNearestTideStation(lat, lon);
 
       if (!nearestStation) {
-        console.log(
-          `WARNING: No tide station found within 25km of ${lat}, ${lon} - skipping sample`
-        );
         properties.tideSummary = null;
         continue;
       }
 
-      console.log(
-        `SUCCESS: Using tide station: ${nearestStation.name} (${nearestStation.distance}km away)`
-      );
 
       // Get tide data for the station
       const tideData = await getTideData(nearestStation.id, sampleTime);
 
       if (!tideData) {
-        console.log(`No tide data available for station ${nearestStation.id}`);
         properties.tideSummary = null;
         continue;
       }
@@ -410,21 +385,14 @@ async function enrichSamplesWithTideData(inputFilePath) {
       if (tideSummary) {
         properties.tideSummary = tideSummary;
         enrichedCount++;
-        console.log(
-          `SUCCESS: Sample enriched with tide data: ${tideSummary} from ${nearestStation.name}`
-        );
       } else {
         properties.tideSummary = null;
-        console.log(`WARNING: Could not determine tide status from station ${nearestStation.name}`);
       }
 
       // Add a small delay to avoid hitting API rate limits
       await new Promise(resolve => setTimeout(resolve, 100));
     }
 
-    console.log(
-      `\nProcessing complete: ${enrichedCount} of ${processedCount} samples enriched with tide data.`
-    );
 
     // Write the updated data to output file
     const outputFilePath = inputFilePath
@@ -432,9 +400,7 @@ async function enrichSamplesWithTideData(inputFilePath) {
       .replace('.geojson', '.enriched.geojson');
     fs.writeFileSync(outputFilePath, JSON.stringify(sampleData, null, 2), 'utf8');
 
-    console.log(`\nEnriched data saved to: ${outputFilePath}`);
   } catch (error) {
-    console.error('Error processing samples:', error);
   }
 }
 
@@ -444,7 +410,6 @@ const __dirname = path.dirname(__filename);
 
 // Check for input file argument
 if (process.argv.length < 3) {
-  console.log('Usage: node enrichWithTideData.js <path-to-sample-file.json>');
   process.exit(1);
 }
 
@@ -452,5 +417,5 @@ const inputFilePath = process.argv[2];
 
 // Execute the main function
 enrichSamplesWithTideData(inputFilePath)
-  .then(() => console.log('Processing completed successfully.'))
-  .catch(error => console.error('Error during processing:', error));
+  .then(() => {})
+  .catch(error => {});

@@ -9,6 +9,7 @@
 import { ref, onMounted, watch, onUnmounted, defineEmits } from 'vue';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { captureEvent } from '../posthog';
 
 // Function to get color based on MPN value
 const getColorForMPN = mpn => {
@@ -117,8 +118,11 @@ const updatePopupStyles = () => {
 // Watch for changes in dark mode setting
 watch(
   () => props.isDarkMode,
-  () => {
+  (newMode) => {
     updateTileLayer();
+    captureEvent('theme_changed', {
+      mode: newMode ? 'dark' : 'light'
+    });
   }
 );
 
@@ -143,18 +147,18 @@ watch(mapData, newData => {
 // Methods
 const loadMapData = async date => {
   try {
-    console.log(`Loading data for date: ${date}`);
+    // Track date selection
+    captureEvent('date_selected', { date });
 
     // Always use the non-enriched version first to ensure we get data
     const response = await fetch(`${import.meta.env.BASE_URL}data/${date}.geojson`);
     if (!response.ok) {
-      console.error(`Error: Failed to fetch ${date}.geojson, status: ${response.status}`);
+      captureEvent('data_load_failed', { date });
       return;
     }
 
     try {
       mapData.value = await response.json();
-      console.log(`Successfully loaded basic data with ${mapData.value.features.length} features`);
 
       // Update parent component with the site count and sample data
       if (mapData.value && mapData.value.features) {
@@ -175,43 +179,27 @@ const loadMapData = async date => {
         );
         if (enrichedResponse.ok) {
           const enrichedData = await enrichedResponse.json();
-          console.log(
-            `Successfully loaded enriched data with ${enrichedData.features.length} features and tide info`
-          );
           mapData.value = enrichedData;
         }
       } catch (enrichedError) {
-        console.log(`Using regular data (enriched not available): ${enrichedError.message}`);
       }
     } catch (jsonError) {
-      console.error('Error parsing JSON:', jsonError);
     }
   } catch (error) {
-    console.error('Error loading map data:', error);
   }
 };
 
 const updateMap = data => {
-  console.log(
-    'Updating map with data:',
-    data.type,
-    'containing',
-    data.features?.length || 0,
-    'features'
-  );
 
   if (!map.value) {
-    console.error('Map not initialized!');
     return;
   }
 
   // Store current view state before updating markers
   let previousCenter = map.value.getCenter();
   let previousZoom = map.value.getZoom();
-  console.log('Previous map center:', previousCenter, 'zoom:', previousZoom);
 
   // Clear existing markers
-  console.log('Clearing existing markers:', markers.value.length);
   for (const marker of markers.value) {
     marker.remove();
   }
@@ -219,11 +207,9 @@ const updateMap = data => {
 
   // Add new markers
   if (!data.features || data.features.length === 0) {
-    console.warn('No features found in data!');
     return;
   }
 
-  console.log(`Adding ${data.features.length} features to map`);
   let markersAdded = 0;
 
   for (const feature of data.features) {
@@ -233,12 +219,10 @@ const updateMap = data => {
         !feature.geometry.coordinates ||
         feature.geometry.coordinates.length < 2
       ) {
-        console.warn('Invalid feature geometry:', feature);
         continue;
       }
 
       if (!feature.properties || !feature.properties.mpn) {
-        console.warn('Invalid feature properties:', feature);
         continue;
       }
 
@@ -247,12 +231,10 @@ const updateMap = data => {
       const lng = coords[0];
 
       if (isNaN(lat) || isNaN(lng)) {
-        console.warn(`Invalid coordinates: [${lat}, ${lng}]`);
         continue;
       }
 
       const { site, mpn, sampleTime } = feature.properties;
-      console.log(`Creating marker for ${site} at [${lat}, ${lng}]`);
 
       // Create water bottle icon
       const bottleIcon = createWaterBottleIcon(mpn);
@@ -326,47 +308,63 @@ const updateMap = data => {
         })
         .addTo(map.value);
 
+      // Add popup open event tracking
+      marker.on('popupopen', () => {
+        captureEvent('marker_clicked', {
+          site: site,
+          mpn: mpn
+        });
+      });
+
       markers.value.push(marker);
       markersAdded++;
     } catch (error) {
-      console.error('Error adding marker:', error);
     }
   }
 
-  console.log(`Successfully added ${markersAdded} markers to the map`);
 
   // Handle map positioning
   if (markers.value.length > 0) {
     if (!hasAutoFitted.value) {
-      console.log('First load - fitting map to bounds');
       // First load: auto-fit to bounds
       const group = L.featureGroup(markers.value);
       map.value.fitBounds(group.getBounds(), { padding: [30, 30] });
       hasAutoFitted.value = true;
     } else {
-      console.log('Subsequent load - maintaining previous view');
       // Subsequent loads: maintain previous view
       map.value.setView(previousCenter, previousZoom);
     }
   } else {
-    console.warn('No markers were created on the map!');
   }
 };
 
 onMounted(() => {
-  console.log('Initializing map');
   // Initialize map
   map.value = L.map('map').setView([40.7128, -74.006], 12);
 
   // Initialize tile layer using our updateTileLayer function
   updateTileLayer();
 
+  // Add map interaction analytics
+  map.value.on('zoomend', () => {
+    captureEvent('map_zoomed', {
+      zoom_level: map.value.getZoom()
+    });
+  });
+
+  map.value.on('moveend', () => {
+    const center = map.value.getCenter();
+    captureEvent('map_panned', {
+      lat: center.lat.toFixed(4),
+      lng: center.lng.toFixed(4)
+    });
+  });
+
   // Remove zoom control
   map.value.removeControl(map.value.zoomControl);
 
   // Load map data if we have a selected date
   if (props.selectedDate) {
-    console.log(`Initial load for date: ${props.selectedDate}`);
     loadMapData(props.selectedDate);
   }
 });
