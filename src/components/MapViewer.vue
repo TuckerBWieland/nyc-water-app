@@ -9,7 +9,7 @@
 import { ref, onMounted, watch, onUnmounted, defineEmits } from 'vue';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { captureEvent } from '../posthog';
+import { track, EVENTS } from '../lib/analytics';
 
 // Function to get color based on MPN value
 const getColorForMPN = mpn => {
@@ -120,7 +120,7 @@ watch(
   () => props.isDarkMode,
   (newMode) => {
     updateTileLayer();
-    captureEvent('theme_changed', {
+    track(EVENTS.CHANGED_THEME, {
       mode: newMode ? 'dark' : 'light'
     });
   }
@@ -148,12 +148,12 @@ watch(mapData, newData => {
 const loadMapData = async date => {
   try {
     // Track date selection
-    captureEvent('date_selected', { date });
+    track(EVENTS.SELECTED_DATE, { date });
 
     // Always use the non-enriched version first to ensure we get data
     const response = await fetch(`${import.meta.env.BASE_URL}data/${date}.geojson`);
     if (!response.ok) {
-      captureEvent('data_load_failed', { date });
+      track(EVENTS.FAILED_LOADING_DATA, { date });
       return;
     }
 
@@ -310,7 +310,7 @@ const updateMap = data => {
 
       // Add popup open event tracking
       marker.on('popupopen', () => {
-        captureEvent('marker_clicked', {
+        track(EVENTS.VIEWED_SAMPLE_PIN, {
           site: site,
           mpn: mpn
         });
@@ -347,14 +347,14 @@ onMounted(() => {
 
   // Add map interaction analytics
   map.value.on('zoomend', () => {
-    captureEvent('map_zoomed', {
+    track(EVENTS.ZOOMED_MAP, {
       zoom_level: map.value.getZoom()
     });
   });
 
   map.value.on('moveend', () => {
     const center = map.value.getCenter();
-    captureEvent('map_panned', {
+    track(EVENTS.PANNED_MAP, {
       lat: center.lat.toFixed(4),
       lng: center.lng.toFixed(4)
     });
