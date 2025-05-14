@@ -7,7 +7,7 @@ const initPostHog = () => {
 
   if (isProduction) {
     // Initialize PostHog with your project API key
-    posthog.init('YOUR_POSTHOG_API_KEY', {
+    posthog.init('phc_w0axXDyN3zCal0qUUsV83NnyCoKsI9AKHXR59aat3tP', {
       api_host: 'https://app.posthog.com',
       // Disable capturing by default
       capture_pageview: false,
