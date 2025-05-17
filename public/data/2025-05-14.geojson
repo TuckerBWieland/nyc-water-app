@@ -7,74 +7,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -73.89769,
-          40.956632
-        ]
-      },
-      "properties": {
-        "Site Name": "Hudson River, JFK Marina, Yonkers",
-        "Sample Time": "",
-        "MPN": "",
-        "date": "2025-05-14"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": 1,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -73.903492,
-          40.937939
-        ]
-      },
-      "properties": {
-        "Site Name": "Hudson River, Yonkers Paddling and Rowing Club",
-        "Sample Time": "",
-        "MPN": "",
-        "date": "2025-05-14"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": 2,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -73.901795,
-          40.935655
-        ]
-      },
-      "properties": {
-        "Site Name": "Saw Mill River, daylighted section, Yonkers",
-        "Sample Time": "",
-        "MPN": "",
-        "date": "2025-05-14"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": 3,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -73.9319,
-          40.8689
-        ]
-      },
-      "properties": {
-        "Site Name": "Hudson River, Dyckman Marina",
-        "Sample Time": "",
-        "MPN": "",
-        "date": "2025-05-14"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": 4,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           -73.882821,
           40.832385
         ]
@@ -88,7 +20,7 @@
     },
     {
       "type": "Feature",
-      "id": 5,
+      "id": 1,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -105,7 +37,7 @@
     },
     {
       "type": "Feature",
-      "id": 6,
+      "id": 2,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -122,7 +54,7 @@
     },
     {
       "type": "Feature",
-      "id": 7,
+      "id": 3,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -139,7 +71,7 @@
     },
     {
       "type": "Feature",
-      "id": 8,
+      "id": 4,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -156,7 +88,7 @@
     },
     {
       "type": "Feature",
-      "id": 9,
+      "id": 5,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -173,7 +105,7 @@
     },
     {
       "type": "Feature",
-      "id": 10,
+      "id": 6,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -190,7 +122,7 @@
     },
     {
       "type": "Feature",
-      "id": 11,
+      "id": 7,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -207,7 +139,7 @@
     },
     {
       "type": "Feature",
-      "id": 12,
+      "id": 8,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -224,7 +156,7 @@
     },
     {
       "type": "Feature",
-      "id": 13,
+      "id": 9,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -241,58 +173,7 @@
     },
     {
       "type": "Feature",
-      "id": 14,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -73.993778,
-          40.773522
-        ]
-      },
-      "properties": {
-        "Site Name": "Hudson River, Pier 99 Boat Launch",
-        "Sample Time": "",
-        "MPN": "",
-        "date": "2025-05-14"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": 15,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -73.995991,
-          40.771322
-        ]
-      },
-      "properties": {
-        "Site Name": "Hudson River, Pier 96",
-        "Sample Time": "",
-        "MPN": "",
-        "date": "2025-05-14"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": 16,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -74.002129,
-          40.764275
-        ]
-      },
-      "properties": {
-        "Site Name": "Hudson River, Pier 84",
-        "Sample Time": "",
-        "MPN": "",
-        "date": "2025-05-14"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": 17,
+      "id": 10,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -309,7 +190,7 @@
     },
     {
       "type": "Feature",
-      "id": 18,
+      "id": 11,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -326,7 +207,7 @@
     },
     {
       "type": "Feature",
-      "id": 19,
+      "id": 12,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -343,7 +224,7 @@
     },
     {
       "type": "Feature",
-      "id": 20,
+      "id": 13,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -360,7 +241,7 @@
     },
     {
       "type": "Feature",
-      "id": 21,
+      "id": 14,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -377,7 +258,7 @@
     },
     {
       "type": "Feature",
-      "id": 22,
+      "id": 15,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -394,7 +275,7 @@
     },
     {
       "type": "Feature",
-      "id": 23,
+      "id": 16,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -411,7 +292,7 @@
     },
     {
       "type": "Feature",
-      "id": 24,
+      "id": 17,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -428,7 +309,7 @@
     },
     {
       "type": "Feature",
-      "id": 25,
+      "id": 18,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -445,7 +326,7 @@
     },
     {
       "type": "Feature",
-      "id": 26,
+      "id": 19,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -462,7 +343,7 @@
     },
     {
       "type": "Feature",
-      "id": 27,
+      "id": 20,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -479,24 +360,7 @@
     },
     {
       "type": "Feature",
-      "id": 28,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -73.849571,
-          40.760445
-        ]
-      },
-      "properties": {
-        "Site Name": "Flushing Bay, World's Fair Marina Pier 1 East",
-        "Sample Time": "",
-        "MPN": "",
-        "date": "2025-05-14"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": 29,
+      "id": 21,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -513,7 +377,7 @@
     },
     {
       "type": "Feature",
-      "id": 30,
+      "id": 22,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -530,7 +394,7 @@
     },
     {
       "type": "Feature",
-      "id": 31,
+      "id": 23,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -547,7 +411,7 @@
     },
     {
       "type": "Feature",
-      "id": 32,
+      "id": 24,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -564,24 +428,7 @@
     },
     {
       "type": "Feature",
-      "id": 33,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -73.768804,
-          40.780171
-        ]
-      },
-      "properties": {
-        "Site Name": "Little Neck Bay",
-        "Sample Time": "",
-        "MPN": "",
-        "date": "2025-05-14"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": 34,
+      "id": 25,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -598,7 +445,7 @@
     },
     {
       "type": "Feature",
-      "id": 35,
+      "id": 26,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -615,7 +462,7 @@
     },
     {
       "type": "Feature",
-      "id": 36,
+      "id": 27,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -632,7 +479,7 @@
     },
     {
       "type": "Feature",
-      "id": 37,
+      "id": 28,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -649,7 +496,7 @@
     },
     {
       "type": "Feature",
-      "id": 38,
+      "id": 29,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -666,7 +513,7 @@
     },
     {
       "type": "Feature",
-      "id": 39,
+      "id": 30,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -683,7 +530,7 @@
     },
     {
       "type": "Feature",
-      "id": 40,
+      "id": 31,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -700,7 +547,7 @@
     },
     {
       "type": "Feature",
-      "id": 41,
+      "id": 32,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -717,7 +564,7 @@
     },
     {
       "type": "Feature",
-      "id": 42,
+      "id": 33,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -734,7 +581,7 @@
     },
     {
       "type": "Feature",
-      "id": 43,
+      "id": 34,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -751,7 +598,7 @@
     },
     {
       "type": "Feature",
-      "id": 44,
+      "id": 35,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -768,7 +615,7 @@
     },
     {
       "type": "Feature",
-      "id": 45,
+      "id": 36,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -785,7 +632,7 @@
     },
     {
       "type": "Feature",
-      "id": 46,
+      "id": 37,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -802,7 +649,7 @@
     },
     {
       "type": "Feature",
-      "id": 47,
+      "id": 38,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -819,7 +666,7 @@
     },
     {
       "type": "Feature",
-      "id": 48,
+      "id": 39,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -836,7 +683,7 @@
     },
     {
       "type": "Feature",
-      "id": 49,
+      "id": 40,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -853,7 +700,7 @@
     },
     {
       "type": "Feature",
-      "id": 50,
+      "id": 41,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -870,7 +717,7 @@
     },
     {
       "type": "Feature",
-      "id": 51,
+      "id": 42,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -887,7 +734,7 @@
     },
     {
       "type": "Feature",
-      "id": 52,
+      "id": 43,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -904,7 +751,7 @@
     },
     {
       "type": "Feature",
-      "id": 53,
+      "id": 44,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -921,7 +768,7 @@
     },
     {
       "type": "Feature",
-      "id": 54,
+      "id": 45,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -938,7 +785,7 @@
     },
     {
       "type": "Feature",
-      "id": 55,
+      "id": 46,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -955,7 +802,7 @@
     },
     {
       "type": "Feature",
-      "id": 56,
+      "id": 47,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -972,7 +819,7 @@
     },
     {
       "type": "Feature",
-      "id": 57,
+      "id": 48,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -989,7 +836,7 @@
     },
     {
       "type": "Feature",
-      "id": 58,
+      "id": 49,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1006,7 +853,7 @@
     },
     {
       "type": "Feature",
-      "id": 59,
+      "id": 50,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1023,7 +870,7 @@
     },
     {
       "type": "Feature",
-      "id": 60,
+      "id": 51,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1040,7 +887,7 @@
     },
     {
       "type": "Feature",
-      "id": 61,
+      "id": 52,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1057,24 +904,7 @@
     },
     {
       "type": "Feature",
-      "id": 62,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -73.989916,
-          40.676814
-        ]
-      },
-      "properties": {
-        "Site Name": "Gowanus Canal, Lowlands Nursery",
-        "Sample Time": "",
-        "MPN": "",
-        "date": "2025-05-14"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": 63,
+      "id": 53,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1091,7 +921,7 @@
     },
     {
       "type": "Feature",
-      "id": 64,
+      "id": 54,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1108,7 +938,7 @@
     },
     {
       "type": "Feature",
-      "id": 65,
+      "id": 55,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1125,7 +955,7 @@
     },
     {
       "type": "Feature",
-      "id": 66,
+      "id": 56,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1142,7 +972,7 @@
     },
     {
       "type": "Feature",
-      "id": 67,
+      "id": 57,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1159,7 +989,7 @@
     },
     {
       "type": "Feature",
-      "id": 68,
+      "id": 58,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1176,7 +1006,7 @@
     },
     {
       "type": "Feature",
-      "id": 69,
+      "id": 59,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1193,7 +1023,7 @@
     },
     {
       "type": "Feature",
-      "id": 70,
+      "id": 60,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1210,75 +1040,7 @@
     },
     {
       "type": "Feature",
-      "id": 71,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -74.08794,
-          40.572109
-        ]
-      },
-      "properties": {
-        "Site Name": "Raritan Bay, Midlland Beach",
-        "Sample Time": "",
-        "MPN": "",
-        "date": "2025-05-14"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": 72,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -74.091456,
-          40.566537
-        ]
-      },
-      "properties": {
-        "Site Name": "Raritan Bay, New Dorp Beach",
-        "Sample Time": "",
-        "MPN": "",
-        "date": "2025-05-14"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": 73,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -74.111618,
-          40.549642
-        ]
-      },
-      "properties": {
-        "Site Name": "Raritan Bay, Oakwood Beach",
-        "Sample Time": "",
-        "MPN": "",
-        "date": "2025-05-14"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": 74,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -74.1254,
-          40.5422
-        ]
-      },
-      "properties": {
-        "Site Name": "Raritan Bay, Great Kills Beach",
-        "Sample Time": "",
-        "MPN": "",
-        "date": "2025-05-14"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": 75,
+      "id": 61,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1290,261 +1052,6 @@
         "Site Name": "Arthur Kill, Conference House Park",
         "Sample Time": "7:00 AM",
         "MPN": 2005,
-        "date": "2025-05-14"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": 76,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -74.032318,
-          40.859316
-        ]
-      },
-      "properties": {
-        "Site Name": "Hackensack River, Ridgefield Park, NJ",
-        "Sample Time": "",
-        "MPN": "",
-        "date": "2025-05-14"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": 77,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -74.0571,
-          40.807001
-        ]
-      },
-      "properties": {
-        "Site Name": "Hackensack River, River Barge Park, Carlstadt NJ",
-        "Sample Time": "",
-        "MPN": "",
-        "date": "2025-05-14"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": 78,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -74.08723,
-          40.763925
-        ]
-      },
-      "properties": {
-        "Site Name": "Hackensack River, Laurel Hill Park, Secaucus NJ",
-        "Sample Time": "",
-        "MPN": "",
-        "date": "2025-05-14"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": 79,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -74.112276,
-          40.688829
-        ]
-      },
-      "properties": {
-        "Site Name": "Hackensack River, Rutkowski Park, Bayonne NJ",
-        "Sample Time": "",
-        "MPN": "",
-        "date": "2025-05-14"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": 80,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -74.133458,
-          40.662968
-        ]
-      },
-      "properties": {
-        "Site Name": "Hackensack River, Bayonne City Park, Bayonne NJ",
-        "Sample Time": "",
-        "MPN": "",
-        "date": "2025-05-14"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": 81,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -74.12563,
-          40.64512
-        ]
-      },
-      "properties": {
-        "Site Name": "Kill Van Kull, Brady’s Dock, Bayonne NJ",
-        "Sample Time": "",
-        "MPN": "",
-        "date": "2025-05-14"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": 82,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -74.268318,
-          40.599456
-        ]
-      },
-      "properties": {
-        "Site Name": "Rahway River, Riverfront Park, NJ",
-        "Sample Time": "",
-        "MPN": "",
-        "date": "2025-05-14"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": 83,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -74.256497,
-          40.601792
-        ]
-      },
-      "properties": {
-        "Site Name": "Rahway River, Rahway Valley Sewerage Authority, NJ",
-        "Sample Time": "",
-        "MPN": "",
-        "date": "2025-05-14"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": 84,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -74.212477,
-          40.571734
-        ]
-      },
-      "properties": {
-        "Site Name": "Rahway River, Carteret Waterfront Park, NJ",
-        "Sample Time": "",
-        "MPN": "",
-        "date": "2025-05-14"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": 85,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -74.51219,
-          40.54067
-        ]
-      },
-      "properties": {
-        "Site Name": "Raritan River, Riverside Park, Piscataway NJ",
-        "Sample Time": "",
-        "MPN": "",
-        "date": "2025-05-14"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": 86,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -74.43384,
-          40.48826
-        ]
-      },
-      "properties": {
-        "Site Name": "Raritan River, Rutgers Boathouse, New Brunswick NJ",
-        "Sample Time": "",
-        "MPN": "",
-        "date": "2025-05-14"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": 87,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -74.38409,
-          40.48769
-        ]
-      },
-      "properties": {
-        "Site Name": "Raritan River, Edison Boat Basin, Edison NJ",
-        "Sample Time": "",
-        "MPN": "",
-        "date": "2025-05-14"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": 88,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -74.35586,
-          40.47483
-        ]
-      },
-      "properties": {
-        "Site Name": "Raritan River, Ken Buchanan Park, Sayreville NJ",
-        "Sample Time": "",
-        "MPN": "",
-        "date": "2025-05-14"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": 89,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -74.2698,
-          40.48334
-        ]
-      },
-      "properties": {
-        "Site Name": "Raritan Bay, Waterfront Park, South Amboy, NJ",
-        "Sample Time": "",
-        "MPN": "",
-        "date": "2025-05-14"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": 90,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -74.27719,
-          40.50007
-        ]
-      },
-      "properties": {
-        "Site Name": "Raritan River, Second Street Park, Perth Amboy NJ",
-        "Sample Time": "",
-        "MPN": "",
         "date": "2025-05-14"
       }
     }

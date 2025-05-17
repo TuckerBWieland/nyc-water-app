@@ -30,8 +30,17 @@ const COLOR_RED = waterQuality.colors.poor;
  * @param mpn - MPN value to evaluate
  * @returns Hex color code based on MPN threshold
  */
-const getColorForMPN = (mpn: string | number): string => {
+const getColorForMPN = (mpn: string | number | null): string => {
+  if (mpn === null) {
+    return COLOR_YELLOW; // Use yellow for null/unknown values
+  }
+  
   const mpnValue = Number(mpn);
+  if (isNaN(mpnValue)) {
+    console.warn('Invalid MPN value:', mpn);
+    return COLOR_YELLOW; // Use yellow for invalid values
+  }
+  
   if (mpnValue < MPN_THRESHOLD_LOW) return COLOR_GREEN; // Green - Acceptable
   if (mpnValue <= MPN_THRESHOLD_MEDIUM) return COLOR_YELLOW; // Yellow - Caution
   return COLOR_RED; // Red - Unacceptable
@@ -193,6 +202,7 @@ watch(
 
 // Watch for changes in map data and update map
 watch(mapData, newData => {
+  console.log('Map data updated:', newData);
   if (newData && map.value) {
     updateMap(newData);
   }
@@ -279,8 +289,12 @@ const loadMapData = async (date: string) => {
  */
 const updateMap = (data: GeoJSONCollection): void => {
   if (!map.value) {
+    console.error('Map instance is not available');
     return;
   }
+
+  console.log('Updating map with data:', data);
+  console.log('Features count:', data.features ? data.features.length : 0);
 
   // Store current view state before updating markers
   let previousCenter = map.value.getCenter();
@@ -294,6 +308,7 @@ const updateMap = (data: GeoJSONCollection): void => {
 
   // Add new markers
   if (!data.features || data.features.length === 0) {
+    console.warn('No features found in data');
     return;
   }
 
@@ -315,13 +330,25 @@ const updateMap = (data: GeoJSONCollection): void => {
         continue;
       }
 
-      if (!feature.properties || !feature.properties.mpn) {
+      if (!feature.properties) {
         handleError(
-          new Error('Missing required properties in feature'),
+          new Error('Missing properties in feature'),
           { component: 'MapViewer', operation: 'updateMap', data: { feature } },
           ErrorSeverity.WARNING,
           { showToUser: false }
         );
+        console.warn('Skipping feature with missing properties:', feature);
+        continue;
+      }
+      
+      // Extract properties with support for different case formats
+      const siteName = feature.properties.site || feature.properties['Site Name'] || '';
+      const mpnValue = feature.properties.mpn !== undefined ? feature.properties.mpn : feature.properties['MPN'];
+      const sampleTimeValue = feature.properties.sampleTime || feature.properties['Sample Time'] || '';
+      
+      // Skip if we couldn't find MPN at all
+      if (mpnValue === undefined) {
+        console.warn('Feature is missing MPN property:', feature);
         continue;
       }
 
@@ -352,12 +379,13 @@ const updateMap = (data: GeoJSONCollection): void => {
 
       // Determine quality message
       let qualityColor, qualityMessage;
-      const mpnValue = Number(mpn);
+      // Use the mpnValue we already extracted and validated
+      const mpnNumber = Number(mpnValue);
 
-      if (mpnValue < 35) {
+      if (mpnNumber < 35) {
         qualityColor = 'text-lime-500';
         qualityMessage = 'Acceptable for swimming';
-      } else if (mpnValue <= 104) {
+      } else if (mpnNumber <= 104) {
         qualityColor = 'text-yellow-400';
         qualityMessage = 'Unacceptable if levels persist';
       } else {
@@ -373,8 +401,8 @@ const updateMap = (data: GeoJSONCollection): void => {
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
         
-      const sanitizedSite = sanitize(site);
-      const sanitizedMpn = sanitize(mpn.toString());
+      const sanitizedSite = sanitize(siteName);
+      const sanitizedMpn = sanitize(mpnValue === null ? 'N/A' : mpnValue.toString());
       
       let popupContent = `
         <div class="site-popup">
@@ -388,8 +416,8 @@ const updateMap = (data: GeoJSONCollection): void => {
       `;
 
       // Add sample time if available
-      if (sampleTime) {
-        const sanitizedSampleTime = sanitize(sampleTime);
+      if (sampleTimeValue) {
+        const sanitizedSampleTime = sanitize(sampleTimeValue);
         popupContent += `<div class="text-xs opacity-75 mt-1">Sampled at ${sanitizedSampleTime}</div>`;
       }
 

@@ -49,14 +49,30 @@ function extractDateFromFilename(filename: string): string {
 function convertCsvToGeoJson(csvData: CsvRow[], date: string): FeatureCollection {
   const features: Feature<Point>[] = csvData
     .filter(row => {
-      // Skip rows without coordinates or missing MPN
+      // Skip rows without coordinates, MPN, or Sample Time
       const hasCoordinates = row.Latitude && row.Longitude && 
                            !isNaN(parseFloat(row.Latitude)) && 
                            !isNaN(parseFloat(row.Longitude));
       
-      // We accept rows even if MPN is empty - we'll include them but with empty MPN values
-      // This allows locations to be displayed on the map even if they don't have MPN readings
-      return hasCoordinates;
+      // Check if MPN is a non-empty string and a valid number
+      const hasMPN = row.MPN && row.MPN.trim() !== '' && 
+                   !isNaN(Number(row.MPN.replace(/[<>]/g, '')));
+      
+      // Check if Sample Time is not blank
+      const hasSampleTime = row['Sample Time'] && row['Sample Time'].trim() !== '';
+      
+      // Log skipped rows for debugging
+      if (!hasCoordinates || !hasMPN || !hasSampleTime) {
+        const reason = [];
+        if (!hasCoordinates) reason.push('invalid coordinates');
+        if (!hasMPN) reason.push('missing MPN value');
+        if (!hasSampleTime) reason.push('missing Sample Time');
+        
+        console.log(`Skipping row with Site Name "${row['Site Name'] || 'Unknown'}" due to: ${reason.join(', ')}`);
+        return false;
+      }
+      
+      return true;
     })
     .map((row, index) => {
       // Create a clean properties object
