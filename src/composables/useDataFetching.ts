@@ -1,7 +1,7 @@
 /**
  * Composable for data fetching operations with error handling and state management
  */
-import { ref, Ref } from 'vue';
+import { ref, Ref, UnwrapRef } from 'vue';
 import { handleError, handleAsyncError, ErrorSeverity } from '../utils/errorHandler';
 import { analytics, AnalyticsEvent } from '../services/analytics';
 import config from '../config';
@@ -34,7 +34,7 @@ export interface FetchOptions {
 /** Result of the data fetching hook */
 export interface FetchResult<T> {
   /** The fetched data */
-  data: Ref<T | null>;
+  data: Ref<UnwrapRef<T> | null>;
   /** Current fetch status */
   status: Ref<FetchStatus>;
   /** Error message if fetch failed */
@@ -84,7 +84,7 @@ export function useDataFetching<T = any>(options: FetchOptions = {}): FetchResul
       analytics.track(AnalyticsEvent.SELECTED_DATE, { date });
     }
     
-    return handleAsyncError<T | null>(async () => {
+    const result = await handleAsyncError<T | null>(async () => {
       // Construct the URL based on the date format and path
       const url = `${baseUrl}${dataPath}/${date}.geojson`;
       
@@ -151,6 +151,9 @@ export function useDataFetching<T = any>(options: FetchOptions = {}): FetchResul
       fallbackValue: null,
       rethrow: false
     });
+    
+    // Return null instead of undefined if result is undefined
+    return result === undefined ? null : result;
   };
   
   /**
@@ -179,7 +182,7 @@ export function useDataFetching<T = any>(options: FetchOptions = {}): FetchResul
   }
   
   return {
-    data,
+    data: data as Ref<UnwrapRef<T> | null>,
     status,
     error,
     fetchForDate,

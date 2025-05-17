@@ -134,7 +134,7 @@ export async function handleAsyncError<T>(
   fn: () => Promise<T>,
   context: ErrorContext = {},
   options: ErrorHandlingOptions = {}
-): Promise<T | undefined> {
+): Promise<T | undefined | null> {
   try {
     return await fn();
   } catch (error) {

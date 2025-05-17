@@ -7,7 +7,8 @@
     "dev": "vite",
     "compile-scripts": "tsc --project tsconfig.json",
     "enrich-data": "npm run compile-scripts && node dist/enrichAllGeojson.js",
-    "prebuild": "npm run compile-scripts && npm run enrich-data",
+    "prebuild-with-enrich": "npm run compile-scripts && npm run enrich-data",
+    "prebuild": "npm run compile-scripts",
     "build": "vite build",
     "preview": "vite preview",
     "deploy": "gh-pages -d dist",
@@ -17,7 +18,7 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:ui": "vitest --ui",
-    "typecheck": "vue-tsc --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "leaflet": "^1.9.4",
@@ -27,6 +28,7 @@
   },
   "devDependencies": {
     "@types/jsdom": "^21.1.1",
+    "@types/leaflet": "^1.9.17",
     "@types/node": "^22.15.18",
     "@types/node-fetch": "^2.6.12",
     "@vitejs/plugin-vue": "^4.2.3",

@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch, onUnmounted, defineEmits } from 'vue';
+import { ref, onMounted, watch, onUnmounted } from 'vue';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { analytics, AnalyticsEvent } from '../services/analytics';

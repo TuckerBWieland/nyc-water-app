@@ -1,6 +1,8 @@
 // Import from the new centralized analytics service
 import { analytics as analyticsService } from '../services/analytics';
 import eventDescriptions from './eventMapping.json';
+// Type assertion for eventDescriptions
+const typedEventDescriptions = eventDescriptions as Record<AnalyticsEvent, string>;
 import { 
   AnalyticsEvent, 
   EventPayload, 
@@ -46,7 +48,7 @@ export function trackEvent<E extends AnalyticsEvent>(
   // Add standard properties to all events
   const enhancedProps = {
     ...payload,
-    eventDescription: eventDescriptions[event] || '',
+    eventDescription: typedEventDescriptions[event] || '',
   };
   
   // Log event in development for debugging
@@ -55,7 +57,7 @@ export function trackEvent<E extends AnalyticsEvent>(
   }
   
   // Delegate to the new service
-  analyticsService.track(event, enhancedProps as any);
+  analyticsService.track(event, enhancedProps as EventPayloadMap[E]);
 }
 
 /**
@@ -75,7 +77,7 @@ export const track = (eventKey: string, properties: Record<string, any> = {}): v
   // Add standard properties to all events
   const enhancedProps = {
     ...properties,
-    eventDescription: eventDescriptions[eventKey as keyof typeof eventDescriptions] || '',
+    eventDescription: typedEventDescriptions[eventKey as AnalyticsEvent] || '',
   };
   
   // Log event in development for debugging
@@ -84,7 +86,7 @@ export const track = (eventKey: string, properties: Record<string, any> = {}): v
   }
   
   // Delegate to the new service
-  analyticsService.track(eventKey as AnalyticsEvent, enhancedProps);
+  analyticsService.track(eventKey as AnalyticsEvent, enhancedProps as any);
 };
 
 /**
