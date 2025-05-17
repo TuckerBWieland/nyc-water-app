@@ -2,7 +2,7 @@
  * Composable for data fetching operations with error handling and state management
  */
 import { ref, Ref, UnwrapRef } from 'vue';
-import { handleError, handleAsyncError, ErrorSeverity } from '../utils/errorHandler';
+import { handleError, handleAsyncOperation, ErrorSeverity, AsyncResult } from '../utils/errorHandler';
 import { analytics, AnalyticsEvent } from '../services/analytics';
 import config from '../config';
 import { isGeoJSONCollection } from '../types/geojson';
@@ -84,7 +84,7 @@ export function useDataFetching<T = any>(options: FetchOptions = {}): FetchResul
       analytics.track(AnalyticsEvent.SELECTED_DATE, { date });
     }
     
-    const result = await handleAsyncError<T | null>(async () => {
+    const result = await handleAsyncOperation<T | null>(async () => {
       // Construct the URL based on the date format and path
       const url = `${baseUrl}${dataPath}/${date}.geojson`;
       
@@ -123,7 +123,7 @@ export function useDataFetching<T = any>(options: FetchOptions = {}): FetchResul
       
       // Try to load enriched version if enabled
       if (tryEnriched) {
-        await handleAsyncError(async () => {
+        await handleAsyncOperation(async () => {
           const enrichedUrl = `${baseUrl}${dataPath}/${date}.enriched.geojson`;
           const enrichedResponse = await fetch(enrichedUrl);
           
@@ -152,8 +152,8 @@ export function useDataFetching<T = any>(options: FetchOptions = {}): FetchResul
       rethrow: false
     });
     
-    // Return null instead of undefined if result is undefined
-    return result === undefined ? null : result;
+    // Return null if no data was returned
+    return result.data;
   };
   
   /**

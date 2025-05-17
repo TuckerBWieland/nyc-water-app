@@ -1,9 +1,9 @@
 /**
  * Centralized error handling utility for consistent error management across the application.
- * Handles logging, user notifications, and fallback behaviors.
+ * Handles logging, user notifications, and consistent error result formats.
  */
 
-import { analytics, AnalyticsEvent } from '../services/analytics';
+import { analytics, AnalyticsEvent } from '../analytics';
 
 /**
  * Error severity levels to categorize different types of errors
@@ -33,7 +33,15 @@ export interface ErrorHandlingOptions {
   reportToAnalytics?: boolean; // Whether to send to analytics
   rethrow?: boolean;        // Whether to rethrow the error
   showToUser?: boolean;     // Whether to show error to user
-  fallbackValue?: any;      // Value to return as fallback
+  fallbackValue?: any;      // Value to return on error
+}
+
+/**
+ * Consistent return type for async operations
+ */
+export interface AsyncResult<T> {
+  data: T | null;
+  error: Error | null;
 }
 
 // Default options for error handling
@@ -47,12 +55,8 @@ const defaultOptions: ErrorHandlingOptions = {
 /**
  * Global state for error notifications that components can subscribe to
  */
-export const errorNotifications: {
-  messages: Array<{message: string; severity: ErrorSeverity}>;
-  addError: (message: string, severity: ErrorSeverity) => void;
-  clearErrors: () => void;
-} = {
-  messages: [],
+export const errorNotifications = {
+  messages: [] as Array<{message: string; severity: ErrorSeverity}>,
   addError(message: string, severity: ErrorSeverity) {
     this.messages.push({ message, severity });
     // In a real app, you would make this reactive with Vue's ref/reactive
@@ -69,14 +73,14 @@ export const errorNotifications: {
  * @param context - Additional context for the error
  * @param severity - How severe the error is
  * @param options - Configuration for how to handle the error
- * @returns The fallback value if specified
+ * @returns Formatted error result
  */
-export function handleError<T = void>(
+export function handleError<T>(
   error: Error | unknown,
   context: ErrorContext = {},
   severity: ErrorSeverity = ErrorSeverity.ERROR,
   options: ErrorHandlingOptions = {}
-): T | undefined {
+): AsyncResult<T> {
   // Merge with default options
   const opts = { ...defaultOptions, ...options };
   
@@ -118,25 +122,32 @@ export function handleError<T = void>(
     throw errorObject;
   }
   
-  // Return fallback value if provided
-  return opts.fallbackValue as T;
+  // Return consistent error result format
+  return { 
+    data: null, 
+    error: errorObject 
+  };
 }
 
 /**
- * Wrapper utility to handle async function errors
+ * Wrapper utility to handle async function errors with consistent return types
  * 
  * @param fn - Async function to execute
  * @param context - Error context
  * @param options - Error handling options
- * @returns Promise resolving to the function result or fallback
+ * @returns Promise resolving to structured response with data and error fields
  */
-export async function handleAsyncError<T>(
+export async function handleAsyncOperation<T>(
   fn: () => Promise<T>,
   context: ErrorContext = {},
   options: ErrorHandlingOptions = {}
-): Promise<T | undefined | null> {
+): Promise<AsyncResult<T>> {
   try {
-    return await fn();
+    const result = await fn();
+    return { 
+      data: result, 
+      error: null 
+    };
   } catch (error) {
     return handleError<T>(error, context, ErrorSeverity.ERROR, options);
   }
@@ -144,20 +155,22 @@ export async function handleAsyncError<T>(
 
 /**
  * Higher-order function that wraps a function with error handling
+ * Uses the consistent AsyncResult return type
  * 
  * @param fn - Function to wrap with error handling
  * @param context - Error context
  * @param options - Error handling options
- * @returns Wrapped function with error handling
+ * @returns Wrapped function with error handling and consistent return type
  */
 export function withErrorHandling<T extends (...args: any[]) => any>(
   fn: T,
   context: ErrorContext = {},
   options: ErrorHandlingOptions = {}
-): (...args: Parameters<T>) => ReturnType<T> | undefined {
-  return (...args: Parameters<T>): ReturnType<T> | undefined => {
+): (...args: Parameters<T>) => AsyncResult<ReturnType<T>> {
+  return (...args: Parameters<T>): AsyncResult<ReturnType<T>> => {
     try {
-      return fn(...args);
+      const result = fn(...args);
+      return { data: result, error: null };
     } catch (error) {
       return handleError<ReturnType<T>>(error, context, ErrorSeverity.ERROR, options);
     }

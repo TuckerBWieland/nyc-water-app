@@ -69,7 +69,7 @@ import DateScroller from './components/DateScroller.vue';
 import InfoPopup from './components/InfoPopup.vue';
 import SampleBarLegend from './components/SampleBarLegend.vue';
 import RainDropLegend from './components/RainDropLegend.vue';
-import { handleAsyncError, ErrorSeverity } from './utils/errorHandler';
+import { handleAsyncOperation, ErrorSeverity } from './utils/errorHandler';
 
 /**
  * Available data dates from the API
@@ -154,7 +154,7 @@ const updateMapMode = (darkMode: boolean): void => {
  * Fetches available dates and sets the default date
  */
 onMounted(async (): Promise<void> => {
-  await handleAsyncError(async () => {
+  await handleAsyncOperation(async () => {
     const url = `${import.meta.env.BASE_URL}data/index.json`;
     const res = await fetch(url);
     

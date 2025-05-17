@@ -10,7 +10,7 @@ import { ref, onMounted, watch, onUnmounted } from 'vue';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { analytics, AnalyticsEvent } from '../services/analytics';
-import { handleError, handleAsyncError, ErrorSeverity } from '../utils/errorHandler';
+import { handleError, handleAsyncOperation, ErrorSeverity } from '../utils/errorHandler';
 import config from '../config';
 
 // Import constants from configuration
@@ -200,7 +200,7 @@ watch(mapData, newData => {
 
 // Methods
 const loadMapData = async (date: string) => {
-  return handleAsyncError(async () => {
+  return handleAsyncOperation(async () => {
     // Track date selection
     analytics.track(AnalyticsEvent.SELECTED_DATE, { date });
 
@@ -239,7 +239,7 @@ const loadMapData = async (date: string) => {
       }
 
       // Try to load the enriched version if available
-      await handleAsyncError(async () => {
+      await handleAsyncOperation(async () => {
         const enrichedResponse = await fetch(
           `${import.meta.env.BASE_URL}${dataPath}/${date}.enriched.geojson`
         );
