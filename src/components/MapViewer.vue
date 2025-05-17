@@ -224,8 +224,8 @@ const loadMapData = async (date: string) => {
 
         // Extract the sample data for the legend
         const samples = mapData.value.features.map(feature => ({
-          site: feature.properties.site,
-          mpn: feature.properties.mpn,
+          site: feature.properties.site || feature.properties['Site Name'] || '',
+          mpn: feature.properties.mpn || feature.properties['MPN'] || '',
         }));
         emit('update:sampleData', samples);
       } else {
@@ -339,7 +339,10 @@ const updateMap = (data: GeoJSONCollection): void => {
         continue;
       }
 
-      const { site, mpn, sampleTime } = feature.properties;
+      // Extract properties with correct field names (handle both formats)
+      const site = feature.properties.site || feature.properties['Site Name'] || '';
+      const mpn = feature.properties.mpn || feature.properties['MPN'] || '';
+      const sampleTime = feature.properties.sampleTime || feature.properties['Sample Time'] || '';
 
       // Create water bottle icon
       const bottleIcon = createWaterBottleIcon(mpn);

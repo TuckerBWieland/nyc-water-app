@@ -48,28 +48,42 @@ function extractDateFromFilename(filename: string): string {
  */
 function convertCsvToGeoJson(csvData: CsvRow[], date: string): FeatureCollection {
   const features: Feature<Point>[] = csvData
-    .filter(row => row.Latitude && row.Longitude) // Skip rows without coordinates
+    .filter(row => {
+      // Skip rows without coordinates or missing MPN
+      const hasCoordinates = row.Latitude && row.Longitude && 
+                           !isNaN(parseFloat(row.Latitude)) && 
+                           !isNaN(parseFloat(row.Longitude));
+      
+      // We accept rows even if MPN is empty - we'll include them but with empty MPN values
+      // This allows locations to be displayed on the map even if they don't have MPN readings
+      return hasCoordinates;
+    })
     .map((row, index) => {
-      const properties: { [key: string]: any } = { ...row };
+      // Create a clean properties object
+      const properties: { [key: string]: any } = {
+        'Site Name': row['Site Name'] || '',
+        'Sample Time': row['Sample Time'] || '',
+        'MPN': '', // Default to empty string
+        'date': date
+      };
       
       // Convert lat/lon from strings to numbers
       const lat = parseFloat(row.Latitude);
       const lon = parseFloat(row.Longitude);
       
-      // Remove lat/lon from properties as they're used in the geometry
-      delete properties.Latitude;
-      delete properties.Longitude;
-      
-      // Add date from filename
-      properties.date = date;
-      
-      // Convert MPN to number if it's a valid number
-      if (properties.MPN && !isNaN(Number(properties.MPN.replace(/[<>]/g, '')))) {
-        // Handle "<10" format
-        if (properties.MPN.startsWith('<')) {
-          properties.MPN = parseFloat(properties.MPN.substring(1)) - 1;
+      // Process MPN value if it exists
+      if (row.MPN) {
+        if (row.MPN.toLowerCase() === 'null' || row.MPN === '') {
+          properties.MPN = null;
+        } else if (!isNaN(Number(row.MPN.replace(/[<>]/g, '')))) {
+          // Handle "<10" format
+          if (row.MPN.startsWith('<')) {
+            properties.MPN = parseFloat(row.MPN.substring(1)) - 1;
+          } else {
+            properties.MPN = parseFloat(row.MPN);
+          }
         } else {
-          properties.MPN = parseFloat(properties.MPN);
+          properties.MPN = row.MPN; // Keep as string if can't convert
         }
       }
       
