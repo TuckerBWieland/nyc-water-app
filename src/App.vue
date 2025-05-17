@@ -5,9 +5,6 @@
       :is-dark-mode="isDarkMode"
       @update:site-count="updateSiteCount"
       @update:sample-data="updateSampleData"
-      @update:rainfall-by-day-in="updateRainfallByDayIn"
-      @update:rain-data="updateRainData"
-      @update:total-rain="updateTotalRain"
     />
     <HeaderOverlay
       v-model:is-expanded="isHeaderExpanded"
@@ -40,13 +37,7 @@
     <!-- Legend components in top-left corner - only visible when header is collapsed -->
     <div v-if="!isHeaderExpanded" class="absolute top-4 left-4 z-40 flex flex-col space-y-2">
       <SampleBarLegend :samples="sampleData" :is-dark-mode="isDarkMode" />
-      <RainDropLegend
-        :rainfall="rainfall"
-        :rainfall-by-day-in="rainfallByDayIn"
-        :rain-data="rainData"
-        :total-rain="totalRain"
-        :is-dark-mode="isDarkMode"
-      />
+      <RainDropLegend :selected-date="selectedDate" :is-dark-mode="isDarkMode" />
     </div>
 
     <!-- Bottom navigation elements stacked in proper order -->
@@ -116,29 +107,8 @@ const isHeaderExpanded = ref<boolean>(false);
  */
 const sampleData = ref<Array<{ site: string; mpn: string | number }>>([]);
 
-/**
- * Rainfall amount in inches (for the rain drop legend)
- * @type {import('vue').Ref<number>}
- */
-const rainfall = ref<number>(1.25);
-
-/**
- * Rainfall by day in inches (for the rain drop legend) - legacy format
- * @type {import('vue').Ref<Array<number | null>>}
- */
-const rainfallByDayIn = ref<Array<number | null>>([]);
-
-/**
- * New rainfall data array in inches (for the rain drop legend)
- * @type {import('vue').Ref<Array<number>>}
- */
-const rainData = ref<Array<number>>([]);
-
-/**
- * Total rainfall in inches over the 7-day period
- * @type {import('vue').Ref<number>}
- */
-const totalRain = ref<number>(0);
+// Rainfall data is now handled directly in the RainDropLegend component
+// using a static mapping of dates to rainfall arrays
 
 /**
  * Update the count of water sampling sites
@@ -176,39 +146,7 @@ const updateMapMode = (darkMode: boolean): void => {
   isDarkMode.value = darkMode;
 };
 
-/**
- * Update the rainfall by day data - legacy format
- * Called by MapViewer when new data is loaded
- *
- * @param {Array<number | null>} data - Rainfall by day data in inches
- */
-const updateRainfallByDayIn = (data: Array<number | null>): void => {
-  rainfallByDayIn.value = data;
-
-  // Also update the total rainfall value (for backward compatibility)
-  const total = data.reduce((sum, val) => sum + (val || 0), 0);
-  rainfall.value = Number(total.toFixed(1));
-};
-
-/**
- * Update the new rainfall data array
- * Called by MapViewer when new data is loaded
- *
- * @param {Array<number>} data - Rainfall data array in inches
- */
-const updateRainData = (data: Array<number>): void => {
-  rainData.value = data;
-};
-
-/**
- * Update the total rainfall value
- * Called by MapViewer when new data is loaded
- *
- * @param {number} value - Total rainfall in inches
- */
-const updateTotalRain = (value: number): void => {
-  totalRain.value = value;
-};
+// Rainfall data handlers have been removed as we now use static data in RainDropLegend component
 
 /**
  * Initialize the component on mount

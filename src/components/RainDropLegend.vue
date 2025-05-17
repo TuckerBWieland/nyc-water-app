@@ -38,146 +38,49 @@
 </template>
 
 <script setup lang="ts">
-import { computed, type PropType } from 'vue';
+import { computed } from 'vue';
 
 // Days of the week labels (Friday to Thursday, ending with sample day)
 const dayLabels = ['F', 'S', 'S', 'M', 'T', 'W', 'Th'];
 
-// Using Runtime props validation with proper TypeScript typing
-const props = defineProps({
-  rainfall: {
-    type: Number,
-    default: 0,
-  },
-  rainfallByDay: {
-    type: Array as PropType<(number | null)[]>,
-    default: () => [],
-  },
-  rainfallByDayIn: {
-    type: Array as PropType<(number | null)[]>,
-    default: () => [],
-  },
-  rainData: {
-    type: Array as PropType<number[]>,
-    default: () => [],
-  },
-  totalRain: {
-    type: Number,
-    default: 0,
-  },
-  isDarkMode: {
-    type: Boolean,
-    default: false,
-  },
+// Static rainfall data map by sampling date (in inches)
+const rainfallBySampleDate: Record<string, number[]> = {
+  '2025-05-14': [0.0, 0.95, 0.15, 0.74, 0.24, 0.02, 0.01],
+  '2025-05-07': [0.69, 0.01, 0.0, 0.0, 0.16, 1.22, 0.0],
+  // Add future sampling weeks here as needed
+};
+
+// Accept the selected sampling date and dark mode as props
+const props = defineProps<{
+  selectedDate: string;
+  isDarkMode: boolean;
+}>();
+
+// Compute the rainfall array for the selected date
+const activeRainData = computed(() => {
+  return rainfallBySampleDate[props.selectedDate] ?? [];
 });
 
-// Check if we have array data available
-const hasArrayData = computed<boolean>(() => {
-  return props.rainfallByDayIn.length > 0 || props.rainfallByDay.length > 0;
+// Compute the total rainfall from that array
+const totalRainfall = computed(() => {
+  return activeRainData.value.reduce((sum, val) => sum + (val || 0), 0);
 });
 
-// Generate a synthetic 7-day array from the single rainfall value
-const syntheticRainData = computed<(number | null)[]>(() => {
-  // Create an array with the rainfall value distributed over 7 days
-  // This is a fallback for when only the single rainfall value is provided
-  if (props.rainfall > 0) {
-    // Create a distribution that looks natural - higher in middle days
-    const distribution = [0.1, 0.15, 0.2, 0.25, 0.15, 0.1, 0.05];
-    return distribution.map(factor => props.rainfall * factor);
-  }
-  return [0, 0, 0, 0, 0, 0, 0];
-});
-
-// Determine which data source to use for the rain chart
-const activeRainData = computed<(number | null)[]>(() => {
-  // First check if rainfallByDayIn is valid
-  if (props.rainfallByDayIn.length > 0) {
-    console.log('Daily rainfall distribution (inches):', props.rainfallByDayIn);
-    return props.rainfallByDayIn;
-  }
-
-  // Next check rainData
-  if (props.rainData.length > 0) {
-    console.log('Daily rainfall distribution from rainData (inches):', props.rainData);
-    return props.rainData;
-  }
-
-  // Next check rainfallByDay
-  if (props.rainfallByDay.length > 0) {
-    console.log('Daily rainfall distribution from rainfallByDay (inches):', props.rainfallByDay);
-    return props.rainfallByDay;
-  }
-
-  // Fallback to synthetic data based on single rainfall value
-  console.log('Daily rainfall distribution (synthetic, inches):', syntheticRainData.value);
-  return syntheticRainData.value;
-});
-
-// Calculate total rainfall (sum of all values)
-const totalRainfall = computed<number>(() => {
-  // Use totalRain prop if provided
-  if (props.totalRain > 0) {
-    return props.totalRain;
-  }
-
-  // Calculate total from our active data array
-  if (activeRainData.value.length > 0) {
-    const calculatedTotal = activeRainData.value.reduce(
-      (sum, val) => sum + (val !== null && val !== undefined ? Number(val) : 0),
-      0
-    );
-    return calculatedTotal;
-  }
-
-  // Use the single rainfall value as a last resort
-  return props.rainfall;
-});
-
-// Formatted total rainfall with one decimal place
-const totalRainfallValue = computed<string>(() => {
-  return totalRainfall.value.toFixed(1);
-});
+// Formatted total rainfall with two decimal places
+const totalRainfallValue = computed(() => totalRainfall.value.toFixed(2));
 
 // Check if we have valid rainfall data to display
 const hasValidRainfallData = computed<boolean>(() => {
-  // First check rainfallByDayIn for valid data
-  let hasValidData =
-    props.rainfallByDayIn.length > 0 &&
-    props.rainfallByDayIn.some(val => val !== null && val !== undefined && val > 0);
-
-  // If no valid data from rainfallByDayIn, then check other data sources
-  if (!hasValidData) {
-    // Check rainfall prop (single value)
-    if (props.rainfall > 0) {
-      hasValidData = true;
-    }
-
-    // Check rainData array
-    if (!hasValidData && props.rainData.length > 0 && props.rainData.some(val => val > 0)) {
-      hasValidData = true;
-    }
-
-    // Check rainfallByDay array
-    if (
-      !hasValidData &&
-      props.rainfallByDay.length > 0 &&
-      props.rainfallByDay.some(val => val !== null && val !== undefined && val > 0)
-    ) {
-      hasValidData = true;
-    }
-
-    // Check totalRain prop
-    if (!hasValidData && props.totalRain > 0) {
-      hasValidData = true;
-    }
-  }
-
-  return hasValidData;
+  return (
+    activeRainData.value.length > 0 &&
+    activeRainData.value.some(val => val !== null && val !== undefined && val > 0)
+  );
 });
 
 // Determine color class based on rainfall amount
 const getBarColorClass = (value: number | null): string => {
-  if (value === null || value === undefined) return props.isDarkMode ? 'bg-gray-500' : 'bg-gray-300';
+  if (value === null || value === undefined)
+    return props.isDarkMode ? 'bg-gray-500' : 'bg-gray-300';
 
   if (value < 0.5) return props.isDarkMode ? 'bg-green-600' : 'bg-green-500';
   if (value < 3.0) return props.isDarkMode ? 'bg-yellow-500' : 'bg-yellow-400';
@@ -207,7 +110,8 @@ const getBarHeight = (value: number | null): number => {
 }
 
 /* Ensure minimum height for bars with very small values */
-.w-4, .md\:w-5 {
-  min-height: 1px;
+.w-4,
+.md\:w-5 {
+  min-height: 2px;
 }
 </style>
