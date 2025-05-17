@@ -252,19 +252,22 @@ const loadMapData = async (date: string) => {
           );
           
           if (featureWithRainfall) {
-            const rainData = featureWithRainfall.properties.rainfall_by_day_in.map(val => 
+            const rawMm = featureWithRainfall.properties.rainfall_by_day_in.map(val => 
               typeof val === 'number' ? val : parseFloat(val)
             );
             
-            // Calculate total rain from the array
-            const totalRain = rainData.reduce((sum, val) => sum + (val || 0), 0);
+            // Convert from mm to inches (1 mm = 0.0393701 inches)
+            const inches = rawMm.map(mm => Number((mm * 0.0393701).toFixed(2)));
+            
+            // Calculate total rain from the array in inches
+            const totalInches = inches.reduce((sum, val) => sum + (val || 0), 0);
             
             // Emit the new data format
-            emit('update:rainData', rainData);
-            emit('update:totalRain', Number(totalRain.toFixed(2)));
+            emit('update:rainData', inches);
+            emit('update:totalRain', Number(totalInches.toFixed(2)));
             
             // Also emit using the legacy format for backward compatibility
-            emit('update:rainfallByDayIn', rainData);
+            emit('update:rainfallByDayIn', inches);
           }
         }
         // Fallback to synthetic data if no rainfall_by_day_in is available
@@ -506,8 +509,10 @@ const updateMap = (data: GeoJSONCollection): void => {
       
       // Add rainfall info if available
       if (feature.properties.rainfall_mm_7day !== undefined && feature.properties.rainfall_mm_7day !== null) {
-        const rainfallValue = feature.properties.rainfall_mm_7day;
-        const rainfallText = `${rainfallValue} mm (7-day)`;
+        const mm = feature.properties.rainfall_mm_7day || 0;
+        // Convert mm to inches (1 mm = 0.0393701 inches)
+        const inches = Number((mm * 0.0393701).toFixed(2));
+        const rainfallText = `${inches} in (7-day)`;
         const sanitizedRainfall = sanitize(rainfallText);
         
         popupContent += `<div class="text-xs opacity-75 mt-1">
