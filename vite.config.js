@@ -6,6 +6,6 @@ export default defineConfig({
   base: '/nyc-water-app/',
   plugins: [vue()],
   resolve: {
-    extensions: ['.js', '.ts', '.jsx', '.tsx', '.json', '.vue']
+    extensions: ['.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
   },
 });

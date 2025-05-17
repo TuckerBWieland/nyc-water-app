@@ -117,6 +117,7 @@ const props = defineProps<MapViewerProps>();
 const emit = defineEmits<{
   'update:siteCount': [count: number];
   'update:sampleData': [samples: SampleData[]];
+  'update:rainfallByDayIn': [data: (number | null)[]];
 }>();
 
 // Reactive references with type annotations
@@ -238,6 +239,28 @@ const loadMapData = async (date: string) => {
           mpn: feature.properties.mpn || feature.properties['MPN'] || '',
         }));
         emit('update:sampleData', samples);
+        
+        // Extract rainfall data if available
+        // For this demo, create synthetic daily data from the 7-day total
+        if (mapData.value.features.some(f => f.properties.rainfall_mm_7day !== undefined)) {
+          // Create a synthetic 7-day distribution from the average rainfall_mm_7day
+          // Calculate average 7-day rainfall across all points and convert from mm to inches
+          const totalRainfall = mapData.value.features.reduce((sum, feature) => {
+            return sum + (feature.properties.rainfall_mm_7day || 0);
+          }, 0);
+          const averageRainfall = totalRainfall / mapData.value.features.length;
+          
+          // Convert mm to inches (1 mm = 0.0393701 inches)
+          const totalRainfallInches = averageRainfall * 0.0393701;
+          
+          // Create a distribution over 7 days - this is synthetic data for the demo
+          // In a real app, we would have daily data from the API
+          const distribution = [0.1, 0.15, 0.2, 0.25, 0.15, 0.1, 0.05];
+          const rainfallByDay = distribution.map(factor => Number((totalRainfallInches * factor).toFixed(2)));
+          
+          // Emit the rainfall data
+          emit('update:rainfallByDayIn', rainfallByDay);
+        }
       } else {
         // No features found
         handleError(
@@ -421,6 +444,11 @@ const updateMap = (data: GeoJSONCollection): void => {
         popupContent += `<div class="text-xs opacity-75 mt-1">Sampled at ${sanitizedSampleTime}</div>`;
       }
 
+      // Add tide and rainfall info section header if either is available
+      if (feature.properties.tideSummary || feature.properties.rainfall_mm_7day !== undefined) {
+        popupContent += `<div class="text-xs font-medium mt-3 pt-2 border-t border-gray-200">Environmental Conditions:</div>`;
+      }
+      
       // Add tide info if available - with conditional formatting
       if (feature.properties.tideSummary) {
         // Parse the tide summary
@@ -443,7 +471,20 @@ const updateMap = (data: GeoJSONCollection): void => {
         }
 
         const sanitizedTideSummary = sanitize(displaySummary);
-        popupContent += `<div class="text-xs opacity-75 mt-1" title="Tidal data is taken from nearest NOAA station and is only approximate">${sanitizedTideSummary}</div>`;
+        popupContent += `<div class="text-xs opacity-75 mt-1">
+          <span title="Tidal data is taken from nearest NOAA station and is only approximate">${sanitizedTideSummary}</span>
+        </div>`;
+      }
+      
+      // Add rainfall info if available
+      if (feature.properties.rainfall_mm_7day !== undefined && feature.properties.rainfall_mm_7day !== null) {
+        const rainfallValue = feature.properties.rainfall_mm_7day;
+        const rainfallText = `${rainfallValue} mm (7-day)`;
+        const sanitizedRainfall = sanitize(rainfallText);
+        
+        popupContent += `<div class="text-xs opacity-75 mt-1">
+          <span title="Rainfall data for the 7 days prior to sample date from Open-Meteo API">${sanitizedRainfall}</span>
+        </div>`;
       }
 
       // Close the popup div

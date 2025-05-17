@@ -1,0 +1,9 @@
+{
+    "viewed_page": "User viewed a page",
+    "viewed_sample_pin": "User clicked on a map pin to view sample details",
+    "changed_theme": "User changed the theme (light/dark mode)",
+    "selected_date": "User selected a different date to view data for",
+    "zoomed_map": "User zoomed in or out on the map",
+    "panned_map": "User panned/moved the map view",
+    "failed_loading_data": "Data failed to load for a selected date"
+}

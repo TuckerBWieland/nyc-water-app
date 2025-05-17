@@ -15,7 +15,9 @@
         "Site Name": "Bronx River, Starlight Park, North Dock",
         "Sample Time": "12:45 PM",
         "MPN": 1860,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 9.3,
+        "tideSummary": "High Tide – ⬆️ Rising (Battery)"
       }
     },
     {
@@ -32,7 +34,9 @@
         "Site Name": "Bronx River, Concrete Plant Park Canoe Launch",
         "Sample Time": "11:32 AM",
         "MPN": 1835,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 14.8,
+        "tideSummary": "Mid Tide – ⬇️ Falling (Battery)"
       }
     },
     {
@@ -49,7 +53,9 @@
         "Site Name": "Bronx River, Hunts Point Riverside Park",
         "Sample Time": "9:10 AM",
         "MPN": 2603,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 17.1,
+        "tideSummary": "High Tide – ⬆️ Rising (Battery)"
       }
     },
     {
@@ -66,7 +72,9 @@
         "Site Name": "Bronx River, Soundview Park, HP009",
         "Sample Time": "12:15 PM",
         "MPN": 411,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 9.5,
+        "tideSummary": "Low Tide – ⬇️ Falling (Battery)"
       }
     },
     {
@@ -83,7 +91,9 @@
         "Site Name": "Bronx River, Soundview Park (mouth)",
         "Sample Time": "9:14 AM",
         "MPN": 573,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 30.2,
+        "tideSummary": "Mid Tide – ⬆️ Rising (Battery)"
       }
     },
     {
@@ -100,7 +110,9 @@
         "Site Name": "Bronx Kill, west end",
         "Sample Time": "8:53 AM",
         "MPN": 122,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 33.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (Battery)"
       }
     },
     {
@@ -117,7 +129,9 @@
         "Site Name": "Bronx Kill, east end",
         "Sample Time": "8:41 AM",
         "MPN": 573,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 11.7,
+        "tideSummary": "Mid Tide – ⬇️ Falling (Battery)"
       }
     },
     {
@@ -134,7 +148,9 @@
         "Site Name": "Harlem River, Little Hell Gate",
         "Sample Time": "9:06 AM",
         "MPN": 404,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 27.8,
+        "tideSummary": "High Tide – ⬆️ Rising (Battery)"
       }
     },
     {
@@ -151,7 +167,9 @@
         "Site Name": "Harlem River, Water's Edge Garden Beach",
         "Sample Time": "9:16 AM",
         "MPN": 520,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 11.4,
+        "tideSummary": "Mid Tide – ⬇️ Falling (Battery)"
       }
     },
     {
@@ -168,7 +186,9 @@
         "Site Name": "Harlem River, Lincoln Avenue 2",
         "Sample Time": "9:06 AM",
         "MPN": 431,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 9.1,
+        "tideSummary": "Mid Tide – ⬇️ Falling (Battery)"
       }
     },
     {
@@ -185,7 +205,9 @@
         "Site Name": "Hudson River, Pier 66",
         "Sample Time": "9:54 AM",
         "MPN": 98,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 12,
+        "tideSummary": "High Tide – ⬆️ Rising (Battery)"
       }
     },
     {
@@ -202,7 +224,9 @@
         "Site Name": "Hudson River, Gansevoort Peninsula, North",
         "Sample Time": "10:02 AM",
         "MPN": 98,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 22.9,
+        "tideSummary": "Mid Tide – ⬇️ Falling (Battery)"
       }
     },
     {
@@ -219,7 +243,9 @@
         "Site Name": "Hudson River, Gansevoort Peninsula, South",
         "Sample Time": "10:07 AM",
         "MPN": 146,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 10.2,
+        "tideSummary": "Mid Tide – ⬇️ Falling (Battery)"
       }
     },
     {
@@ -236,7 +262,9 @@
         "Site Name": "Hudson River, Pier 40",
         "Sample Time": "9:30 AM",
         "MPN": 161,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 8.2,
+        "tideSummary": "Mid Tide – ⬆️ Rising (Battery)"
       }
     },
     {
@@ -253,7 +281,9 @@
         "Site Name": "Hudson River, Pier 26",
         "Sample Time": "9:37 AM",
         "MPN": 75,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 20.6,
+        "tideSummary": "Mid Tide – ⬆️ Rising (Battery)"
       }
     },
     {
@@ -270,7 +300,9 @@
         "Site Name": "Hudson River, Battery Park City, Rockefeller Park",
         "Sample Time": "9:58 AM",
         "MPN": 134,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 20,
+        "tideSummary": "Mid Tide – ⬆️ Rising (Battery)"
       }
     },
     {
@@ -287,7 +319,9 @@
         "Site Name": "Hudson River, Weehawken Cove, Hoboken NJ",
         "Sample Time": "9:20 AM",
         "MPN": 203,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 23.8,
+        "tideSummary": "Mid Tide – ⬆️ Rising (Battery)"
       }
     },
     {
@@ -304,7 +338,9 @@
         "Site Name": "Hudson River, Pier 13, Hoboken, NJ",
         "Sample Time": "9:30 AM",
         "MPN": 135,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 8.5,
+        "tideSummary": "Low Tide – ⬇️ Falling (Battery)"
       }
     },
     {
@@ -321,7 +357,9 @@
         "Site Name": "Hudson River, Hoboken Cove Beach, Hoboken NJ",
         "Sample Time": "9:35 AM",
         "MPN": 97,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 15.6,
+        "tideSummary": "Low Tide – ⬇️ Falling (Battery)"
       }
     },
     {
@@ -338,7 +376,9 @@
         "Site Name": "Hudson River, Frank Sinatra Park, Hoboken NJ",
         "Sample Time": "9:45 AM",
         "MPN": 135,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 19.8,
+        "tideSummary": "High Tide – ⬆️ Rising (Battery)"
       }
     },
     {
@@ -355,7 +395,9 @@
         "Site Name": "Flushing Bay, 28th Avenue (Big Rock Beach)",
         "Sample Time": "11:25 AM",
         "MPN": 187,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 18.6,
+        "tideSummary": "High Tide – ⬆️ Rising (Battery)"
       }
     },
     {
@@ -372,7 +414,9 @@
         "Site Name": "Flushing Bay, World's Fair Marina Boat Ramp",
         "Sample Time": "11:03 AM",
         "MPN": 8164,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 14.3,
+        "tideSummary": "Mid Tide – ⬆️ Rising (Battery)"
       }
     },
     {
@@ -389,7 +433,9 @@
         "Site Name": "Flushing Creek",
         "Sample Time": "7:11 AM",
         "MPN": null,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 33.3,
+        "tideSummary": "Low Tide – ⬇️ Falling (Battery)"
       }
     },
     {
@@ -406,7 +452,9 @@
         "Site Name": "Kissena Lake",
         "Sample Time": "10:15 AM",
         "MPN": 41,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 30.9,
+        "tideSummary": "Mid Tide – ⬆️ Rising (Battery)"
       }
     },
     {
@@ -423,7 +471,9 @@
         "Site Name": "Meadow Lake (Flushing Meadows-Corona Park)",
         "Sample Time": "11:47 AM",
         "MPN": 7701,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 6.3,
+        "tideSummary": "High Tide – ⬆️ Rising (Battery)"
       }
     },
     {
@@ -440,7 +490,9 @@
         "Site Name": "East River, E 90th St Ferry",
         "Sample Time": "10:25 AM",
         "MPN": 292,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 29.5,
+        "tideSummary": "Mid Tide – ⬆️ Rising (Battery)"
       }
     },
     {
@@ -457,7 +509,9 @@
         "Site Name": "East River, Hallets Cove",
         "Sample Time": "10:21 AM",
         "MPN": 272,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 10.7,
+        "tideSummary": "High Tide – ⬆️ Rising (Battery)"
       }
     },
     {
@@ -474,7 +528,9 @@
         "Site Name": "East River, Gantry State Park",
         "Sample Time": "11:22 AM",
         "MPN": 269,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 23.3,
+        "tideSummary": "High Tide – ⬆️ Rising (Battery)"
       }
     },
     {
@@ -491,7 +547,9 @@
         "Site Name": "Newtown Creek, Second Street Kayak Launch",
         "Sample Time": "11:07 AM",
         "MPN": 1892,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 10.4,
+        "tideSummary": "Mid Tide – ⬆️ Rising (Battery)"
       }
     },
     {
@@ -508,7 +566,9 @@
         "Site Name": "Newtown Creek, Pulaski Bridge, Queens",
         "Sample Time": "6:18 AM",
         "MPN": 17329,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 15.6,
+        "tideSummary": "Low Tide – ⬇️ Falling (Battery)"
       }
     },
     {
@@ -525,7 +585,9 @@
         "Site Name": "Newtown Creek, Dutch Kills (head)",
         "Sample Time": "10:20 AM",
         "MPN": null,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 20.5,
+        "tideSummary": "Mid Tide – ⬆️ Rising (Battery)"
       }
     },
     {
@@ -542,7 +604,9 @@
         "Site Name": "Newtown Creek, Apollo Street",
         "Sample Time": "9:10 AM",
         "MPN": 6488,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 16.8,
+        "tideSummary": "High Tide – ⬆️ Rising (Battery)"
       }
     },
     {
@@ -559,7 +623,9 @@
         "Site Name": "Newtown Creek, East Branch",
         "Sample Time": "9:19 AM",
         "MPN": null,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 26.9,
+        "tideSummary": "Low Tide – ⬇️ Falling (Battery)"
       }
     },
     {
@@ -576,7 +642,9 @@
         "Site Name": "Newtown Creek, English Kills",
         "Sample Time": "8:00 AM",
         "MPN": null,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 33.9,
+        "tideSummary": "Low Tide – ⬇️ Falling (Battery)"
       }
     },
     {
@@ -593,7 +661,9 @@
         "Site Name": "East River, Stuy Cove Park",
         "Sample Time": "7:19 AM",
         "MPN": 520,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 31,
+        "tideSummary": "High Tide – ⬆️ Rising (Battery)"
       }
     },
     {
@@ -610,7 +680,9 @@
         "Site Name": "East River, India Street",
         "Sample Time": "6:41 AM",
         "MPN": 457,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 27.4,
+        "tideSummary": "Mid Tide – ⬆️ Rising (Battery)"
       }
     },
     {
@@ -627,7 +699,9 @@
         "Site Name": "East River, WNYC Transmitter Park",
         "Sample Time": "6:59 AM",
         "MPN": 487,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 21.5,
+        "tideSummary": "Low Tide – ⬇️ Falling (Battery)"
       }
     },
     {
@@ -644,7 +718,9 @@
         "Site Name": "East River, Marsha P Johnson State Park",
         "Sample Time": "10:20 AM",
         "MPN": 211,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 20.9,
+        "tideSummary": "Mid Tide – ⬆️ Rising (Battery)"
       }
     },
     {
@@ -661,7 +737,9 @@
         "Site Name": "Bushwick Inlet",
         "Sample Time": "10:05 AM",
         "MPN": 213,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 31.7,
+        "tideSummary": "Low Tide – ⬇️ Falling (Battery)"
       }
     },
     {
@@ -678,7 +756,9 @@
         "Site Name": "East River, Bushwick Inlet Park Beach",
         "Sample Time": "8:25 AM",
         "MPN": 657,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 25.1,
+        "tideSummary": "Mid Tide – ⬇️ Falling (Battery)"
       }
     },
     {
@@ -695,7 +775,9 @@
         "Site Name": "East River, North 3rd Street",
         "Sample Time": "8:40 AM",
         "MPN": 272,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 20.9,
+        "tideSummary": "High Tide – ⬆️ Rising (Battery)"
       }
     },
     {
@@ -712,7 +794,9 @@
         "Site Name": "East River, Grand Ferry Park",
         "Sample Time": "10:01 AM",
         "MPN": 317,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 31.6,
+        "tideSummary": "Low Tide – ⬇️ Falling (Battery)"
       }
     },
     {
@@ -729,7 +813,9 @@
         "Site Name": "East River, South 5th Street/Domino Park",
         "Sample Time": "9:56 AM",
         "MPN": 160,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 16.5,
+        "tideSummary": "Mid Tide – ⬆️ Rising (Battery)"
       }
     },
     {
@@ -746,7 +832,9 @@
         "Site Name": "East River, South 8th St",
         "Sample Time": "7:03 AM",
         "MPN": 573,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 30.8,
+        "tideSummary": "Mid Tide – ⬇️ Falling (Battery)"
       }
     },
     {
@@ -763,7 +851,9 @@
         "Site Name": "Wallabout Channel (Brooklyn Navy Yard)",
         "Sample Time": "9:40 AM",
         "MPN": 591,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 11.9,
+        "tideSummary": "High Tide – ⬆️ Rising (Battery)"
       }
     },
     {
@@ -780,7 +870,9 @@
         "Site Name": "East River, Esplanade (+Pool)",
         "Sample Time": "9:41 AM",
         "MPN": 292,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 31,
+        "tideSummary": "Low Tide – ⬇️ Falling (Battery)"
       }
     },
     {
@@ -797,7 +889,9 @@
         "Site Name": "East River, Brooklyn Bridge Beach (Manhattan)",
         "Sample Time": "11:10 AM",
         "MPN": 933,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 33.1,
+        "tideSummary": "Mid Tide – ⬇️ Falling (Battery)"
       }
     },
     {
@@ -814,7 +908,9 @@
         "Site Name": "East River, Dumbo Cove",
         "Sample Time": "10:12 AM",
         "MPN": 134,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 25.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (Battery)"
       }
     },
     {
@@ -831,7 +927,9 @@
         "Site Name": "East River, Pier 2 Kayak Dock (Brooklyn Bridge Park)",
         "Sample Time": "8:58 AM",
         "MPN": 145,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 31.8,
+        "tideSummary": "Mid Tide – ⬇️ Falling (Battery)"
       }
     },
     {
@@ -848,7 +946,9 @@
         "Site Name": "East River, Pier 4 Beach (Brooklyn Bridge Park)",
         "Sample Time": "8:46 AM",
         "MPN": 187,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 6,
+        "tideSummary": "Mid Tide – ⬆️ Rising (Battery)"
       }
     },
     {
@@ -865,7 +965,9 @@
         "Site Name": "Buttermilk Channel, Pier 101 (Governors Island)",
         "Sample Time": "9:31 AM",
         "MPN": 145,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 10.3,
+        "tideSummary": "Mid Tide – ⬇️ Falling (Battery)"
       }
     },
     {
@@ -882,7 +984,9 @@
         "Site Name": "Buttermilk Channel, Valentino Pier",
         "Sample Time": "9:40 AM",
         "MPN": 135,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 13.9,
+        "tideSummary": "High Tide – ⬆️ Rising (Battery)"
       }
     },
     {
@@ -899,7 +1003,9 @@
         "Site Name": "Gowanus Canal, Second Street Sponge Park",
         "Sample Time": "8:00 AM",
         "MPN": null,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 7.7,
+        "tideSummary": "Low Tide – ⬇️ Falling (Battery)"
       }
     },
     {
@@ -916,7 +1022,9 @@
         "Site Name": "Upper Harbor, Bush Terminal Park (Inner Lagoon)",
         "Sample Time": "7:00 AM",
         "MPN": 75,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 28.7,
+        "tideSummary": "Low Tide – ⬇️ Falling (Battery)"
       }
     },
     {
@@ -933,7 +1041,9 @@
         "Site Name": "Upper Harbor, Bush Terminal Park (North Embayment)",
         "Sample Time": "7:05 AM",
         "MPN": 75,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 12.6,
+        "tideSummary": "Low Tide – ⬇️ Falling (Battery)"
       }
     },
     {
@@ -950,7 +1060,9 @@
         "Site Name": "Upper Harbor, Pier 69",
         "Sample Time": "1:00 PM",
         "MPN": 110,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 8.3,
+        "tideSummary": "High Tide – ⬆️ Rising (Battery)"
       }
     },
     {
@@ -967,7 +1079,9 @@
         "Site Name": "Prospect Park Lake",
         "Sample Time": "7:30 AM",
         "MPN": null,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 22.9,
+        "tideSummary": "Mid Tide – ⬇️ Falling (Battery)"
       }
     },
     {
@@ -984,7 +1098,9 @@
         "Site Name": "Coney Island Creek, Kaiser Park",
         "Sample Time": "7:00 AM",
         "MPN": null,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 34.4,
+        "tideSummary": "Mid Tide – ⬆️ Rising (Battery)"
       }
     },
     {
@@ -1001,7 +1117,9 @@
         "Site Name": "Paerdegat Basin, Jamaica Bay (Sebago Canoe Club)",
         "Sample Time": "11:26 AM",
         "MPN": 173,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 33.8,
+        "tideSummary": "Low Tide – ⬇️ Falling (Battery)"
       }
     },
     {
@@ -1018,7 +1136,9 @@
         "Site Name": "Gravesend Bay, Calvert Vaux Cove",
         "Sample Time": "1:08 PM",
         "MPN": 122,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 32.1,
+        "tideSummary": "Mid Tide – ⬆️ Rising (Battery)"
       }
     },
     {
@@ -1035,7 +1155,9 @@
         "Site Name": "Gravesend Bay, OH-015",
         "Sample Time": "1:30 PM",
         "MPN": 10462,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 5.8,
+        "tideSummary": "Low Tide – ⬇️ Falling (Battery)"
       }
     },
     {
@@ -1052,7 +1174,9 @@
         "Site Name": "Arthur Kill, Conference House Park",
         "Sample Time": "7:00 AM",
         "MPN": 2005,
-        "date": "2025-05-14"
+        "date": "2025-05-14",
+        "rainfall_mm_7day": 25.2,
+        "tideSummary": "Mid Tide – ⬆️ Rising (Battery)"
       }
     }
   ]

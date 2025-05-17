@@ -5,6 +5,7 @@
       :is-dark-mode="isDarkMode"
       @update:site-count="updateSiteCount"
       @update:sample-data="updateSampleData"
+      @update:rainfall-by-day-in="updateRainfallByDayIn"
     />
     <HeaderOverlay
       v-model:is-expanded="isHeaderExpanded"
@@ -37,7 +38,11 @@
     <!-- Legend components in top-left corner - only visible when header is collapsed -->
     <div v-if="!isHeaderExpanded" class="absolute top-4 left-4 z-40 flex flex-col space-y-2">
       <SampleBarLegend :samples="sampleData" :is-dark-mode="isDarkMode" />
-      <RainDropLegend :rainfall="rainfall" :is-dark-mode="isDarkMode" />
+      <RainDropLegend 
+        :rainfall="rainfall" 
+        :rainfall-by-day-in="rainfallByDayIn" 
+        :is-dark-mode="isDarkMode" 
+      />
     </div>
 
     <!-- Bottom navigation elements stacked in proper order -->
@@ -114,6 +119,12 @@ const sampleData = ref<Array<{ site: string, mpn: string | number }>>([]);
 const rainfall = ref<number>(1.25);
 
 /**
+ * Rainfall by day in inches (for the rain drop legend)
+ * @type {import('vue').Ref<Array<number | null>>}
+ */
+const rainfallByDayIn = ref<Array<number | null>>([]);
+
+/**
  * Update the count of water sampling sites
  * Called by MapViewer when new data is loaded
  * 
@@ -147,6 +158,20 @@ const toggleDarkMode = (): void => {
  */
 const updateMapMode = (darkMode: boolean): void => {
   isDarkMode.value = darkMode;
+};
+
+/**
+ * Update the rainfall by day data
+ * Called by MapViewer when new data is loaded
+ * 
+ * @param {Array<number | null>} data - Rainfall by day data in inches
+ */
+const updateRainfallByDayIn = (data: Array<number | null>): void => {
+  rainfallByDayIn.value = data;
+  
+  // Also update the total rainfall value (for backward compatibility)
+  const total = data.reduce((sum, val) => sum + (val || 0), 0);
+  rainfall.value = Number(total.toFixed(1));
 };
 
 /**

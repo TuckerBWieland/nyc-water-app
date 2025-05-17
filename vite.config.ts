@@ -9,10 +9,10 @@ export default defineConfig({
     vue(),
     geoJsonEnrichmentPlugin({
       dataDir: 'public/data',
-      skipInDev: false // Set to true to skip enrichment in dev mode
-    })
+      skipInDev: false, // Set to true to skip enrichment in dev mode
+    }),
   ],
   resolve: {
-    extensions: ['.js', '.ts', '.jsx', '.tsx', '.json', '.vue']
+    extensions: ['.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
   },
 });

@@ -23,6 +23,7 @@
  * @property {string} [properties.sampleTime] - Time when sample was collected
  * @property {string} [properties.timestamp] - Alternative timestamp format
  * @property {string|null} [properties.tideSummary] - Tide conditions at sample time
+ * @property {number|null} [properties.rainfall_mm_7day] - 7-day rainfall total in mm
  */
 export interface GeoJSONFeature {
   type: string;
@@ -37,6 +38,7 @@ export interface GeoJSONFeature {
     sampleTime?: string;
     timestamp?: string;
     tideSummary?: string | null;
+    rainfall_mm_7day?: number | null;
   };
 }
 
@@ -67,6 +69,7 @@ export interface GeoJSONCollection {
  * @property {string} [sampleTime] - Time when sample was collected
  * @property {string} [timestamp] - Alternative timestamp format
  * @property {string|null} [tideSummary] - Tide conditions at sample time
+ * @property {number|null} [rainfall_mm_7day] - 7-day rainfall total in mm
  */
 export interface SampleData {
   [key: string]: any;
@@ -79,6 +82,7 @@ export interface SampleData {
   sampleTime?: string;
   timestamp?: string;
   tideSummary?: string | null;
+  rainfall_mm_7day?: number | null;
 }
 
 /**

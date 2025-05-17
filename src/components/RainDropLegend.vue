@@ -1,57 +1,56 @@
 <template>
   <div
-    class="rain-drop-legend p-2 rounded shadow-md"
+    v-if="hasValidRainfallData"
+    class="rain-drop-legend p-3 rounded shadow-md"
     :class="isDarkMode ? 'bg-gray-800 text-gray-200' : 'bg-white text-gray-800'"
   >
-    <h3 class="text-xs font-medium mb-1">7-Day Rainfall</h3>
+    <h3 class="text-xs font-medium mb-2">7-Day Rainfall</h3>
 
-    <div class="flex items-center">
-      <!-- Water drop SVG with animated fill -->
-      <div class="relative w-8 h-12 mr-2">
-        <svg viewBox="0 0 100 160" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
-          <!-- Droplet outline -->
-          <path
-            d="M50,0 C50,0 0,70 0,110 C0,138.1 22.4,160 50,160 C77.6,160 100,138.1 100,110 C100,70 50,0 50,0 Z"
-            stroke="currentColor"
-            stroke-width="2"
-            fill="none"
-            :class="isDarkMode ? 'text-sky-600' : 'text-sky-700'"
-          />
-
-          <!-- Droplet fill - uses clipPath to animate fill level -->
-          <path
-            d="M50,0 C50,0 0,70 0,110 C0,138.1 22.4,160 50,160 C77.6,160 100,138.1 100,110 C100,70 50,0 50,0 Z"
-            class="text-sky-400"
-            fill="currentColor"
-            :clip-path="'url(#rainClip' + _uid + ')'"
-          />
-
-          <!-- Clip path for water level -->
-          <clipPath :id="'rainClip' + _uid">
-            <rect x="0" :y="160 - fillHeight" width="100" :height="fillHeight" />
-          </clipPath>
-        </svg>
+    <div class="flex items-end justify-between h-16 mb-1">
+      <!-- 7 vertical bars representing daily rainfall -->
+      <div
+        v-for="(value, index) in rainData"
+        :key="index"
+        class="flex flex-col items-center group"
+      >
+        <div
+          class="w-3 rounded-t transition-all duration-300 shadow-sm hover:shadow-md group-hover:w-4"
+          :class="getBarColorClass(value)"
+          :style="{ height: `${getBarHeight(value)}%` }"
+          :title="`${value !== null && value !== undefined ? Number(value).toFixed(2) : 'No data'} inches`"
+        ></div>
+        <span class="text-xs mt-1 font-medium">{{ getDayLabel(index) }}</span>
       </div>
-
-      <!-- Rainfall text -->
-      <div class="flex flex-col items-center">
-        <div class="flex items-baseline gap-1 text-lg font-bold">
-          <span>{{ rainfall.toFixed(2) }}</span
-          ><span class="text-xs">in</span>
-        </div>
-        <span class="text-xs text-gray-500 mt-1">{{ getRainfallLabel }}</span>
-      </div>
+    </div>
+    
+    <!-- Total rainfall display -->
+    <div 
+      class="text-xs text-center mt-2 pt-2 border-t" 
+      :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
+    >
+      <span class="font-semibold">Total rainfall:</span>
+      <span class="font-bold">{{ totalRainfallValue }}</span>
+      <span>in</span>
     </div>
   </div>
 </template>
 
-<script setup>
-import { computed, ref } from 'vue';
+<script setup lang="ts">
+import { computed } from 'vue';
 
+// Using Runtime props validation with proper TypeScript typing
 const props = defineProps({
   rainfall: {
     type: Number,
     default: 0,
+  },
+  rainfallByDay: {
+    type: Array as () => (number | null)[],
+    default: () => [],
+  },
+  rainfallByDayIn: {
+    type: Array as () => (number | null)[],
+    default: () => [],
   },
   isDarkMode: {
     type: Boolean,
@@ -59,26 +58,91 @@ const props = defineProps({
   },
 });
 
-const _uid = ref(`rain-${Math.random().toString(36).substring(2, 9)}`);
+// Days of the week labels (Friday to Thursday, ending with sample day)
+const dayLabels = ['F', 'S', 'S', 'M', 'T', 'W', 'Th'];
 
-// Clip fill height: max 160px for 15 inches
-const fillHeight = computed(() => {
-  const percentage = Math.min(props.rainfall / 15, 1);
-  return percentage * 160;
+// Check if we have array data available
+const hasArrayData = computed<boolean>(() => {
+  return (props.rainfallByDayIn.length > 0 || props.rainfallByDay.length > 0);
 });
 
-const getRainfallLabel = computed(() => {
-  if (props.rainfall < 0.1) return 'Dry';
-  if (props.rainfall < 1) return 'Light';
-  if (props.rainfall < 3) return 'Moderate';
-  if (props.rainfall < 6) return 'Heavy';
-  if (props.rainfall < 10) return 'Very Heavy';
-  return 'Extreme';
+// Generate a synthetic 7-day array from the single rainfall value
+const syntheticRainData = computed<(number | null)[]>(() => {
+  // Create an array with the rainfall value distributed over 7 days
+  // This is a fallback for when only the single rainfall value is provided
+  if (props.rainfall > 0) {
+    // Create a distribution that looks natural - higher in middle days
+    const distribution = [0.1, 0.15, 0.2, 0.25, 0.15, 0.1, 0.05];
+    return distribution.map(factor => props.rainfall * factor);
+  }
+  return [0, 0, 0, 0, 0, 0, 0];
 });
+
+// Choose which rainfall data array to use
+const rainData = computed<(number | null)[]>(() => {
+  if (props.rainfallByDayIn.length > 0) return props.rainfallByDayIn;
+  if (props.rainfallByDay.length > 0) return props.rainfallByDay;
+  return syntheticRainData.value;
+});
+
+// Calculate total rainfall (sum of all values)
+const totalRainfall = computed<number>(() => {
+  if (hasArrayData.value) {
+    return rainData.value.reduce((sum, val) => sum + (val !== null && val !== undefined ? Number(val) : 0), 0);
+  }
+  // Use the single rainfall value if no array data available
+  return props.rainfall;
+});
+
+// Formatted total rainfall with one decimal place
+const totalRainfallValue = computed<string>(() => {
+  return totalRainfall.value.toFixed(1);
+});
+
+// Check if we have valid rainfall data to display
+const hasValidRainfallData = computed<boolean>(() => {
+  // Always show if we have a rainfall value
+  if (props.rainfall > 0) return true;
+  
+  // Check for array data
+  if (!rainData.value || rainData.value.length === 0) return false;
+  
+  // Check if at least one value is not null
+  return rainData.value.some(val => val !== null && val !== undefined);
+});
+
+// Determine color class based on rainfall amount
+const getBarColorClass = (value: number | null): string => {
+  if (value === null || value === undefined) return 'bg-gray-200';
+  
+  if (value < 0.5) return props.isDarkMode ? 'bg-green-600' : 'bg-green-500';
+  if (value < 3.0) return props.isDarkMode ? 'bg-yellow-500' : 'bg-yellow-400';
+  return props.isDarkMode ? 'bg-red-600' : 'bg-red-500';
+};
+
+// Get day label for each bar
+const getDayLabel = (index: number): string => {
+  return dayLabels[index % 7];
+};
+
+// Calculate bar height percentage based on rainfall amount
+const getBarHeight = (value: number | null): number => {
+  if (value === null || value === undefined || value === 0) return 5; // Minimum height
+  
+  // Height is proportional to rainfall, max height at 4 inches
+  // Use a logarithmic scale to better show differences in small values
+  const heightPercentage = Math.max(5, Math.min(100, 20 * Math.log2(1 + Number(value) * 2)));
+  return heightPercentage;
+};
 </script>
 
 <style scoped>
 .rain-drop-legend {
-  min-width: 90px;
+  min-width: 160px;
+}
+
+/* Ensure minimum height for bars with very small values */
+.w-3 {
+  min-height: 1px;
 }
 </style>

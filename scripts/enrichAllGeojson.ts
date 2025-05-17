@@ -1,5 +1,5 @@
 /**
- * NOAA Tide Data Enrichment - Batch Processor
+ * NOAA Tide & Rainfall Data Enrichment - Batch Processor
  *
  * This script automatically processes all GeoJSON files in the public/data folder
  * that don't already have corresponding enriched versions.
@@ -10,7 +10,7 @@
  * The script will:
  * 1. Find all .geojson files in public/data/
  * 2. For each file without a corresponding .enriched.geojson version,
- *    run the enrichWithTideData.js script on it
+ *    run the enrichWithTideData.js and enrichWithRainfallData.js scripts on it
  * 3. Original files remain untouched
  */
 
@@ -26,7 +26,8 @@ const __dirname = path.dirname(__filename);
 // Configuration
 const DATA_DIR = path.join(__dirname, '..', 'public', 'data');
 // The script will be compiled to the dist directory
-const ENRICHMENT_SCRIPT = path.join(__dirname, 'enrichWithTideData.js');
+const TIDE_ENRICHMENT_SCRIPT = path.join(__dirname, 'enrichWithTideData.js');
+const RAINFALL_ENRICHMENT_SCRIPT = path.join(__dirname, 'enrichWithRainfallData.js');
 
 /**
  * Function to check if Node.js exists
@@ -43,15 +44,23 @@ function checkNodeExists(): boolean {
 }
 
 /**
- * Function to check if the enrichment script exists
- * @returns boolean indicating whether the script exists
+ * Function to check if the enrichment scripts exist
+ * @returns boolean indicating whether the scripts exist
  */
-function checkEnrichmentScriptExists(): boolean {
-  if (!fs.existsSync(ENRICHMENT_SCRIPT)) {
-    console.error(`Enrichment script not found at ${ENRICHMENT_SCRIPT}`);
-    return false;
+function checkEnrichmentScriptsExist(): boolean {
+  let allScriptsExist = true;
+  
+  if (!fs.existsSync(TIDE_ENRICHMENT_SCRIPT)) {
+    console.error(`Tide enrichment script not found at ${TIDE_ENRICHMENT_SCRIPT}`);
+    allScriptsExist = false;
   }
-  return true;
+  
+  if (!fs.existsSync(RAINFALL_ENRICHMENT_SCRIPT)) {
+    console.error(`Rainfall enrichment script not found at ${RAINFALL_ENRICHMENT_SCRIPT}`);
+    allScriptsExist = false;
+  }
+  
+  return allScriptsExist;
 }
 
 /**
@@ -92,7 +101,7 @@ function enrichedVersionExists(filename: string): boolean {
  */
 function enrichAllGeoJsonFiles(): void {
   // Check prerequisites
-  if (!checkNodeExists() || !checkEnrichmentScriptExists()) {
+  if (!checkNodeExists() || !checkEnrichmentScriptsExist()) {
     return;
   }
 
@@ -122,8 +131,18 @@ function enrichAllGeoJsonFiles(): void {
 
     try {
       console.log(`Processing ${file}...`);
-      // Run the enrichment script on the file
-      execSync(`node ${ENRICHMENT_SCRIPT} "${filePath}"`, {
+      
+      // First, run the tide enrichment script
+      console.log(`- Adding tide data to ${file}...`);
+      execSync(`node ${TIDE_ENRICHMENT_SCRIPT} "${filePath}"`, {
+        stdio: 'inherit',
+        timeout: 300000, // 5 minute timeout
+      });
+      
+      // Then run the rainfall enrichment script on the enriched file
+      console.log(`- Adding rainfall data to ${file}...`);
+      const enrichedFilePath = filePath.replace('.geojson', '.enriched.geojson');
+      execSync(`node ${RAINFALL_ENRICHMENT_SCRIPT} "${enrichedFilePath}"`, {
         stdio: 'inherit',
         timeout: 300000, // 5 minute timeout
       });
