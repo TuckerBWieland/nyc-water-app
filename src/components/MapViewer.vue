@@ -205,7 +205,6 @@ watch(
 
 // Watch for changes in map data and update map
 watch(mapData, newData => {
-  console.log('Map data updated:', newData);
   if (newData && map.value) {
     updateMap(newData);
   }
@@ -272,6 +271,9 @@ const loadMapData = async (date: string) => {
               emit('update:rainData', inches);
               emit('update:totalRain', Number(totalInches.toFixed(2)));
 
+              // Log total 7-day rainfall in inches
+              console.log(`Total 7-day rainfall: ${Number(totalInches.toFixed(2))} inches`);
+
               // Also emit using the legacy format for backward compatibility
               emit('update:rainfallByDayIn', inches);
             }
@@ -311,6 +313,12 @@ const loadMapData = async (date: string) => {
             // Emit both the new and legacy data formats
             emit('update:rainData', rainfallByDay);
             emit('update:totalRain', Number(totalRainfallInches.toFixed(2)));
+
+            // Log synthetic 7-day rainfall in inches
+            console.log(
+              `Total 7-day rainfall (synthetic): ${Number(totalRainfallInches.toFixed(2))} inches`
+            );
+
             emit('update:rainfallByDayIn', rainfallByDay);
           }
         } else {
@@ -370,9 +378,6 @@ const updateMap = (data: GeoJSONCollection): void => {
     return;
   }
 
-  console.log('Updating map with data:', data);
-  console.log('Features count:', data.features ? data.features.length : 0);
-
   // Store current view state before updating markers
   let previousCenter = map.value.getCenter();
   let previousZoom = map.value.getZoom();
@@ -388,6 +393,9 @@ const updateMap = (data: GeoJSONCollection): void => {
     console.warn('No features found in data');
     return;
   }
+
+  // Log total number of features
+  console.log(`Total features on map: ${data.features.length}`);
 
   let markersAdded = 0;
 
