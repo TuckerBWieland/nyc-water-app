@@ -5,13 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "enrich-data": "node scripts/enrichAllGeojson.js",
-    "prebuild": "npm run enrich-data",
+    "compile-scripts": "tsc --project tsconfig.json",
+    "enrich-data": "npm run compile-scripts && node dist/enrichAllGeojson.js",
+    "prebuild": "npm run compile-scripts && npm run enrich-data",
     "build": "vite build",
     "preview": "vite preview",
     "deploy": "gh-pages -d dist",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
-    "format": "prettier --write src/"
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx --fix --ignore-path .gitignore",
+    "format": "prettier --write src/ scripts/"
   },
   "dependencies": {
     "leaflet": "^1.9.4",
@@ -20,6 +21,8 @@
     "vue": "^3.3.4"
   },
   "devDependencies": {
+    "@types/node": "^22.15.18",
+    "@types/node-fetch": "^2.6.12",
     "@vitejs/plugin-vue": "^4.2.3",
     "@vue/eslint-config-prettier": "^7.1.0",
     "autoprefixer": "^10.4.14",
@@ -29,6 +32,7 @@
     "postcss": "^8.4.24",
     "prettier": "^2.8.8",
     "tailwindcss": "^3.3.2",
+    "typescript": "^5.8.3",
     "vite": "^4.4.0"
   }
 }

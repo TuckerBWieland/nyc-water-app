@@ -12,5 +12,5 @@ app.mount('#app');
 // Track page view using standardized analytics
 track(EVENTS.VIEWED_PAGE, {
   page: 'home',
-  referrer: document.referrer
+  referrer: document.referrer,
 });

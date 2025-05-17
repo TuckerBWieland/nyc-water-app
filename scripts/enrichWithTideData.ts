@@ -1,0 +1,162 @@
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { parseDateUTC } from './parseDateUTC.js';
+import { 
+  findNearestTideStation,
+  getTideData,
+  analyzeTideData,
+  formatDate
+} from './tideServices.js';
+import type { 
+  GeoJSONCollection,
+  GeoJSONFeature,
+  SampleData
+} from './types.js';
+
+/**
+ * Main function to enrich samples with tide data
+ * 
+ * @param inputFilePath - Path to the GeoJSON or JSON file to enrich
+ * @returns Promise that resolves when the enrichment is complete
+ */
+export async function enrichSamplesWithTideData(inputFilePath: string): Promise<void> {
+  try {
+    // Read the input file
+    const rawData = fs.readFileSync(inputFilePath, 'utf8');
+    const sampleData = JSON.parse(rawData);
+
+    // Check if it's a GeoJSON file or a regular JSON array
+    const isGeoJSON = sampleData.type === 'FeatureCollection' && Array.isArray(sampleData.features);
+    const samples: (GeoJSONFeature | SampleData)[] = isGeoJSON ? sampleData.features : sampleData;
+
+    // Process each sample
+    let processedCount = 0;
+    let enrichedCount = 0;
+
+    for (const sample of samples) {
+      processedCount++;
+
+      // Extract coordinates and sample time based on data format
+      let lat: number | undefined, 
+          lon: number | undefined, 
+          sampleTime: string | undefined, 
+          properties: Record<string, any>;
+
+      if ('geometry' in sample && 'properties' in sample) {
+        // GeoJSON format
+        lon = sample.geometry.coordinates[0];
+        lat = sample.geometry.coordinates[1];
+        sampleTime = sample.properties.sampleTime || sample.properties.timestamp;
+        properties = sample.properties;
+      } else {
+        // Regular JSON format
+        lat = (sample as SampleData).latitude || (sample as SampleData).lat;
+        lon = (sample as SampleData).longitude || (sample as SampleData).lon;
+        sampleTime = (sample as SampleData).sampleTime || (sample as SampleData).timestamp;
+        properties = sample as Record<string, any>;
+      }
+
+      // Standardize sample time format if it's not already a full ISO string
+      if (sampleTime && !sampleTime.includes('T')) {
+        // If it's just a time like "9:02", assume it's for the sample date
+        if (/^\\d{1,2}:\\d{2}(:\\d{2})?(\\s*[AP]M)?$/i.test(sampleTime)) {
+          const [hours, minutes] = sampleTime
+            .replace(/\\s*[AP]M/i, '')
+            .split(':')
+            .map(Number);
+          const isPM = /PM/i.test(sampleTime);
+
+          // Get the date from the file name or a specified date
+          const dateFromFilename = path.basename(inputFilePath).split('.')[0]; // e.g., "2025-05-09"
+
+          // Use Date.UTC to create a date in UTC
+          const year = parseInt(dateFromFilename.split('-')[0], 10);
+          const month = parseInt(dateFromFilename.split('-')[1], 10) - 1; // 0-based months
+          const day = parseInt(dateFromFilename.split('-')[2], 10);
+          const adjustedHours = isPM && hours < 12 ? hours + 12 : hours;
+
+          // Create a UTC Date directly to avoid timezone offsets
+          const sampleDate = new Date(Date.UTC(year, month, day, adjustedHours, minutes));
+
+          // Format to consistent string format
+          sampleTime = formatDate(sampleDate);
+          console.log(
+            `Converted sample time "${hours}:${minutes}${
+              isPM ? ' PM' : ''
+            }" to "${sampleTime}" (UTC)`
+          );
+        }
+      }
+
+      if (!lat || !lon || !sampleTime) {
+        continue;
+      }
+
+      // Find the nearest tide station
+      const nearestStation = await findNearestTideStation(lat, lon);
+
+      if (!nearestStation) {
+        properties.tideSummary = null;
+        continue;
+      }
+
+      // Get tide data for the station
+      const tideData = await getTideData(nearestStation.id, sampleTime);
+
+      if (!tideData) {
+        properties.tideSummary = null;
+        continue;
+      }
+
+      // Analyze the tide data
+      const tideSummary = analyzeTideData(tideData, nearestStation.name, sampleTime);
+
+      if (tideSummary) {
+        properties.tideSummary = tideSummary;
+        enrichedCount++;
+      } else {
+        properties.tideSummary = null;
+      }
+
+      // Add a small delay to avoid hitting API rate limits
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+
+    console.log(`Processed ${processedCount} samples, enriched ${enrichedCount} with tide data`);
+
+    // Write the updated data to output file
+    const outputFilePath = inputFilePath
+      .replace('.json', '.enriched.json')
+      .replace('.geojson', '.enriched.geojson');
+    fs.writeFileSync(outputFilePath, JSON.stringify(sampleData, null, 2), 'utf8');
+    console.log(`Wrote enriched data to ${outputFilePath}`);
+  } catch (error) {
+    console.error('Error enriching samples with tide data:', error);
+  }
+}
+
+// Only run directly if this script is called directly (not imported)
+if (import.meta.url === `file://${process.argv[1]}`) {
+  // Get __dirname equivalent in ES modules
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
+
+  // Check for input file argument
+  if (process.argv.length < 3) {
+    console.error('Please provide a path to a GeoJSON or JSON file to enrich');
+    process.exit(1);
+  }
+
+  const inputFilePath = process.argv[2];
+
+  // Execute the main function
+  enrichSamplesWithTideData(inputFilePath)
+    .then(() => {
+      console.log('Enrichment completed successfully');
+    })
+    .catch(error => {
+      console.error('Enrichment failed:', error);
+      process.exit(1);
+    });
+}

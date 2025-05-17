@@ -118,10 +118,10 @@ const updatePopupStyles = () => {
 // Watch for changes in dark mode setting
 watch(
   () => props.isDarkMode,
-  (newMode) => {
+  newMode => {
     updateTileLayer();
     track(EVENTS.CHANGED_THEME, {
-      mode: newMode ? 'dark' : 'light'
+      mode: newMode ? 'dark' : 'light',
     });
   }
 );
@@ -181,16 +181,12 @@ const loadMapData = async date => {
           const enrichedData = await enrichedResponse.json();
           mapData.value = enrichedData;
         }
-      } catch (enrichedError) {
-      }
-    } catch (jsonError) {
-    }
-  } catch (error) {
-  }
+      } catch (enrichedError) {}
+    } catch (jsonError) {}
+  } catch (error) {}
 };
 
 const updateMap = data => {
-
   if (!map.value) {
     return;
   }
@@ -312,16 +308,14 @@ const updateMap = data => {
       marker.on('popupopen', () => {
         track(EVENTS.VIEWED_SAMPLE_PIN, {
           site: site,
-          mpn: mpn
+          mpn: mpn,
         });
       });
 
       markers.value.push(marker);
       markersAdded++;
-    } catch (error) {
-    }
+    } catch (error) {}
   }
-
 
   // Handle map positioning
   if (markers.value.length > 0) {
@@ -348,7 +342,7 @@ onMounted(() => {
   // Add map interaction analytics
   map.value.on('zoomend', () => {
     track(EVENTS.ZOOMED_MAP, {
-      zoom_level: map.value.getZoom()
+      zoom_level: map.value.getZoom(),
     });
   });
 
@@ -356,7 +350,7 @@ onMounted(() => {
     const center = map.value.getCenter();
     track(EVENTS.PANNED_MAP, {
       lat: center.lat.toFixed(4),
-      lng: center.lng.toFixed(4)
+      lng: center.lng.toFixed(4),
     });
   });
 

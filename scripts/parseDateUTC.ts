@@ -1,5 +1,11 @@
-// Helper function to ensure a Date object is created with proper UTC interpretation
-function parseDateUTC(dateString) {
+/**
+ * Ensures a Date object is created with proper UTC interpretation
+ * Handles different date formats consistently in UTC
+ * 
+ * @param dateString - Date string or Date object to parse
+ * @returns Date object in UTC
+ */
+export function parseDateUTC(dateString: Date | string): Date {
   if (dateString instanceof Date) {
     return dateString;
   }
@@ -15,6 +21,10 @@ function parseDateUTC(dateString) {
 
       // Create a UTC Date object
       return new Date(Date.UTC(year, month - 1, day, hours, minutes));
+    } else if (dateString.includes('-')) {
+      // Just date without time (e.g., 2025-05-09)
+      const [year, month, day] = dateString.split('-').map(Number);
+      return new Date(Date.UTC(year, month - 1, day));
     }
   }
 
