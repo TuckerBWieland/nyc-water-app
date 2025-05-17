@@ -51,9 +51,9 @@ export function useLeafletMap(options: MapOptions): MapRef {
   } = options;
 
   // Reactive references
-  const instance = ref<L.Map | null>(null);
-  const tileLayer = ref<L.TileLayer | null>(null);
-  const markers = ref<L.Marker[]>([]);
+  const instance = ref<L.Map | null>(null) as Ref<L.Map | null>;
+  const tileLayer = ref<L.TileLayer | null>(null) as Ref<L.TileLayer | null>;
+  const markers = ref<L.Marker[]>([]) as Ref<L.Marker[]>;
   const hasAutoFitted = ref<boolean>(false);
 
   /**

@@ -295,6 +295,19 @@ const loadMapData = async (date: string) => {
               Number((totalRainfallInches * factor).toFixed(2))
             );
 
+            // Add this information to all features in the GeoJSON for consistent data access
+            // This simulates having daily rainfall data in the data source
+            for (const feature of mapData.value.features) {
+              if (!feature.properties.rainfall_by_day_in) {
+                // Calculate individual daily values from the feature's total rainfall
+                const featureRainfall = feature.properties.rainfall_mm_7day || 0;
+                const featureRainfallInches = featureRainfall * 0.0393701;
+                feature.properties.rainfall_by_day_in = distribution.map(factor =>
+                  Number((featureRainfallInches * factor).toFixed(2))
+                );
+              }
+            }
+
             // Emit both the new and legacy data formats
             emit('update:rainData', rainfallByDay);
             emit('update:totalRain', Number(totalRainfallInches.toFixed(2)));

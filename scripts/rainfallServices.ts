@@ -37,7 +37,12 @@ export async function findNearestRainfallStation(
       }
     );
 
-    const data = await response.json();
+    const data = await response.json() as { results: Array<{
+      id: string;
+      name: string;
+      latitude: string;
+      longitude: string;
+    }> };
 
     // Transform data to our station format
     const stations = data.results.map(station => ({

@@ -166,7 +166,7 @@ export function useMarkers(map: Ref<L.Map | null>, options: MarkerOptions = {}):
   } = options;
 
   // State
-  const markers = ref<L.Marker[]>([]);
+  const markers = ref<L.Marker[]>([]) as Ref<L.Marker[]>;
   const markerCount = ref<number>(0);
   const processedFeatures = ref<number>(0);
 

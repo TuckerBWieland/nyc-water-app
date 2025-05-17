@@ -86,11 +86,31 @@ const syntheticRainData = computed<(number | null)[]>(() => {
 
 // Choose which rainfall data array to use
 const rainData = computed<(number | null)[]>(() => {
+  // Log what we have for debugging
+  console.log('RainDropLegend props:', {
+    rainData: props.rainData,
+    rainfallByDayIn: props.rainfallByDayIn,
+    rainfallByDay: props.rainfallByDay,
+    totalRain: props.totalRain,
+  });
+
   // Use the new rainData prop if provided
-  if (props.rainData && props.rainData.length > 0) return props.rainData;
+  if (props.rainData && props.rainData.length > 0) {
+    console.log('Using rainData prop:', props.rainData);
+    return props.rainData;
+  }
   // Fallback to legacy props
-  if (props.rainfallByDayIn.length > 0) return props.rainfallByDayIn;
-  if (props.rainfallByDay.length > 0) return props.rainfallByDay;
+  if (props.rainfallByDayIn && props.rainfallByDayIn.length > 0) {
+    console.log('Using rainfallByDayIn prop:', props.rainfallByDayIn);
+    return props.rainfallByDayIn;
+  }
+  if (props.rainfallByDay && props.rainfallByDay.length > 0) {
+    console.log('Using rainfallByDay prop:', props.rainfallByDay);
+    return props.rainfallByDay;
+  }
+
+  // Final fallback to synthetic data
+  console.log('Using synthetic rain data:', syntheticRainData.value);
   return syntheticRainData.value;
 });
 
@@ -118,17 +138,36 @@ const totalRainfallValue = computed<string>(() => {
 const hasValidRainfallData = computed<boolean>(() => {
   // Use new props first
   if (props.rainData && props.rainData.length > 0) {
-    return props.rainData.some(val => val !== null && val !== undefined);
+    // Check if rainData has at least one non-null, non-zero value
+    const hasValidRainData = props.rainData.some(
+      val => val !== null && val !== undefined && val > 0
+    );
+    console.log('hasValidRainData from props.rainData:', hasValidRainData);
+    if (hasValidRainData) return true;
   }
 
   // Fallback to legacy props
-  if (props.rainfall > 0) return true;
+  if (props.rainfall > 0) {
+    console.log('Using props.rainfall > 0:', props.rainfall);
+    return true;
+  }
+
+  // Check for total rain
+  if (props.totalRain > 0) {
+    console.log('Using props.totalRain > 0:', props.totalRain);
+    return true;
+  }
 
   // Check for array data
-  if (!rainData.value || rainData.value.length === 0) return false;
+  if (!rainData.value || rainData.value.length === 0) {
+    console.log('No rainData.value:', rainData.value);
+    return false;
+  }
 
-  // Check if at least one value is not null
-  return rainData.value.some(val => val !== null && val !== undefined);
+  // Check if at least one value is not null and greater than zero
+  const result = rainData.value.some(val => val !== null && val !== undefined && val > 0);
+  console.log('Final check on rainData.value:', result, rainData.value);
+  return result;
 });
 
 // Determine color class based on rainfall amount
