@@ -12,7 +12,12 @@ import type {
   GeoJSONCollection,
   GeoJSONFeature,
   SampleData
-} from './types.js';
+} from '../src/types/geojson';
+import {
+  isGeoJSONCollection,
+  isGeoJSONFeature,
+  isSampleData
+} from '../src/types/geojson';
 
 /**
  * Main function to enrich samples with tide data
@@ -24,11 +29,28 @@ export async function enrichSamplesWithTideData(inputFilePath: string): Promise<
   try {
     // Read the input file
     const rawData = fs.readFileSync(inputFilePath, 'utf8');
-    const sampleData = JSON.parse(rawData);
+    const parsedData = JSON.parse(rawData);
 
-    // Check if it's a GeoJSON file or a regular JSON array
-    const isGeoJSON = sampleData.type === 'FeatureCollection' && Array.isArray(sampleData.features);
-    const samples: (GeoJSONFeature | SampleData)[] = isGeoJSON ? sampleData.features : sampleData;
+    // Validate and determine the data type
+    let samples: (GeoJSONFeature | SampleData)[] = [];
+    let isGeoJSON = false;
+    
+    if (isGeoJSONCollection(parsedData)) {
+      isGeoJSON = true;
+      samples = parsedData.features;
+    } else if (Array.isArray(parsedData)) {
+      // Check if it's an array of sample data
+      if (parsedData.length > 0 && isSampleData(parsedData[0])) {
+        samples = parsedData;
+      } else {
+        throw new Error('Unrecognized data format: Array does not contain valid sample data');
+      }
+    } else {
+      throw new Error('Unrecognized data format: Not a GeoJSON collection or sample data array');
+    }
+    
+    // Store the original data structure for writing back later
+    const sampleData = parsedData;
 
     // Process each sample
     let processedCount = 0;

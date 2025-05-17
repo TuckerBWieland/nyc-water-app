@@ -7,7 +7,13 @@ import type {
   ProcessedTideReading,
   NOAAStationsResponse,
   NOAAWaterLevelResponse
-} from './types.js';
+} from '../src/types/tide';
+import { 
+  isTideStation, 
+  isTideReading,
+  isNOAAStationsResponse,
+  isNOAAWaterLevelResponse 
+} from '../src/types/tide';
 
 const fetch = nodeFetch;
 
@@ -68,9 +74,16 @@ export async function findNearestTideStation(lat: number, lon: number): Promise<
     const response = await fetch(
       'https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations.json'
     );
-    const data = await response.json() as NOAAStationsResponse;
+    const data = await response.json();
+    
+    // Validate the response using type guard
+    if (!isNOAAStationsResponse(data)) {
+      console.error('Invalid NOAA stations response format');
+      return null;
+    }
 
-    if (!data.stations) {
+    if (!data.stations || data.stations.length === 0) {
+      console.error('No stations found in NOAA response');
       return null;
     }
 
@@ -103,7 +116,13 @@ export async function findNearestTideStation(lat: number, lon: number): Promise<
  * @returns Nearest station or null if none found
  */
 export function findNearestStationWithinRadius(
-  stations: any[], 
+  stations: Array<{
+    id: string;
+    name: string;
+    lat: number;
+    lng: number;
+    [key: string]: any;
+  }>, 
   lat: number, 
   lon: number, 
   maxDistanceKm: number
@@ -157,11 +176,26 @@ export async function getTideData(stationId: string, sampleTime: string | Date):
     )}&end_date=${encodeURIComponent(end)}`;
 
     const response = await fetch(url);
-    const data = await response.json() as NOAAWaterLevelResponse;
+    const data = await response.json();
+    
+    // Validate the response using type guard
+    if (!isNOAAWaterLevelResponse(data)) {
+      console.error('Invalid NOAA water level response format');
+      return null;
+    }
 
     if (data.error) {
       console.error('NOAA API error:', data.error);
       return null;
+    }
+
+    // Validate the data array if it exists
+    if (data.data && data.data.length > 0) {
+      // Check a sample entry to ensure it's valid
+      if (!isTideReading(data.data[0])) {
+        console.error('Invalid tide reading format in response');
+        return null;
+      }
     }
 
     return data.data || [];

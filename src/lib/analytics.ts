@@ -1,65 +1,72 @@
 import { posthogClient } from '../posthog';
 import eventDescriptions from './eventMapping.json';
+import { 
+  AnalyticsEvent, 
+  EventPayload, 
+  EventPayloadMap,
+  UserTraits as UserTraitsType
+} from '../types/analytics';
 
 /**
- * Type definition for analytics events
+ * Re-export the AnalyticsEvent enum
  */
-export type EventName = 
-  | 'viewed_page'
-  | 'viewed_sample_pin'
-  | 'changed_theme'
-  | 'selected_date'
-  | 'zoomed_map'
-  | 'panned_map'
-  | 'failed_loading_data';
+export { AnalyticsEvent };
 
 /**
- * Type for the EVENTS constant object
+ * Type for the EVENTS constant object (for backward compatibility)
  */
-export type EventsRecord = Record<string, EventName>;
+export type EventsRecord = Record<string, string>;
 
 /**
  * Standardized analytics event names
  * Follow verb_object[_context] pattern in snake_case
  */
 export const EVENTS: EventsRecord = {
-  VIEWED_PAGE: 'viewed_page',
-  VIEWED_SAMPLE_PIN: 'viewed_sample_pin',
-  CHANGED_THEME: 'changed_theme',
-  SELECTED_DATE: 'selected_date',
-  ZOOMED_MAP: 'zoomed_map',
-  PANNED_MAP: 'panned_map',
-  FAILED_LOADING_DATA: 'failed_loading_data',
+  VIEWED_PAGE: AnalyticsEvent.VIEWED_PAGE,
+  VIEWED_SAMPLE_PIN: AnalyticsEvent.VIEWED_SAMPLE_PIN,
+  CHANGED_THEME: AnalyticsEvent.CHANGED_THEME,
+  SELECTED_DATE: AnalyticsEvent.SELECTED_DATE,
+  ZOOMED_MAP: AnalyticsEvent.ZOOMED_MAP,
+  PANNED_MAP: AnalyticsEvent.PANNED_MAP,
+  FAILED_LOADING_DATA: AnalyticsEvent.FAILED_LOADING_DATA,
 };
 
+// Re-export UserTraits for backward compatibility
+export type UserTraits = UserTraitsType;
+
 /**
- * Properties that can be passed to tracking events
+ * Type-safe track function for known events with proper payload types
  */
-export interface TrackingProperties {
-  [key: string]: any;
-  page?: string;
-  referrer?: string;
-  theme?: string;
-  date?: string;
-  zoomLevel?: number;
-  sampleId?: string;
-  error?: string;
+export function trackEvent<E extends AnalyticsEvent>(
+  event: E,
+  payload: EventPayloadMap[E]
+): void {
+  // Add standard properties to all events
+  const enhancedProps = {
+    ...payload,
+    timestamp: new Date().toISOString(),
+    eventDescription: eventDescriptions[event] || '',
+  };
+  
+  // Log event in development for debugging
+  if (import.meta.env.DEV) {
+    console.info(`[Analytics] ${event}`, enhancedProps);
+  }
+  
+  // Send to PostHog
+  posthogClient.capture(event, enhancedProps);
 }
 
 /**
- * Track an analytics event
- * @param eventKey - Event key from EVENTS object
- * @param properties - Event properties
- * @returns void
+ * Legacy track function for backward compatibility
+ * @deprecated Use trackEvent instead for type safety
  */
-export const track = (eventKey: string, properties: TrackingProperties = {}): void => {
+export const track = (eventKey: string, properties: Record<string, any> = {}): void => {
   // Check if the event name exists in our standardized list
-  const eventName = Object.values(EVENTS).includes(eventKey as EventName) ? eventKey : null;
-  
-  if (!eventName) {
+  if (!Object.values(AnalyticsEvent).includes(eventKey as AnalyticsEvent)) {
     console.warn(
       `[Analytics] Unknown event key: "${eventKey}". ` +
-        'Please add it to the EVENTS object in analytics.js'
+        'Please add it to the AnalyticsEvent enum in analytics.ts'
     );
     return;
   }
@@ -68,33 +75,24 @@ export const track = (eventKey: string, properties: TrackingProperties = {}): vo
   const enhancedProps = {
     ...properties,
     timestamp: new Date().toISOString(),
-    eventDescription: eventDescriptions[eventName as keyof typeof eventDescriptions] || '',
+    eventDescription: eventDescriptions[eventKey as keyof typeof eventDescriptions] || '',
   };
   
   // Log event in development for debugging
   if (import.meta.env.DEV) {
-    console.info(`[Analytics] ${eventName}`, enhancedProps);
+    console.info(`[Analytics] ${eventKey}`, enhancedProps);
   }
   
   // Send to PostHog
-  posthogClient.capture(eventName, enhancedProps);
+  posthogClient.capture(eventKey, enhancedProps);
 };
-
-/**
- * User traits interface
- */
-export interface UserTraits {
-  [key: string]: any;
-  name?: string;
-  email?: string;
-}
 
 /**
  * Identify a user
  * @param userId - Unique user identifier
  * @param traits - User properties/traits
  */
-export const identify = (userId: string, traits: UserTraits = {}): void => {
+export const identify = (userId: string, traits: UserTraitsType = {}): void => {
   if (!userId) {
     console.warn('[Analytics] User ID is required for identification');
     return;
@@ -111,7 +109,9 @@ export const reset = (): void => {
 
 export default {
   track,
+  trackEvent,
   identify,
   reset,
   EVENTS,
+  AnalyticsEvent,
 };

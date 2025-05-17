@@ -5,22 +5,44 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, watch, onUnmounted, defineEmits } from 'vue';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { track, EVENTS } from '../lib/analytics';
+import { analytics, AnalyticsEvent } from '../services/analytics';
+import { handleError, handleAsyncError, ErrorSeverity } from '../utils/errorHandler';
+import config from '../config';
 
-// Function to get color based on MPN value
-const getColorForMPN = mpn => {
+// Import constants from configuration
+const { waterQuality, map: mapConfig } = config;
+
+// Constants for MPN threshold values
+const MPN_THRESHOLD_LOW = waterQuality.mpnThresholds.low;
+const MPN_THRESHOLD_MEDIUM = waterQuality.mpnThresholds.medium;
+
+// Color constants
+const COLOR_GREEN = waterQuality.colors.good;
+const COLOR_YELLOW = waterQuality.colors.moderate;
+const COLOR_RED = waterQuality.colors.poor;
+
+/**
+ * Function to get color based on MPN value
+ * @param mpn - MPN value to evaluate
+ * @returns Hex color code based on MPN threshold
+ */
+const getColorForMPN = (mpn: string | number): string => {
   const mpnValue = Number(mpn);
-  if (mpnValue < 35) return '#4CAF50'; // Green
-  if (mpnValue <= 104) return '#FFC107'; // Yellow
-  return '#F44336'; // Red
+  if (mpnValue < MPN_THRESHOLD_LOW) return COLOR_GREEN; // Green - Acceptable
+  if (mpnValue <= MPN_THRESHOLD_MEDIUM) return COLOR_YELLOW; // Yellow - Caution
+  return COLOR_RED; // Red - Unacceptable
 };
 
-// Function to create a custom water bottle divIcon
-const createWaterBottleIcon = mpn => {
+/**
+ * Function to create a custom water bottle divIcon
+ * @param mpn - MPN value to determine the icon color
+ * @returns Leaflet divIcon for the marker
+ */
+const createWaterBottleIcon = (mpn: string | number): L.DivIcon => {
   const color = getColorForMPN(mpn);
 
   return L.divIcon({
@@ -48,34 +70,62 @@ const createWaterBottleIcon = mpn => {
   });
 };
 
-// Props
-const props = defineProps({
-  selectedDate: {
-    type: String,
-    required: true,
-  },
-  isDarkMode: {
-    type: Boolean,
-    default: false,
-  },
-});
+// TypeScript interfaces
+interface MapViewerProps {
+  selectedDate: string;
+  isDarkMode: boolean;
+}
 
-// Emits
-const emit = defineEmits(['update:siteCount', 'update:sampleData']);
+interface SampleData {
+  site: string;
+  mpn: string | number;
+}
 
-// Reactive references
-const mapData = ref(null);
-const map = ref(null);
-const markers = ref([]);
-const tileLayer = ref(null);
-const hasAutoFitted = ref(false);
+interface GeoJSONFeature {
+  type: string;
+  geometry: {
+    type: string;
+    coordinates: number[];
+  };
+  properties: {
+    site: string;
+    mpn: string | number;
+    sampleTime?: string;
+    tideSummary?: string;
+    [key: string]: any;
+  };
+}
 
-// Tile layer URLs
-const LIGHT_TILE_URL = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
-const DARK_TILE_URL = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
+interface GeoJSONCollection {
+  type: string;
+  features: GeoJSONFeature[];
+}
 
-// Update the map tile layer based on the current mode
-const updateTileLayer = () => {
+// Props with TypeScript validation
+const props = defineProps<MapViewerProps>();
+
+// Emits with TypeScript validation
+const emit = defineEmits<{
+  'update:siteCount': [count: number];
+  'update:sampleData': [samples: SampleData[]];
+}>();
+
+// Reactive references with type annotations
+const mapData = ref<GeoJSONCollection | null>(null);
+const map = ref<L.Map | null>(null);
+const markers = ref<L.Marker[]>([]);
+const tileLayer = ref<L.TileLayer | null>(null);
+const hasAutoFitted = ref<boolean>(false);
+
+// Tile layer URLs from configuration
+const LIGHT_TILE_URL = mapConfig.tileUrls.light;
+const DARK_TILE_URL = mapConfig.tileUrls.dark;
+
+/**
+ * Updates the map tile layer based on the current theme mode
+ * Switches between light and dark map tiles
+ */
+const updateTileLayer = (): void => {
   if (!map.value) return;
 
   // Remove existing tile layer if it exists
@@ -95,8 +145,11 @@ const updateTileLayer = () => {
   updatePopupStyles();
 };
 
-// Update popup styles based on dark mode
-const updatePopupStyles = () => {
+/**
+ * Updates popup styles based on current theme mode
+ * Re-applies popups to markers with updated styling classes
+ */
+const updatePopupStyles = (): void => {
   if (!map.value) return;
 
   // Re-apply popups to all markers with updated styling
@@ -108,7 +161,7 @@ const updatePopupStyles = () => {
       // Close and unbind the current popup
       marker.closePopup().unbindPopup();
       // Bind a new popup with the same content but updated class
-      marker.bindPopup(content, {
+      marker.bindPopup(content || '', {
         className: props.isDarkMode ? 'dark-mode-popup' : '',
       });
     }
@@ -120,8 +173,9 @@ watch(
   () => props.isDarkMode,
   newMode => {
     updateTileLayer();
-    track(EVENTS.CHANGED_THEME, {
-      mode: newMode ? 'dark' : 'light',
+    analytics.track(AnalyticsEvent.CHANGED_THEME, {
+      theme: newMode ? 'dark' : 'light',
+      previousTheme: newMode ? 'light' : 'dark'
     });
   }
 );
@@ -145,16 +199,20 @@ watch(mapData, newData => {
 });
 
 // Methods
-const loadMapData = async date => {
-  try {
+const loadMapData = async (date: string) => {
+  return handleAsyncError(async () => {
     // Track date selection
-    track(EVENTS.SELECTED_DATE, { date });
+    analytics.track(AnalyticsEvent.SELECTED_DATE, { date });
 
     // Always use the non-enriched version first to ensure we get data
-    const response = await fetch(`${import.meta.env.BASE_URL}data/${date}.geojson`);
+    const dataPath = config.paths.data;
+    const response = await fetch(`${import.meta.env.BASE_URL}${dataPath}/${date}.geojson`);
     if (!response.ok) {
-      track(EVENTS.FAILED_LOADING_DATA, { date });
-      return;
+      analytics.track(AnalyticsEvent.FAILED_LOADING_DATA, { 
+        date,
+        error: `${response.status} ${response.statusText}`
+      });
+      throw new Error(`Failed to load data for ${date}: ${response.status} ${response.statusText}`);
     }
 
     try {
@@ -170,23 +228,56 @@ const loadMapData = async date => {
           mpn: feature.properties.mpn,
         }));
         emit('update:sampleData', samples);
+      } else {
+        // No features found
+        handleError(
+          new Error(`No features found in data for ${date}`),
+          { component: 'MapViewer', operation: 'loadMapData' },
+          ErrorSeverity.WARNING,
+          { showToUser: false }
+        );
       }
 
       // Try to load the enriched version if available
-      try {
+      await handleAsyncError(async () => {
         const enrichedResponse = await fetch(
-          `${import.meta.env.BASE_URL}data/${date}.enriched.geojson`
+          `${import.meta.env.BASE_URL}${dataPath}/${date}.enriched.geojson`
         );
         if (enrichedResponse.ok) {
           const enrichedData = await enrichedResponse.json();
           mapData.value = enrichedData;
         }
-      } catch (enrichedError) {}
-    } catch (jsonError) {}
-  } catch (error) {}
-};
+      }, 
+      { component: 'MapViewer', operation: 'loadEnrichedData' }, 
+      { reportToAnalytics: true, showToUser: false });
 
-const updateMap = data => {
+    } catch (jsonError) {
+      // Handle JSON parsing errors
+      handleError(
+        jsonError,
+        { component: 'MapViewer', operation: 'parseMapData', data: { date } },
+        ErrorSeverity.ERROR,
+        { 
+          reportToAnalytics: true, 
+          showToUser: false,
+          rethrow: true 
+        }
+      );
+    }
+  }, 
+  { component: 'MapViewer', operation: 'loadMapData', data: { date } },
+  { 
+    reportToAnalytics: true, 
+    showToUser: false 
+  });
+}
+
+/**
+ * Updates the map with new GeoJSON data
+ * Clears existing markers and adds new ones based on the data
+ * @param data - GeoJSON collection containing sample data
+ */
+const updateMap = (data: GeoJSONCollection): void => {
   if (!map.value) {
     return;
   }
@@ -215,10 +306,22 @@ const updateMap = data => {
         !feature.geometry.coordinates ||
         feature.geometry.coordinates.length < 2
       ) {
+        handleError(
+          new Error('Invalid feature geometry or coordinates'),
+          { component: 'MapViewer', operation: 'updateMap', data: { feature } },
+          ErrorSeverity.WARNING,
+          { showToUser: false }
+        );
         continue;
       }
 
       if (!feature.properties || !feature.properties.mpn) {
+        handleError(
+          new Error('Missing required properties in feature'),
+          { component: 'MapViewer', operation: 'updateMap', data: { feature } },
+          ErrorSeverity.WARNING,
+          { showToUser: false }
+        );
         continue;
       }
 
@@ -227,6 +330,12 @@ const updateMap = data => {
       const lng = coords[0];
 
       if (isNaN(lat) || isNaN(lng)) {
+        handleError(
+          new Error('Invalid coordinates (NaN values)'),
+          { component: 'MapViewer', operation: 'updateMap', data: { coordinates: coords } },
+          ErrorSeverity.WARNING,
+          { showToUser: false }
+        );
         continue;
       }
 
@@ -253,12 +362,22 @@ const updateMap = data => {
         qualityMessage = 'Unacceptable for swimming';
       }
 
-      // Create simple popup content
+      // Create simple popup content with sanitized values
+      const sanitize = (str: string) => str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+        
+      const sanitizedSite = sanitize(site);
+      const sanitizedMpn = sanitize(mpn.toString());
+      
       let popupContent = `
         <div class="site-popup">
-          <div class="font-semibold text-lg site-name">${site}</div>
+          <div class="font-semibold text-lg site-name">${sanitizedSite}</div>
           <div class="mt-2 ${qualityColor} font-medium text-base">
-            ${mpn} MPN/100mL
+            ${sanitizedMpn} MPN/100mL
           </div>
           <div class="mt-1 text-sm opacity-75">
             ${qualityMessage}
@@ -267,7 +386,8 @@ const updateMap = data => {
 
       // Add sample time if available
       if (sampleTime) {
-        popupContent += `<div class="text-xs opacity-75 mt-1">Sampled at ${sampleTime}</div>`;
+        const sanitizedSampleTime = sanitize(sampleTime);
+        popupContent += `<div class="text-xs opacity-75 mt-1">Sampled at ${sanitizedSampleTime}</div>`;
       }
 
       // Add tide info if available - with conditional formatting
@@ -291,7 +411,8 @@ const updateMap = data => {
           displaySummary = `High Tide ${stationInfo}`;
         }
 
-        popupContent += `<div class="text-xs opacity-75 mt-1" title="Tidal data is taken from nearest NOAA station and is only approximate">${displaySummary}</div>`;
+        const sanitizedTideSummary = sanitize(displaySummary);
+        popupContent += `<div class="text-xs opacity-75 mt-1" title="Tidal data is taken from nearest NOAA station and is only approximate">${sanitizedTideSummary}</div>`;
       }
 
       // Close the popup div
@@ -306,15 +427,27 @@ const updateMap = data => {
 
       // Add popup open event tracking
       marker.on('popupopen', () => {
-        track(EVENTS.VIEWED_SAMPLE_PIN, {
-          site: site,
-          mpn: mpn,
+        analytics.track(AnalyticsEvent.VIEWED_SAMPLE_PIN, {
+          sampleId: site,
+          result: mpn.toString(),
+          location: `${lat.toFixed(4)},${lng.toFixed(4)}`
         });
       });
 
       markers.value.push(marker);
       markersAdded++;
-    } catch (error) {}
+    } catch (error) {
+      handleError(
+        error,
+        { component: 'MapViewer', operation: 'processFeature' },
+        ErrorSeverity.ERROR,
+        { 
+          logToConsole: true,
+          reportToAnalytics: true,
+          showToUser: false
+        }
+      );
+    }
   }
 
   // Handle map positioning
@@ -333,25 +466,50 @@ const updateMap = data => {
 };
 
 onMounted(() => {
-  // Initialize map
-  map.value = L.map('map').setView([40.7128, -74.006], 12);
+  // Initialize map with coordinates from configuration
+  map.value = L.map('map').setView(
+    [mapConfig.defaultLatitude, mapConfig.defaultLongitude], 
+    mapConfig.defaultZoom
+  );
 
   // Initialize tile layer using our updateTileLayer function
   updateTileLayer();
 
-  // Add map interaction analytics
+  // Add map interaction analytics with debouncing
+  let zoomTimeout: number | undefined;
   map.value.on('zoomend', () => {
-    track(EVENTS.ZOOMED_MAP, {
-      zoom_level: map.value.getZoom(),
-    });
+    // Clear any existing timeout
+    if (zoomTimeout) {
+      window.clearTimeout(zoomTimeout);
+    }
+    
+    // Set a new timeout to avoid sending too many events
+    zoomTimeout = window.setTimeout(() => {
+      analytics.track(AnalyticsEvent.ZOOMED_MAP, {
+        zoomLevel: map.value?.getZoom() || 0,
+      });
+    }, 500); // 500ms debounce
   });
 
+  let panTimeout: number | undefined;
   map.value.on('moveend', () => {
-    const center = map.value.getCenter();
-    track(EVENTS.PANNED_MAP, {
-      lat: center.lat.toFixed(4),
-      lng: center.lng.toFixed(4),
-    });
+    // Clear any existing timeout
+    if (panTimeout) {
+      window.clearTimeout(panTimeout);
+    }
+    
+    // Set a new timeout to avoid sending too many events
+    panTimeout = window.setTimeout(() => {
+      const center = map.value?.getCenter();
+      if (center) {
+        analytics.track(AnalyticsEvent.PANNED_MAP, {
+          center: {
+            lat: Number(center.lat.toFixed(4)),
+            lng: Number(center.lng.toFixed(4)),
+          }
+        });
+      }
+    }, 500); // 500ms debounce
   });
 
   // Remove zoom control

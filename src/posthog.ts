@@ -1,31 +1,32 @@
 import posthog from 'posthog-js';
-
-/**
- * PostHog client properties
- */
-export interface PosthogProperties {
-  [key: string]: any;
-}
+import { AnalyticsEvent, EventPayload, EventPayloadMap, UserTraits } from './types/analytics';
+import { analytics as analyticsConfig } from './config';
 
 /**
  * Only initialize PostHog in production environment
  * @returns The initialized PostHog client
  */
 const initPostHog = (): typeof posthog => {
-  // Check if we're in production mode
-  const isProduction = import.meta.env.PROD;
+  // Check if analytics are enabled
+  const isEnabled = analyticsConfig.enabled;
+  const apiKey = analyticsConfig.posthogApiKey;
+  const apiHost = analyticsConfig.posthogHost;
 
-  if (isProduction) {
-    // Initialize PostHog with your project API key
-    posthog.init('phc_w0axXDyN3zCal0qUUsV83NnyCoKsI9AKHXR59aat3tP', {
-      api_host: 'https://app.posthog.com',
+  if (!apiKey) {
+    console.warn('PostHog API key not found in environment variables. Analytics will be disabled.');
+  }
+
+  if (isEnabled && apiKey) {
+    // Initialize PostHog with API key from environment variables
+    posthog.init(apiKey, {
+      api_host: apiHost,
       // Disable capturing by default
       capture_pageview: false,
       // Disable auto-capturing of events like clicks
       autocapture: false,
     });
   } else {
-    // In development, replace posthog with a mock version
+    // In development or when disabled, replace posthog with a mock version
     // that logs to console instead of sending events
     Object.keys(posthog).forEach(key => {
       if (typeof posthog[key as keyof typeof posthog] === 'function') {
@@ -44,11 +45,24 @@ const initPostHog = (): typeof posthog => {
 export const posthogClient = initPostHog();
 
 /**
- * Utility function to capture events only in production
+ * Utility function to capture events only in production with type safety
+ * @param eventName - Name of the event to capture from AnalyticsEvent enum
+ * @param properties - Properties to attach to the event
+ */
+export function captureTypedEvent<E extends AnalyticsEvent>(
+  eventName: E,
+  properties: EventPayloadMap[E]
+): void {
+  posthogClient.capture(eventName, properties);
+}
+
+/**
+ * Utility function to capture events only in production (legacy)
+ * @deprecated Use captureTypedEvent for type safety
  * @param eventName - Name of the event to capture
  * @param properties - Properties to attach to the event
  */
-export const captureEvent = (eventName: string, properties: PosthogProperties = {}): void => {
+export const captureEvent = (eventName: string, properties: Record<string, any> = {}): void => {
   posthogClient.capture(eventName, properties);
 };
 
@@ -57,7 +71,7 @@ export const captureEvent = (eventName: string, properties: PosthogProperties = 
  * @param userId - User identifier
  * @param userProperties - Properties to associate with the user
  */
-export const identifyUser = (userId: string, userProperties: PosthogProperties = {}): void => {
+export const identifyUser = (userId: string, userProperties: UserTraits = {}): void => {
   posthogClient.identify(userId, userProperties);
 };
 
