@@ -6,6 +6,8 @@
       @update:site-count="updateSiteCount"
       @update:sample-data="updateSampleData"
       @update:rainfall-by-day-in="updateRainfallByDayIn"
+      @update:rain-data="updateRainData"
+      @update:total-rain="updateTotalRain"
     />
     <HeaderOverlay
       v-model:is-expanded="isHeaderExpanded"
@@ -41,6 +43,8 @@
       <RainDropLegend 
         :rainfall="rainfall" 
         :rainfall-by-day-in="rainfallByDayIn" 
+        :rain-data="rainData"
+        :total-rain="totalRain"
         :is-dark-mode="isDarkMode" 
       />
     </div>
@@ -119,10 +123,22 @@ const sampleData = ref<Array<{ site: string, mpn: string | number }>>([]);
 const rainfall = ref<number>(1.25);
 
 /**
- * Rainfall by day in inches (for the rain drop legend)
+ * Rainfall by day in inches (for the rain drop legend) - legacy format
  * @type {import('vue').Ref<Array<number | null>>}
  */
 const rainfallByDayIn = ref<Array<number | null>>([]);
+
+/**
+ * New rainfall data array in inches (for the rain drop legend)
+ * @type {import('vue').Ref<Array<number>>}
+ */
+const rainData = ref<Array<number>>([]);
+
+/**
+ * Total rainfall in inches over the 7-day period
+ * @type {import('vue').Ref<number>}
+ */
+const totalRain = ref<number>(0);
 
 /**
  * Update the count of water sampling sites
@@ -161,7 +177,7 @@ const updateMapMode = (darkMode: boolean): void => {
 };
 
 /**
- * Update the rainfall by day data
+ * Update the rainfall by day data - legacy format
  * Called by MapViewer when new data is loaded
  * 
  * @param {Array<number | null>} data - Rainfall by day data in inches
@@ -172,6 +188,26 @@ const updateRainfallByDayIn = (data: Array<number | null>): void => {
   // Also update the total rainfall value (for backward compatibility)
   const total = data.reduce((sum, val) => sum + (val || 0), 0);
   rainfall.value = Number(total.toFixed(1));
+};
+
+/**
+ * Update the new rainfall data array
+ * Called by MapViewer when new data is loaded
+ * 
+ * @param {Array<number>} data - Rainfall data array in inches
+ */
+const updateRainData = (data: Array<number>): void => {
+  rainData.value = data;
+};
+
+/**
+ * Update the total rainfall value
+ * Called by MapViewer when new data is loaded
+ * 
+ * @param {number} value - Total rainfall in inches
+ */
+const updateTotalRain = (value: number): void => {
+  totalRain.value = value;
 };
 
 /**

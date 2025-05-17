@@ -52,6 +52,14 @@ const props = defineProps({
     type: Array as () => (number | null)[],
     default: () => [],
   },
+  rainData: {
+    type: Array as () => number[],
+    default: () => [],
+  },
+  totalRain: {
+    type: Number,
+    default: 0,
+  },
   isDarkMode: {
     type: Boolean,
     default: false,
@@ -80,6 +88,9 @@ const syntheticRainData = computed<(number | null)[]>(() => {
 
 // Choose which rainfall data array to use
 const rainData = computed<(number | null)[]>(() => {
+  // Use the new rainData prop if provided
+  if (props.rainData && props.rainData.length > 0) return props.rainData;
+  // Fallback to legacy props
   if (props.rainfallByDayIn.length > 0) return props.rainfallByDayIn;
   if (props.rainfallByDay.length > 0) return props.rainfallByDay;
   return syntheticRainData.value;
@@ -87,6 +98,9 @@ const rainData = computed<(number | null)[]>(() => {
 
 // Calculate total rainfall (sum of all values)
 const totalRainfall = computed<number>(() => {
+  // Use totalRain prop if provided
+  if (props.totalRain > 0) return props.totalRain;
+  // Fallback to calculating from array data
   if (hasArrayData.value) {
     return rainData.value.reduce((sum, val) => sum + (val !== null && val !== undefined ? Number(val) : 0), 0);
   }
@@ -101,7 +115,12 @@ const totalRainfallValue = computed<string>(() => {
 
 // Check if we have valid rainfall data to display
 const hasValidRainfallData = computed<boolean>(() => {
-  // Always show if we have a rainfall value
+  // Use new props first
+  if (props.rainData && props.rainData.length > 0) {
+    return props.rainData.some(val => val !== null && val !== undefined);
+  }
+  
+  // Fallback to legacy props
   if (props.rainfall > 0) return true;
   
   // Check for array data

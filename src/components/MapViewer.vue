@@ -118,6 +118,8 @@ const emit = defineEmits<{
   'update:siteCount': [count: number];
   'update:sampleData': [samples: SampleData[]];
   'update:rainfallByDayIn': [data: (number | null)[]];
+  'update:rainData': [data: number[]];
+  'update:totalRain': [value: number];
 }>();
 
 // Reactive references with type annotations
@@ -241,8 +243,32 @@ const loadMapData = async (date: string) => {
         emit('update:sampleData', samples);
         
         // Extract rainfall data if available
-        // For this demo, create synthetic daily data from the 7-day total
-        if (mapData.value.features.some(f => f.properties.rainfall_mm_7day !== undefined)) {
+        // First check if we have the rainfall_by_day_in array in the GeoJSON
+        if (mapData.value.features.some(f => f.properties.rainfall_by_day_in && Array.isArray(f.properties.rainfall_by_day_in))) {
+          // Get the first feature that has rainfall_by_day_in data
+          const featureWithRainfall = mapData.value.features.find(f => 
+            f.properties.rainfall_by_day_in && 
+            Array.isArray(f.properties.rainfall_by_day_in)
+          );
+          
+          if (featureWithRainfall) {
+            const rainData = featureWithRainfall.properties.rainfall_by_day_in.map(val => 
+              typeof val === 'number' ? val : parseFloat(val)
+            );
+            
+            // Calculate total rain from the array
+            const totalRain = rainData.reduce((sum, val) => sum + (val || 0), 0);
+            
+            // Emit the new data format
+            emit('update:rainData', rainData);
+            emit('update:totalRain', Number(totalRain.toFixed(2)));
+            
+            // Also emit using the legacy format for backward compatibility
+            emit('update:rainfallByDayIn', rainData);
+          }
+        }
+        // Fallback to synthetic data if no rainfall_by_day_in is available
+        else if (mapData.value.features.some(f => f.properties.rainfall_mm_7day !== undefined)) {
           // Create a synthetic 7-day distribution from the average rainfall_mm_7day
           // Calculate average 7-day rainfall across all points and convert from mm to inches
           const totalRainfall = mapData.value.features.reduce((sum, feature) => {
@@ -258,7 +284,9 @@ const loadMapData = async (date: string) => {
           const distribution = [0.1, 0.15, 0.2, 0.25, 0.15, 0.1, 0.05];
           const rainfallByDay = distribution.map(factor => Number((totalRainfallInches * factor).toFixed(2)));
           
-          // Emit the rainfall data
+          // Emit both the new and legacy data formats
+          emit('update:rainData', rainfallByDay);
+          emit('update:totalRain', Number(totalRainfallInches.toFixed(2)));
           emit('update:rainfallByDayIn', rainfallByDay);
         }
       } else {
@@ -485,6 +513,15 @@ const updateMap = (data: GeoJSONCollection): void => {
         popupContent += `<div class="text-xs opacity-75 mt-1">
           <span title="Rainfall data for the 7 days prior to sample date from Open-Meteo API">${sanitizedRainfall}</span>
         </div>`;
+        
+        // Add rainfall station name if available
+        if (feature.properties.rainfall_station_name) {
+          const stationName = feature.properties.rainfall_station_name;
+          const sanitizedStationName = sanitize(stationName);
+          popupContent += `<div class="text-xs opacity-75 mt-1">
+            <span title="Weather station providing rainfall data">Station: ${sanitizedStationName}</span>
+          </div>`;
+        }
       }
 
       // Close the popup div
