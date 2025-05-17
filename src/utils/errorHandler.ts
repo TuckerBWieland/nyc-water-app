@@ -3,7 +3,7 @@
  * Handles logging, user notifications, and fallback behaviors.
  */
 
-import { captureEvent } from '../posthog';
+import { analytics, AnalyticsEvent } from '../services/analytics';
 
 /**
  * Error severity levels to categorize different types of errors
@@ -99,7 +99,7 @@ export function handleError<T = void>(
   
   // Analytics reporting
   if (opts.reportToAnalytics) {
-    captureEvent('error_occurred', {
+    analytics.track(AnalyticsEvent.ERROR_OCCURRED, {
       error_message: errorObject.message,
       error_type: errorObject.name,
       component: context.component,

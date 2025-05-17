@@ -12,7 +12,8 @@ export enum AnalyticsEvent {
   SELECTED_DATE = 'selected_date',
   ZOOMED_MAP = 'zoomed_map',
   PANNED_MAP = 'panned_map',
-  FAILED_LOADING_DATA = 'failed_loading_data'
+  FAILED_LOADING_DATA = 'failed_loading_data',
+  ERROR_OCCURRED = 'error_occurred'
 }
 
 /**
@@ -56,6 +57,14 @@ export interface FailedLoadingDataPayload {
   date?: string;
 }
 
+export interface ErrorOccurredPayload {
+  error_message: string;
+  error_type: string;
+  component?: string;
+  operation?: string;
+  severity: string;
+}
+
 /**
  * Union type of all possible event payloads
  */
@@ -66,7 +75,8 @@ export type EventPayload =
   | SelectedDatePayload
   | ZoomedMapPayload
   | PannedMapPayload
-  | FailedLoadingDataPayload;
+  | FailedLoadingDataPayload
+  | ErrorOccurredPayload;
 
 /**
  * Type that maps event names to their respective payload types
@@ -79,6 +89,7 @@ export type EventPayloadMap = {
   [AnalyticsEvent.ZOOMED_MAP]: ZoomedMapPayload;
   [AnalyticsEvent.PANNED_MAP]: PannedMapPayload;
   [AnalyticsEvent.FAILED_LOADING_DATA]: FailedLoadingDataPayload;
+  [AnalyticsEvent.ERROR_OCCURRED]: ErrorOccurredPayload;
 };
 
 /**

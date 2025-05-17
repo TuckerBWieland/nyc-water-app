@@ -38,7 +38,7 @@ function getEnvVar<T extends string | number | boolean>(
 export const analytics = {
   posthogApiKey: getEnvVar('VITE_POSTHOG_API_KEY', ''),
   posthogHost: getEnvVar('VITE_POSTHOG_HOST', 'https://app.posthog.com'),
-  enabled: getEnvVar('VITE_ENABLE_ANALYTICS', import.meta.env.PROD) // Use environment variable or default to PROD mode
+  enabled: getEnvVar('VITE_ENABLE_ANALYTICS', import.meta.env.PROD === true) // Convert PROD to boolean and use as default
 };
 
 /**

@@ -179,6 +179,7 @@ export const EVENTS = {
   ZOOMED_MAP: AnalyticsEvent.ZOOMED_MAP,
   PANNED_MAP: AnalyticsEvent.PANNED_MAP,
   FAILED_LOADING_DATA: AnalyticsEvent.FAILED_LOADING_DATA,
+  ERROR_OCCURRED: AnalyticsEvent.ERROR_OCCURRED,
 };
 
 export default analytics;

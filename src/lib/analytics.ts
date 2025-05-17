@@ -1,4 +1,5 @@
-import { posthogClient } from '../posthog';
+// Import from the new centralized analytics service
+import { analytics as analyticsService } from '../services/analytics';
 import eventDescriptions from './eventMapping.json';
 import { 
   AnalyticsEvent, 
@@ -29,6 +30,7 @@ export const EVENTS: EventsRecord = {
   ZOOMED_MAP: AnalyticsEvent.ZOOMED_MAP,
   PANNED_MAP: AnalyticsEvent.PANNED_MAP,
   FAILED_LOADING_DATA: AnalyticsEvent.FAILED_LOADING_DATA,
+  ERROR_OCCURRED: AnalyticsEvent.ERROR_OCCURRED,
 };
 
 // Re-export UserTraits for backward compatibility
@@ -44,17 +46,16 @@ export function trackEvent<E extends AnalyticsEvent>(
   // Add standard properties to all events
   const enhancedProps = {
     ...payload,
-    timestamp: new Date().toISOString(),
     eventDescription: eventDescriptions[event] || '',
   };
   
   // Log event in development for debugging
   if (import.meta.env.DEV) {
-    console.info(`[Analytics] ${event}`, enhancedProps);
+    console.info(`[Analytics] ${event} (legacy API)`, enhancedProps);
   }
   
-  // Send to PostHog
-  posthogClient.capture(event, enhancedProps);
+  // Delegate to the new service
+  analyticsService.track(event, enhancedProps as any);
 }
 
 /**
@@ -74,17 +75,16 @@ export const track = (eventKey: string, properties: Record<string, any> = {}): v
   // Add standard properties to all events
   const enhancedProps = {
     ...properties,
-    timestamp: new Date().toISOString(),
     eventDescription: eventDescriptions[eventKey as keyof typeof eventDescriptions] || '',
   };
   
   // Log event in development for debugging
   if (import.meta.env.DEV) {
-    console.info(`[Analytics] ${eventKey}`, enhancedProps);
+    console.info(`[Analytics] ${eventKey} (legacy API)`, enhancedProps);
   }
   
-  // Send to PostHog
-  posthogClient.capture(eventKey, enhancedProps);
+  // Delegate to the new service
+  analyticsService.track(eventKey as AnalyticsEvent, enhancedProps);
 };
 
 /**
@@ -97,14 +97,16 @@ export const identify = (userId: string, traits: UserTraitsType = {}): void => {
     console.warn('[Analytics] User ID is required for identification');
     return;
   }
-  posthogClient.identify(userId, traits);
+  // Delegate to the new service
+  analyticsService.identify(userId, traits);
 };
 
 /**
  * Reset user identity (for logout)
  */
 export const reset = (): void => {
-  posthogClient.reset();
+  // Delegate to the new service
+  analyticsService.reset();
 };
 
 export default {
