@@ -16,7 +16,10 @@ export type UserTraits = UserTraitsType;
 /**
  * Type-safe track function for known events with proper payload types
  */
-export declare function trackEvent<E extends AnalyticsEvent>(event: E, payload: EventPayloadMap[E]): void;
+export declare function trackEvent<E extends AnalyticsEvent>(
+  event: E,
+  payload: EventPayloadMap[E]
+): void;
 /**
  * Legacy track function for backward compatibility
  * @deprecated Use trackEvent instead for type safety
@@ -33,11 +36,11 @@ export declare const identify: (userId: string, traits?: UserTraitsType) => void
  */
 export declare const reset: () => void;
 declare const _default: {
-    track: (eventKey: string, properties?: Record<string, any>) => void;
-    trackEvent: typeof trackEvent;
-    identify: (userId: string, traits?: UserTraitsType) => void;
-    reset: () => void;
-    EVENTS: EventsRecord;
-    AnalyticsEvent: typeof AnalyticsEvent;
+  track: (eventKey: string, properties?: Record<string, any>) => void;
+  trackEvent: typeof trackEvent;
+  identify: (userId: string, traits?: UserTraitsType) => void;
+  reset: () => void;
+  EVENTS: EventsRecord;
+  AnalyticsEvent: typeof AnalyticsEvent;
 };
 export default _default;

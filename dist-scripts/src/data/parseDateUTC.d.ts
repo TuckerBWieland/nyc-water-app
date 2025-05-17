@@ -22,10 +22,10 @@ export declare function formatDateUTC(date: Date): string;
  * @returns Object with year, month, day, etc. in UTC
  */
 export declare function getUTCDateComponents(date: Date): {
-    year: number;
-    month: number;
-    day: number;
-    hours: number;
-    minutes: number;
-    seconds: number;
+  year: number;
+  month: number;
+  day: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
 };

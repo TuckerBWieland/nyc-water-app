@@ -1,6 +1,6 @@
 /**
  * GeoJSON Enrichment Module
- * 
+ *
  * Adds tide data to water quality sample GeoJSON files.
  * This module is used by the Vite plugin and can also be used standalone.
  */
@@ -8,11 +8,17 @@
 import fs from 'fs';
 import path from 'path';
 import { findNearestTideStation, getTideData, analyzeTideData, formatDate } from './tideServices';
-import { GeoJSONCollection, GeoJSONFeature, SampleData, isGeoJSONCollection, isSampleData } from './types';
+import {
+  GeoJSONCollection,
+  GeoJSONFeature,
+  SampleData,
+  isGeoJSONCollection,
+  isSampleData,
+} from './types';
 
 /**
  * Main function to enrich samples with tide data
- * 
+ *
  * @param inputFilePath - Path to the GeoJSON or JSON file to enrich
  * @returns Promise that resolves when the enrichment is complete
  */
@@ -25,7 +31,7 @@ export async function enrichSamplesWithTideData(inputFilePath: string): Promise<
     // Validate and determine the data type
     let samples: (GeoJSONFeature | SampleData)[] = [];
     let isGeoJSON = false;
-    
+
     if (isGeoJSONCollection(parsedData)) {
       isGeoJSON = true;
       samples = parsedData.features;
@@ -39,7 +45,7 @@ export async function enrichSamplesWithTideData(inputFilePath: string): Promise<
     } else {
       throw new Error('Unrecognized data format: Not a GeoJSON collection or sample data array');
     }
-    
+
     // Store the original data structure for writing back later
     const sampleData = parsedData;
 
@@ -51,10 +57,10 @@ export async function enrichSamplesWithTideData(inputFilePath: string): Promise<
       processedCount++;
 
       // Extract coordinates and sample time based on data format
-      let lat: number | undefined, 
-          lon: number | undefined, 
-          sampleTime: string | undefined, 
-          properties: Record<string, any>;
+      let lat: number | undefined,
+        lon: number | undefined,
+        sampleTime: string | undefined,
+        properties: Record<string, any>;
 
       if ('geometry' in sample && 'properties' in sample) {
         // GeoJSON format

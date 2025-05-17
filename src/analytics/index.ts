@@ -1,6 +1,6 @@
 /**
  * Unified Analytics Service
- * 
+ *
  * This module provides a standardized API for tracking analytics events
  * across the application. It uses PostHog for implementation but keeps
  * the API abstract to allow changing providers in the future.
@@ -11,7 +11,7 @@ import config from '../config';
 import { AnalyticsEvent, EventPayloadMap, UserTraits, EventDescriptionMap } from './types';
 import eventDescriptions from '../lib/eventMapping.json';
 
-// Create typed event descriptions 
+// Create typed event descriptions
 const typedEventDescriptions = eventDescriptions as EventDescriptionMap;
 
 /**
@@ -36,9 +36,11 @@ class AnalyticsService {
 
     // Extract configuration
     const { enabled, posthogApiKey, posthogHost } = config.analytics;
-    
+
     if (!posthogApiKey && enabled) {
-      console.warn('Analytics API key not found in environment variables. Analytics will be disabled.');
+      console.warn(
+        'Analytics API key not found in environment variables. Analytics will be disabled.'
+      );
     }
 
     if (enabled && posthogApiKey) {
@@ -52,7 +54,7 @@ class AnalyticsService {
         // Debug mode in development
         debug: config.isDevelopment,
       });
-      
+
       if (config.isDevelopment) {
         console.info('[Analytics] PostHog initialized with API key:', posthogApiKey);
         console.info('[Analytics] API host:', posthogHost);
@@ -61,10 +63,12 @@ class AnalyticsService {
     } else {
       // In development or when disabled, replace methods with mocks
       this.mockAnalyticsClient(posthog);
-      
+
       if (config.isDevelopment) {
         console.info('[Analytics] PostHog initialized in mock mode (events will not be sent)');
-        console.info('[Analytics] To enable real analytics tracking in development, set VITE_ENABLE_ANALYTICS=true');
+        console.info(
+          '[Analytics] To enable real analytics tracking in development, set VITE_ENABLE_ANALYTICS=true'
+        );
       }
     }
 
@@ -99,15 +103,15 @@ class AnalyticsService {
       eventDescription: typedEventDescriptions[event] || '',
       timestamp: new Date().toISOString(),
     } as EventPayloadMap[E];
-    
+
     // Development logging (always log in development for debugging)
     if (config.isDevelopment) {
       console.info(`[Analytics] ${event}`, enhancedProps);
     }
-    
+
     // Send to provider
     this.client.capture(event, enhancedProps as any);
-    
+
     // Log success in development mode
     if (config.isDevelopment && config.analytics.enabled) {
       console.info(`[Analytics] Event sent to PostHog: ${event}`);
@@ -122,7 +126,7 @@ class AnalyticsService {
   public trackPageView(path: string, referrer?: string): void {
     this.track(AnalyticsEvent.VIEWED_PAGE, {
       page: path,
-      referrer
+      referrer,
     });
   }
 
@@ -136,9 +140,9 @@ class AnalyticsService {
       console.warn('User ID is required for identification');
       return;
     }
-    
+
     this.client.identify(userId, traits);
-    
+
     if (config.isDevelopment) {
       console.info(`[Analytics] Identified user: ${userId}`, traits);
     }
@@ -149,7 +153,7 @@ class AnalyticsService {
    */
   public reset(): void {
     this.client.reset();
-    
+
     if (config.isDevelopment) {
       console.info('[Analytics] User reset');
     }
@@ -163,10 +167,7 @@ export const analytics = new AnalyticsService();
 export { AnalyticsEvent } from './types';
 
 // Backward compatibility exports for legacy code
-export const track = <E extends AnalyticsEvent>(
-  event: E, 
-  payload: EventPayloadMap[E]
-): void => {
+export const track = <E extends AnalyticsEvent>(event: E, payload: EventPayloadMap[E]): void => {
   analytics.track(event, payload);
 };
 

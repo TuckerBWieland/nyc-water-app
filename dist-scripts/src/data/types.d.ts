@@ -10,51 +10,51 @@
  * Represents a single water sample location with quality data.
  */
 export interface GeoJSONFeature {
+  type: string;
+  geometry: {
     type: string;
-    geometry: {
-        type: string;
-        coordinates: number[];
-    };
-    properties: {
-        [key: string]: any;
-        site: string;
-        mpn: string | number;
-        sampleTime?: string;
-        timestamp?: string;
-        tideSummary?: string | null;
-    };
+    coordinates: number[];
+  };
+  properties: {
+    [key: string]: any;
+    site: string;
+    mpn: string | number;
+    sampleTime?: string;
+    timestamp?: string;
+    tideSummary?: string | null;
+  };
 }
 /**
  * GeoJSON Collection of water samples.
  * Contains multiple water sample features.
  */
 export interface GeoJSONCollection {
-    type: string;
-    features: GeoJSONFeature[];
+  type: string;
+  features: GeoJSONFeature[];
 }
 /**
  * Sample data in regular JSON format (non-GeoJSON).
  * Alternative representation of water samples that doesn't follow GeoJSON spec.
  */
 export interface SampleData {
-    [key: string]: any;
-    site: string;
-    mpn: string | number;
-    latitude?: number;
-    longitude?: number;
-    lat?: number;
-    lon?: number;
-    sampleTime?: string;
-    timestamp?: string;
-    tideSummary?: string | null;
+  [key: string]: any;
+  site: string;
+  mpn: string | number;
+  latitude?: number;
+  longitude?: number;
+  lat?: number;
+  lon?: number;
+  sampleTime?: string;
+  timestamp?: string;
+  tideSummary?: string | null;
 }
 /**
  * Basic interface for data fetch result
  */
 export interface FetchResult<T> {
-    data: T | null;
-    error: Error | null;
-    loading: boolean;
+  data: T | null;
+  error: Error | null;
+  loading: boolean;
 }
 /**
  * Type guard to check if an object is a GeoJSON coordinates array

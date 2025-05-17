@@ -34,13 +34,13 @@ const getColorForMPN = (mpn: string | number | null): string => {
   if (mpn === null) {
     return COLOR_YELLOW; // Use yellow for null/unknown values
   }
-  
+
   const mpnValue = Number(mpn);
   if (isNaN(mpnValue)) {
     console.warn('Invalid MPN value:', mpn);
     return COLOR_YELLOW; // Use yellow for invalid values
   }
-  
+
   if (mpnValue < MPN_THRESHOLD_LOW) return COLOR_GREEN; // Green - Acceptable
   if (mpnValue <= MPN_THRESHOLD_MEDIUM) return COLOR_YELLOW; // Yellow - Caution
   return COLOR_RED; // Red - Unacceptable
@@ -187,7 +187,7 @@ watch(
     updateTileLayer();
     analytics.track(AnalyticsEvent.CHANGED_THEME, {
       theme: newMode ? 'dark' : 'light',
-      previousTheme: newMode ? 'light' : 'dark'
+      previousTheme: newMode ? 'light' : 'dark',
     });
   }
 );
@@ -213,128 +213,138 @@ watch(mapData, newData => {
 
 // Methods
 const loadMapData = async (date: string) => {
-  return handleAsyncOperation(async () => {
-    // Track date selection
-    analytics.track(AnalyticsEvent.SELECTED_DATE, { date });
+  return handleAsyncOperation(
+    async () => {
+      // Track date selection
+      analytics.track(AnalyticsEvent.SELECTED_DATE, { date });
 
-    // Always use the non-enriched version first to ensure we get data
-    const dataPath = config.paths.data;
-    const response = await fetch(`${import.meta.env.BASE_URL}${dataPath}/${date}.geojson`);
-    if (!response.ok) {
-      analytics.track(AnalyticsEvent.FAILED_LOADING_DATA, { 
-        date,
-        error: `${response.status} ${response.statusText}`
-      });
-      throw new Error(`Failed to load data for ${date}: ${response.status} ${response.statusText}`);
-    }
-
-    try {
-      mapData.value = await response.json();
-
-      // Update parent component with the site count and sample data
-      if (mapData.value && mapData.value.features) {
-        emit('update:siteCount', mapData.value.features.length);
-
-        // Extract the sample data for the legend
-        const samples = mapData.value.features.map(feature => ({
-          site: feature.properties.site || feature.properties['Site Name'] || '',
-          mpn: feature.properties.mpn || feature.properties['MPN'] || '',
-        }));
-        emit('update:sampleData', samples);
-        
-        // Extract rainfall data if available
-        // First check if we have the rainfall_by_day_in array in the GeoJSON
-        if (mapData.value.features.some(f => f.properties.rainfall_by_day_in && Array.isArray(f.properties.rainfall_by_day_in))) {
-          // Get the first feature that has rainfall_by_day_in data
-          const featureWithRainfall = mapData.value.features.find(f => 
-            f.properties.rainfall_by_day_in && 
-            Array.isArray(f.properties.rainfall_by_day_in)
-          );
-          
-          if (featureWithRainfall) {
-            const rawMm = featureWithRainfall.properties.rainfall_by_day_in.map(val => 
-              typeof val === 'number' ? val : parseFloat(val)
-            );
-            
-            // Convert from mm to inches (1 mm = 0.0393701 inches)
-            const inches = rawMm.map(mm => Number((mm * 0.0393701).toFixed(2)));
-            
-            // Calculate total rain from the array in inches
-            const totalInches = inches.reduce((sum, val) => sum + (val || 0), 0);
-            
-            // Emit the new data format
-            emit('update:rainData', inches);
-            emit('update:totalRain', Number(totalInches.toFixed(2)));
-            
-            // Also emit using the legacy format for backward compatibility
-            emit('update:rainfallByDayIn', inches);
-          }
-        }
-        // Fallback to synthetic data if no rainfall_by_day_in is available
-        else if (mapData.value.features.some(f => f.properties.rainfall_mm_7day !== undefined)) {
-          // Create a synthetic 7-day distribution from the average rainfall_mm_7day
-          // Calculate average 7-day rainfall across all points and convert from mm to inches
-          const totalRainfall = mapData.value.features.reduce((sum, feature) => {
-            return sum + (feature.properties.rainfall_mm_7day || 0);
-          }, 0);
-          const averageRainfall = totalRainfall / mapData.value.features.length;
-          
-          // Convert mm to inches (1 mm = 0.0393701 inches)
-          const totalRainfallInches = averageRainfall * 0.0393701;
-          
-          // Create a distribution over 7 days - this is synthetic data for the demo
-          // In a real app, we would have daily data from the API
-          const distribution = [0.1, 0.15, 0.2, 0.25, 0.15, 0.1, 0.05];
-          const rainfallByDay = distribution.map(factor => Number((totalRainfallInches * factor).toFixed(2)));
-          
-          // Emit both the new and legacy data formats
-          emit('update:rainData', rainfallByDay);
-          emit('update:totalRain', Number(totalRainfallInches.toFixed(2)));
-          emit('update:rainfallByDayIn', rainfallByDay);
-        }
-      } else {
-        // No features found
-        handleError(
-          new Error(`No features found in data for ${date}`),
-          { component: 'MapViewer', operation: 'loadMapData' },
-          ErrorSeverity.WARNING,
-          { showToUser: false }
+      // Always use the non-enriched version first to ensure we get data
+      const dataPath = config.paths.data;
+      const response = await fetch(`${import.meta.env.BASE_URL}${dataPath}/${date}.geojson`);
+      if (!response.ok) {
+        analytics.track(AnalyticsEvent.FAILED_LOADING_DATA, {
+          date,
+          error: `${response.status} ${response.statusText}`,
+        });
+        throw new Error(
+          `Failed to load data for ${date}: ${response.status} ${response.statusText}`
         );
       }
 
-      // Try to load the enriched version if available
-      await handleAsyncOperation(async () => {
-        const enrichedResponse = await fetch(
-          `${import.meta.env.BASE_URL}${dataPath}/${date}.enriched.geojson`
-        );
-        if (enrichedResponse.ok) {
-          const enrichedData = await enrichedResponse.json();
-          mapData.value = enrichedData;
-        }
-      }, 
-      { component: 'MapViewer', operation: 'loadEnrichedData' }, 
-      { reportToAnalytics: true, showToUser: false });
+      try {
+        mapData.value = await response.json();
 
-    } catch (jsonError) {
-      // Handle JSON parsing errors
-      handleError(
-        jsonError,
-        { component: 'MapViewer', operation: 'parseMapData', data: { date } },
-        ErrorSeverity.ERROR,
-        { 
-          reportToAnalytics: true, 
-          showToUser: false,
-          rethrow: true 
+        // Update parent component with the site count and sample data
+        if (mapData.value && mapData.value.features) {
+          emit('update:siteCount', mapData.value.features.length);
+
+          // Extract the sample data for the legend
+          const samples = mapData.value.features.map(feature => ({
+            site: feature.properties.site || feature.properties['Site Name'] || '',
+            mpn: feature.properties.mpn || feature.properties['MPN'] || '',
+          }));
+          emit('update:sampleData', samples);
+
+          // Extract rainfall data if available
+          // First check if we have the rainfall_by_day_in array in the GeoJSON
+          if (
+            mapData.value.features.some(
+              f => f.properties.rainfall_by_day_in && Array.isArray(f.properties.rainfall_by_day_in)
+            )
+          ) {
+            // Get the first feature that has rainfall_by_day_in data
+            const featureWithRainfall = mapData.value.features.find(
+              f => f.properties.rainfall_by_day_in && Array.isArray(f.properties.rainfall_by_day_in)
+            );
+
+            if (featureWithRainfall) {
+              const rawMm = featureWithRainfall.properties.rainfall_by_day_in.map(val =>
+                typeof val === 'number' ? val : parseFloat(val)
+              );
+
+              // Convert from mm to inches (1 mm = 0.0393701 inches)
+              const inches = rawMm.map(mm => Number((mm * 0.0393701).toFixed(2)));
+
+              // Calculate total rain from the array in inches
+              const totalInches = inches.reduce((sum, val) => sum + (val || 0), 0);
+
+              // Emit the new data format
+              emit('update:rainData', inches);
+              emit('update:totalRain', Number(totalInches.toFixed(2)));
+
+              // Also emit using the legacy format for backward compatibility
+              emit('update:rainfallByDayIn', inches);
+            }
+          }
+          // Fallback to synthetic data if no rainfall_by_day_in is available
+          else if (mapData.value.features.some(f => f.properties.rainfall_mm_7day !== undefined)) {
+            // Create a synthetic 7-day distribution from the average rainfall_mm_7day
+            // Calculate average 7-day rainfall across all points and convert from mm to inches
+            const totalRainfall = mapData.value.features.reduce((sum, feature) => {
+              return sum + (feature.properties.rainfall_mm_7day || 0);
+            }, 0);
+            const averageRainfall = totalRainfall / mapData.value.features.length;
+
+            // Convert mm to inches (1 mm = 0.0393701 inches)
+            const totalRainfallInches = averageRainfall * 0.0393701;
+
+            // Create a distribution over 7 days - this is synthetic data for the demo
+            // In a real app, we would have daily data from the API
+            const distribution = [0.1, 0.15, 0.2, 0.25, 0.15, 0.1, 0.05];
+            const rainfallByDay = distribution.map(factor =>
+              Number((totalRainfallInches * factor).toFixed(2))
+            );
+
+            // Emit both the new and legacy data formats
+            emit('update:rainData', rainfallByDay);
+            emit('update:totalRain', Number(totalRainfallInches.toFixed(2)));
+            emit('update:rainfallByDayIn', rainfallByDay);
+          }
+        } else {
+          // No features found
+          handleError(
+            new Error(`No features found in data for ${date}`),
+            { component: 'MapViewer', operation: 'loadMapData' },
+            ErrorSeverity.WARNING,
+            { showToUser: false }
+          );
         }
-      );
+
+        // Try to load the enriched version if available
+        await handleAsyncOperation(
+          async () => {
+            const enrichedResponse = await fetch(
+              `${import.meta.env.BASE_URL}${dataPath}/${date}.enriched.geojson`
+            );
+            if (enrichedResponse.ok) {
+              const enrichedData = await enrichedResponse.json();
+              mapData.value = enrichedData;
+            }
+          },
+          { component: 'MapViewer', operation: 'loadEnrichedData' },
+          { reportToAnalytics: true, showToUser: false }
+        );
+      } catch (jsonError) {
+        // Handle JSON parsing errors
+        handleError(
+          jsonError,
+          { component: 'MapViewer', operation: 'parseMapData', data: { date } },
+          ErrorSeverity.ERROR,
+          {
+            reportToAnalytics: true,
+            showToUser: false,
+            rethrow: true,
+          }
+        );
+      }
+    },
+    { component: 'MapViewer', operation: 'loadMapData', data: { date } },
+    {
+      reportToAnalytics: true,
+      showToUser: false,
     }
-  }, 
-  { component: 'MapViewer', operation: 'loadMapData', data: { date } },
-  { 
-    reportToAnalytics: true, 
-    showToUser: false 
-  });
-}
+  );
+};
 
 /**
  * Updates the map with new GeoJSON data
@@ -394,12 +404,14 @@ const updateMap = (data: GeoJSONCollection): void => {
         console.warn('Skipping feature with missing properties:', feature);
         continue;
       }
-      
+
       // Extract properties with support for different case formats
       const siteName = feature.properties.site || feature.properties['Site Name'] || '';
-      const mpnValue = feature.properties.mpn !== undefined ? feature.properties.mpn : feature.properties['MPN'];
-      const sampleTimeValue = feature.properties.sampleTime || feature.properties['Sample Time'] || '';
-      
+      const mpnValue =
+        feature.properties.mpn !== undefined ? feature.properties.mpn : feature.properties['MPN'];
+      const sampleTimeValue =
+        feature.properties.sampleTime || feature.properties['Sample Time'] || '';
+
       // Skip if we couldn't find MPN at all
       if (mpnValue === undefined) {
         console.warn('Feature is missing MPN property:', feature);
@@ -448,16 +460,17 @@ const updateMap = (data: GeoJSONCollection): void => {
       }
 
       // Create simple popup content with sanitized values
-      const sanitize = (str: string) => str
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-        
+      const sanitize = (str: string) =>
+        str
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+
       const sanitizedSite = sanitize(siteName);
       const sanitizedMpn = sanitize(mpnValue === null ? 'N/A' : mpnValue.toString());
-      
+
       let popupContent = `
         <div class="site-popup">
           <div class="font-semibold text-lg site-name">${sanitizedSite}</div>
@@ -479,7 +492,7 @@ const updateMap = (data: GeoJSONCollection): void => {
       if (feature.properties.tideSummary || feature.properties.rainfall_mm_7day !== undefined) {
         popupContent += `<div class="text-xs font-medium mt-3 pt-2 border-t border-gray-200">Environmental Conditions:</div>`;
       }
-      
+
       // Add tide info if available - with conditional formatting
       if (feature.properties.tideSummary) {
         // Parse the tide summary
@@ -506,19 +519,22 @@ const updateMap = (data: GeoJSONCollection): void => {
           <span title="Tidal data is taken from nearest NOAA station and is only approximate">${sanitizedTideSummary}</span>
         </div>`;
       }
-      
+
       // Add rainfall info if available
-      if (feature.properties.rainfall_mm_7day !== undefined && feature.properties.rainfall_mm_7day !== null) {
+      if (
+        feature.properties.rainfall_mm_7day !== undefined &&
+        feature.properties.rainfall_mm_7day !== null
+      ) {
         const mm = feature.properties.rainfall_mm_7day || 0;
         // Convert mm to inches (1 mm = 0.0393701 inches)
         const inches = Number((mm * 0.0393701).toFixed(2));
         const rainfallText = `${inches} in (7-day)`;
         const sanitizedRainfall = sanitize(rainfallText);
-        
+
         popupContent += `<div class="text-xs opacity-75 mt-1">
           <span title="Rainfall data for the 7 days prior to sample date from Open-Meteo API">${sanitizedRainfall}</span>
         </div>`;
-        
+
         // Add rainfall station name if available
         if (feature.properties.rainfall_station_name) {
           const stationName = feature.properties.rainfall_station_name;
@@ -544,7 +560,7 @@ const updateMap = (data: GeoJSONCollection): void => {
         analytics.track(AnalyticsEvent.VIEWED_SAMPLE_PIN, {
           sampleId: site,
           result: mpn.toString(),
-          location: `${lat.toFixed(4)},${lng.toFixed(4)}`
+          location: `${lat.toFixed(4)},${lng.toFixed(4)}`,
         });
       });
 
@@ -555,10 +571,10 @@ const updateMap = (data: GeoJSONCollection): void => {
         error,
         { component: 'MapViewer', operation: 'processFeature' },
         ErrorSeverity.ERROR,
-        { 
+        {
           logToConsole: true,
           reportToAnalytics: true,
-          showToUser: false
+          showToUser: false,
         }
       );
     }
@@ -582,7 +598,7 @@ const updateMap = (data: GeoJSONCollection): void => {
 onMounted(() => {
   // Initialize map with coordinates from configuration
   map.value = L.map('map').setView(
-    [mapConfig.defaultLatitude, mapConfig.defaultLongitude], 
+    [mapConfig.defaultLatitude, mapConfig.defaultLongitude],
     mapConfig.defaultZoom
   );
 
@@ -596,7 +612,7 @@ onMounted(() => {
     if (zoomTimeout) {
       window.clearTimeout(zoomTimeout);
     }
-    
+
     // Set a new timeout to avoid sending too many events
     zoomTimeout = window.setTimeout(() => {
       analytics.track(AnalyticsEvent.ZOOMED_MAP, {
@@ -611,7 +627,7 @@ onMounted(() => {
     if (panTimeout) {
       window.clearTimeout(panTimeout);
     }
-    
+
     // Set a new timeout to avoid sending too many events
     panTimeout = window.setTimeout(() => {
       const center = map.value?.getCenter();
@@ -620,7 +636,7 @@ onMounted(() => {
           center: {
             lat: Number(center.lat.toFixed(4)),
             lng: Number(center.lng.toFixed(4)),
-          }
+          },
         });
       }
     }, 500); // 500ms debounce

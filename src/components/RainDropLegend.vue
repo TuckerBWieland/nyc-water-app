@@ -8,24 +8,22 @@
 
     <div class="flex items-end justify-between h-16 mb-1">
       <!-- 7 vertical bars representing daily rainfall -->
-      <div
-        v-for="(value, index) in rainData"
-        :key="index"
-        class="flex flex-col items-center group"
-      >
+      <div v-for="(value, index) in rainData" :key="index" class="flex flex-col items-center group">
         <div
           class="w-3 rounded-t transition-all duration-300 shadow-sm hover:shadow-md group-hover:w-4"
           :class="getBarColorClass(value)"
           :style="{ height: `${getBarHeight(value)}%` }"
-          :title="`${value !== null && value !== undefined ? Number(value).toFixed(2) : 'No data'} inches`"
+          :title="`${
+            value !== null && value !== undefined ? Number(value).toFixed(2) : 'No data'
+          } inches`"
         ></div>
         <span class="text-xs mt-1 font-medium">{{ getDayLabel(index) }}</span>
       </div>
     </div>
-    
+
     <!-- Total rainfall display -->
-    <div 
-      class="text-xs text-center mt-2 pt-2 border-t" 
+    <div
+      class="text-xs text-center mt-2 pt-2 border-t"
       :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
     >
       <span class="font-semibold">Total rainfall:</span>
@@ -36,7 +34,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, type PropType } from 'vue';
+
+// Days of the week labels (Friday to Thursday, ending with sample day)
+const dayLabels = ['F', 'S', 'S', 'M', 'T', 'W', 'Th'];
 
 // Using Runtime props validation with proper TypeScript typing
 const props = defineProps({
@@ -45,15 +46,15 @@ const props = defineProps({
     default: 0,
   },
   rainfallByDay: {
-    type: Array as () => (number | null)[],
+    type: Array as PropType<(number | null)[]>,
     default: () => [],
   },
   rainfallByDayIn: {
-    type: Array as () => (number | null)[],
+    type: Array as PropType<(number | null)[]>,
     default: () => [],
   },
   rainData: {
-    type: Array as () => number[],
+    type: Array as PropType<number[]>,
     default: () => [],
   },
   totalRain: {
@@ -66,12 +67,9 @@ const props = defineProps({
   },
 });
 
-// Days of the week labels (Friday to Thursday, ending with sample day)
-const dayLabels = ['F', 'S', 'S', 'M', 'T', 'W', 'Th'];
-
 // Check if we have array data available
 const hasArrayData = computed<boolean>(() => {
-  return (props.rainfallByDayIn.length > 0 || props.rainfallByDay.length > 0);
+  return props.rainfallByDayIn.length > 0 || props.rainfallByDay.length > 0;
 });
 
 // Generate a synthetic 7-day array from the single rainfall value
@@ -102,7 +100,10 @@ const totalRainfall = computed<number>(() => {
   if (props.totalRain > 0) return props.totalRain;
   // Fallback to calculating from array data
   if (hasArrayData.value) {
-    return rainData.value.reduce((sum, val) => sum + (val !== null && val !== undefined ? Number(val) : 0), 0);
+    return rainData.value.reduce(
+      (sum, val) => sum + (val !== null && val !== undefined ? Number(val) : 0),
+      0
+    );
   }
   // Use the single rainfall value if no array data available
   return props.rainfall;
@@ -119,13 +120,13 @@ const hasValidRainfallData = computed<boolean>(() => {
   if (props.rainData && props.rainData.length > 0) {
     return props.rainData.some(val => val !== null && val !== undefined);
   }
-  
+
   // Fallback to legacy props
   if (props.rainfall > 0) return true;
-  
+
   // Check for array data
   if (!rainData.value || rainData.value.length === 0) return false;
-  
+
   // Check if at least one value is not null
   return rainData.value.some(val => val !== null && val !== undefined);
 });
@@ -133,7 +134,7 @@ const hasValidRainfallData = computed<boolean>(() => {
 // Determine color class based on rainfall amount
 const getBarColorClass = (value: number | null): string => {
   if (value === null || value === undefined) return 'bg-gray-200';
-  
+
   if (value < 0.5) return props.isDarkMode ? 'bg-green-600' : 'bg-green-500';
   if (value < 3.0) return props.isDarkMode ? 'bg-yellow-500' : 'bg-yellow-400';
   return props.isDarkMode ? 'bg-red-600' : 'bg-red-500';
@@ -147,7 +148,7 @@ const getDayLabel = (index: number): string => {
 // Calculate bar height percentage based on rainfall amount
 const getBarHeight = (value: number | null): number => {
   if (value === null || value === undefined || value === 0) return 5; // Minimum height
-  
+
   // Height is proportional to rainfall, max height at 4 inches
   // Use a logarithmic scale to better show differences in small values
   const heightPercentage = Math.max(5, Math.min(100, 20 * Math.log2(1 + Number(value) * 2)));

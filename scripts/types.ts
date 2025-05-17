@@ -33,8 +33,8 @@ export interface ProcessedTideReading {
  * Analyzed tide status information
  */
 export interface TideStatus {
-  state: string;        // 'High Tide', 'Low Tide', or 'Mid Tide'
-  isRising: boolean;    // Whether the tide is rising or falling
+  state: string; // 'High Tide', 'Low Tide', or 'Mid Tide'
+  isRising: boolean; // Whether the tide is rising or falling
   currentHeight: number;
   minHeight: number;
   maxHeight: number;

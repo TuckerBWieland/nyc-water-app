@@ -1,6 +1,6 @@
 /**
  * Tide data services for the NYC Water Quality App
- * 
+ *
  * This module provides functions to work with NOAA tide data,
  * including finding the nearest tide station, fetching tide data,
  * and analyzing tide status.
@@ -47,7 +47,7 @@ const NEW_YORK_STATIONS: TideStation[] = [
   { id: '8517941', name: 'Gowanus Bay', lat: 40.67, lon: -74.0133, state: 'NY' },
   { id: '8530973', name: 'Raritan Bay', lat: 40.4878, lon: -74.2509, state: 'NJ' },
   { id: '8519050', name: 'Coney Island', lat: 40.567, lon: -73.983, state: 'NY' },
-  { id: '8519436', name: 'Rockaway Inlet', lat: 40.5733, lon: -73.88, state: 'NY' }
+  { id: '8519436', name: 'Rockaway Inlet', lat: 40.5733, lon: -73.88, state: 'NY' },
 ];
 
 /**
@@ -79,11 +79,14 @@ function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: numbe
  * @param lon - Longitude of the location
  * @returns The nearest tide station or null if none found
  */
-export async function findNearestTideStation(lat: number, lon: number): Promise<TideStation | null> {
+export async function findNearestTideStation(
+  lat: number,
+  lon: number
+): Promise<TideStation | null> {
   // Calculate distances to all stations
   const stationsWithDistance = NEW_YORK_STATIONS.map(station => ({
     ...station,
-    distance: calculateDistance(lat, lon, station.lat, station.lon)
+    distance: calculateDistance(lat, lon, station.lat, station.lon),
   }));
 
   // Sort by distance
@@ -139,18 +142,25 @@ export async function getTideData(
     const data = await response.json();
 
     // Check if we got valid predictions
-    if (!data || typeof data !== 'object' || !('predictions' in data) || !Array.isArray(data.predictions)) {
+    if (
+      !data ||
+      typeof data !== 'object' ||
+      !('predictions' in data) ||
+      !Array.isArray(data.predictions)
+    ) {
       console.error('Invalid tide data response:', data);
       return null;
     }
 
     // Extract high and low tide times
     const tides = data.predictions
-      .filter((prediction: Record<string, unknown>) => prediction.type === 'H' || prediction.type === 'L')
+      .filter(
+        (prediction: Record<string, unknown>) => prediction.type === 'H' || prediction.type === 'L'
+      )
       .map((prediction: Record<string, unknown>) => ({
         time: prediction.t as string,
         height: parseFloat(prediction.v as string),
-        type: prediction.type as 'H' | 'L'
+        type: prediction.type as 'H' | 'L',
       }));
 
     return tides;

@@ -47,7 +47,7 @@ export function useLeafletMap(options: MapOptions): MapRef {
     zoom = mapConfig.defaultZoom,
     isDarkMode = false,
     trackAnalytics = true,
-    zoomControls = false
+    zoomControls = false,
   } = options;
 
   // Reactive references
@@ -115,7 +115,7 @@ export function useLeafletMap(options: MapOptions): MapRef {
       if (zoomTimeout) {
         window.clearTimeout(zoomTimeout);
       }
-      
+
       // Set a new timeout to avoid sending too many events
       zoomTimeout = window.setTimeout(() => {
         if (instance.value) {
@@ -133,7 +133,7 @@ export function useLeafletMap(options: MapOptions): MapRef {
       if (panTimeout) {
         window.clearTimeout(panTimeout);
       }
-      
+
       // Set a new timeout to avoid sending too many events
       panTimeout = window.setTimeout(() => {
         if (instance.value) {
@@ -143,7 +143,7 @@ export function useLeafletMap(options: MapOptions): MapRef {
               center: {
                 lat: Number(center.lat.toFixed(4)),
                 lng: Number(center.lng.toFixed(4)),
-              }
+              },
             });
           }
         }
@@ -218,6 +218,6 @@ export function useLeafletMap(options: MapOptions): MapRef {
     clearMarkers,
     fitToMarkers,
     getCenter,
-    getZoom
+    getZoom,
   };
 }

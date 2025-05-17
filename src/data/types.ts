@@ -1,6 +1,6 @@
 /**
  * GeoJSON type definitions for water quality samples
- * 
+ *
  * This module provides TypeScript interfaces and type guards for GeoJSON data
  * used in the NYC Water App. It includes definitions for GeoJSON features,
  * collections, and sample data in both GeoJSON and non-GeoJSON formats.
@@ -80,12 +80,12 @@ export function isGeoJSONGeometry(geometry: any): boolean {
     geometry &&
     typeof geometry === 'object' &&
     typeof geometry.type === 'string' &&
-    ['Point', 'LineString', 'Polygon', 'MultiPoint', 'MultiLineString', 'MultiPolygon'].includes(geometry.type) &&
+    ['Point', 'LineString', 'Polygon', 'MultiPoint', 'MultiLineString', 'MultiPolygon'].includes(
+      geometry.type
+    ) &&
     Array.isArray(geometry.coordinates) &&
-    (
-      (geometry.type === 'Point' && isGeoJSONCoordinates(geometry.coordinates)) ||
-      (geometry.type !== 'Point' && Array.isArray(geometry.coordinates))
-    )
+    ((geometry.type === 'Point' && isGeoJSONCoordinates(geometry.coordinates)) ||
+      (geometry.type !== 'Point' && Array.isArray(geometry.coordinates)))
   );
 }
 
@@ -119,7 +119,8 @@ export function isGeoJSONFeature(obj: any): obj is GeoJSONFeature {
   }
 
   if (
-    (props.mpn === undefined || props.mpn === null) || 
+    props.mpn === undefined ||
+    props.mpn === null ||
     (typeof props.mpn !== 'string' && typeof props.mpn !== 'number')
   ) {
     return false;
@@ -134,7 +135,11 @@ export function isGeoJSONFeature(obj: any): obj is GeoJSONFeature {
     return false;
   }
 
-  if (props.tideSummary !== undefined && props.tideSummary !== null && typeof props.tideSummary !== 'string') {
+  if (
+    props.tideSummary !== undefined &&
+    props.tideSummary !== null &&
+    typeof props.tideSummary !== 'string'
+  ) {
     return false;
   }
 
@@ -187,13 +192,17 @@ export function isSampleData(obj: any): obj is SampleData {
   }
 
   // Check coordinates (either lat/lon or latitude/longitude)
-  const hasLatLon = 
-    typeof obj.lat === 'number' && !isNaN(obj.lat) && 
-    typeof obj.lon === 'number' && !isNaN(obj.lon);
-    
-  const hasLatitudeLongitude = 
-    typeof obj.latitude === 'number' && !isNaN(obj.latitude) && 
-    typeof obj.longitude === 'number' && !isNaN(obj.longitude);
+  const hasLatLon =
+    typeof obj.lat === 'number' &&
+    !isNaN(obj.lat) &&
+    typeof obj.lon === 'number' &&
+    !isNaN(obj.lon);
+
+  const hasLatitudeLongitude =
+    typeof obj.latitude === 'number' &&
+    !isNaN(obj.latitude) &&
+    typeof obj.longitude === 'number' &&
+    !isNaN(obj.longitude);
 
   if (!hasLatLon && !hasLatitudeLongitude) {
     return false;
@@ -213,7 +222,11 @@ export function isSampleData(obj: any): obj is SampleData {
     return false;
   }
 
-  if (obj.tideSummary !== undefined && obj.tideSummary !== null && typeof obj.tideSummary !== 'string') {
+  if (
+    obj.tideSummary !== undefined &&
+    obj.tideSummary !== null &&
+    typeof obj.tideSummary !== 'string'
+  ) {
     return false;
   }
 

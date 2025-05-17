@@ -6,7 +6,10 @@ import type { RainfallStation } from '../src/types/rainfall';
  * @param lon - Longitude to search near
  * @returns Promise resolving to nearest station or null if none found
  */
-export declare function findNearestRainfallStation(lat: number, lon: number): Promise<RainfallStation | null>;
+export declare function findNearestRainfallStation(
+  lat: number,
+  lon: number
+): Promise<RainfallStation | null>;
 /**
  * Helper function to find the nearest station within a given radius
  *
@@ -16,13 +19,18 @@ export declare function findNearestRainfallStation(lat: number, lon: number): Pr
  * @param maxDistanceKm - Maximum distance to search within
  * @returns Nearest station or null if none found
  */
-export declare function findNearestStationWithinRadius(stations: Array<{
+export declare function findNearestStationWithinRadius(
+  stations: Array<{
     id: string;
     name: string;
     lat: number;
     lng: number;
     [key: string]: any;
-}>, lat: number, lon: number, maxDistanceKm: number): RainfallStation | null;
+  }>,
+  lat: number,
+  lon: number,
+  maxDistanceKm: number
+): RainfallStation | null;
 /**
  * Format date as YYYY-MM-DD
  *
@@ -39,7 +47,10 @@ export declare function formatDateForRainfall(date: Date): string;
  * @param sampleDate - End date for the 7-day period (usually the sample date)
  * @returns Promise resolving to 7-day total rainfall in mm or null if data unavailable
  */
-export declare function get7DayRainfallTotal(stationId: string, sampleDate: string | Date): Promise<number | null>;
+export declare function get7DayRainfallTotal(
+  stationId: string,
+  sampleDate: string | Date
+): Promise<number | null>;
 /**
  * Gets 7-day rainfall data using Open-Meteo historical API (alternative to NOAA)
  *
@@ -48,4 +59,8 @@ export declare function get7DayRainfallTotal(stationId: string, sampleDate: stri
  * @param sampleDate - End date for the 7-day period (usually the sample date)
  * @returns Promise resolving to 7-day total rainfall in mm or null if data unavailable
  */
-export declare function getOpen7DayRainfallTotal(lat: number, lon: number, sampleDate: string | Date): Promise<number | null>;
+export declare function getOpen7DayRainfallTotal(
+  lat: number,
+  lon: number,
+  sampleDate: string | Date
+): Promise<number | null>;

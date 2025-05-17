@@ -13,7 +13,7 @@ import { GeoJSONFeature, GeoJSONCollection } from '../types/geojson';
 export enum WaterQuality {
   GOOD = 'good',
   MODERATE = 'moderate',
-  POOR = 'poor'
+  POOR = 'poor',
 }
 
 /** Marker creation options */
@@ -41,7 +41,7 @@ export function getMpnRating(
   mediumThreshold = config.waterQuality.mpnThresholds.medium
 ): WaterQuality {
   const mpnValue = Number(mpn);
-  
+
   if (mpnValue < lowThreshold) {
     return WaterQuality.GOOD;
   } else if (mpnValue <= mediumThreshold) {
@@ -64,7 +64,7 @@ export function getColorForMPN(
   mediumThreshold = config.waterQuality.mpnThresholds.medium
 ): string {
   const quality = getMpnRating(mpn, lowThreshold, mediumThreshold);
-  
+
   switch (quality) {
     case WaterQuality.GOOD:
       return config.waterQuality.colors.good;
@@ -90,7 +90,7 @@ export function getQualityMessage(
   mediumThreshold = config.waterQuality.mpnThresholds.medium
 ): string {
   const quality = getMpnRating(mpn, lowThreshold, mediumThreshold);
-  
+
   switch (quality) {
     case WaterQuality.GOOD:
       return 'Acceptable for swimming';
@@ -116,7 +116,7 @@ export function getQualityClass(
   mediumThreshold = config.waterQuality.mpnThresholds.medium
 ): string {
   const quality = getMpnRating(mpn, lowThreshold, mediumThreshold);
-  
+
   switch (quality) {
     case WaterQuality.GOOD:
       return 'text-lime-500';
@@ -149,23 +149,20 @@ export function sanitizeHtml(str: string): string {
  * @param options - Marker customization options
  * @returns Object with marker management functions
  */
-export function useMarkers(
-  map: Ref<L.Map | null>,
-  options: MarkerOptions = {}
-) {
+export function useMarkers(map: Ref<L.Map | null>, options: MarkerOptions = {}) {
   // Extract options with defaults
   const {
     trackAnalytics = true,
     isDarkMode = false,
     lowThreshold = config.waterQuality.mpnThresholds.low,
-    mediumThreshold = config.waterQuality.mpnThresholds.medium
+    mediumThreshold = config.waterQuality.mpnThresholds.medium,
   } = options;
-  
+
   // State
   const markers = ref<any[]>([]); // Using any type to avoid Leaflet typing issues
   const markerCount = ref<number>(0);
   const processedFeatures = ref<number>(0);
-  
+
   /**
    * Create a water bottle icon based on MPN value
    * @param mpn - MPN value for determining color
@@ -173,7 +170,7 @@ export function useMarkers(
    */
   const createWaterBottleIcon = (mpn: string | number): L.DivIcon => {
     const color = getColorForMPN(mpn, lowThreshold, mediumThreshold);
-    
+
     return L.divIcon({
       html: `
         <div style="width: 16px; height: 32px; color: ${color}">
@@ -198,7 +195,7 @@ export function useMarkers(
       popupAnchor: [0, -40],
     });
   };
-  
+
   /**
    * Create popup content for a water sample marker
    * @param feature - GeoJSON feature with water sample data
@@ -207,15 +204,15 @@ export function useMarkers(
   const createPopupContent = (feature: GeoJSONFeature): string => {
     const { properties } = feature;
     const { site, mpn, sampleTime, tideSummary } = properties;
-    
+
     // Sanitize data for security
     const sanitizedSite = sanitizeHtml(site);
     const sanitizedMpn = sanitizeHtml(mpn.toString());
-    
+
     // Determine quality styling
     const qualityClass = getQualityClass(mpn, lowThreshold, mediumThreshold);
     const qualityMessage = getQualityMessage(mpn, lowThreshold, mediumThreshold);
-    
+
     // Create base popup content
     let popupContent = `
       <div class="site-popup">
@@ -227,19 +224,19 @@ export function useMarkers(
           ${qualityMessage}
         </div>
     `;
-    
+
     // Add sample time if available
     if (sampleTime) {
       const sanitizedSampleTime = sanitizeHtml(sampleTime);
       popupContent += `<div class="text-xs opacity-75 mt-1">Sampled at ${sanitizedSampleTime}</div>`;
     }
-    
+
     // Add tide info if available
     if (tideSummary) {
       // Parse the tide summary
       const tideSummaryStr = tideSummary.toString();
       let displaySummary = tideSummaryStr;
-      
+
       // For intuitive combinations, simplify display
       if (tideSummaryStr.includes('Low Tide – ⬇️ Falling')) {
         const stationInfo = tideSummaryStr.includes('(')
@@ -252,17 +249,17 @@ export function useMarkers(
           : '';
         displaySummary = `High Tide ${stationInfo}`;
       }
-      
+
       const sanitizedTideSummary = sanitizeHtml(displaySummary);
       popupContent += `<div class="text-xs opacity-75 mt-1" title="Tidal data is taken from nearest NOAA station and is only approximate">${sanitizedTideSummary}</div>`;
     }
-    
+
     // Close the popup div
     popupContent += `</div>`;
-    
+
     return popupContent;
   };
-  
+
   /**
    * Add a marker for a GeoJSON feature
    * @param feature - GeoJSON feature with water sample data
@@ -270,10 +267,10 @@ export function useMarkers(
    */
   const addMarker = (feature: GeoJSONFeature): L.Marker | null => {
     if (!map.value) return null;
-    
+
     try {
       processedFeatures.value++;
-      
+
       // Validate feature has required data
       if (
         !feature.geometry ||
@@ -288,7 +285,7 @@ export function useMarkers(
         );
         return null;
       }
-      
+
       if (!feature.properties || !feature.properties.mpn) {
         handleError(
           new Error('Missing required properties in feature'),
@@ -298,12 +295,12 @@ export function useMarkers(
         );
         return null;
       }
-      
+
       // Extract coordinates and properties
       const coords = feature.geometry.coordinates;
       const lat = coords[1];
       const lng = coords[0];
-      
+
       if (isNaN(lat) || isNaN(lng)) {
         handleError(
           new Error('Invalid coordinates (NaN values)'),
@@ -313,77 +310,75 @@ export function useMarkers(
         );
         return null;
       }
-      
+
       const { site, mpn } = feature.properties;
-      
+
       // Create water bottle icon
       const bottleIcon = createWaterBottleIcon(mpn);
-      
+
       // Create popup content
       const popupContent = createPopupContent(feature);
-      
+
       // Create and add the marker
       const marker = L.marker([lat, lng], { icon: bottleIcon })
         .bindPopup(popupContent, {
           className: isDarkMode ? 'dark-mode-popup' : '',
         })
         .addTo(map.value);
-      
+
       // Track analytics for popup opens
       if (trackAnalytics) {
         marker.on('popupopen', () => {
           analytics.track(AnalyticsEvent.VIEWED_SAMPLE_PIN, {
             sampleId: site,
             result: mpn.toString(),
-            location: `${lat.toFixed(4)},${lng.toFixed(4)}`
+            location: `${lat.toFixed(4)},${lng.toFixed(4)}`,
           });
         });
       }
-      
+
       // Add to markers array
       markers.value.push(marker);
       markerCount.value++;
-      
+
       return marker;
     } catch (error) {
-      handleError(
-        error,
-        { component: 'useMarkers', operation: 'addMarker' },
-        ErrorSeverity.ERROR,
-        { logToConsole: true, reportToAnalytics: true }
-      );
+      handleError(error, { component: 'useMarkers', operation: 'addMarker' }, ErrorSeverity.ERROR, {
+        logToConsole: true,
+        reportToAnalytics: true,
+      });
       return null;
     }
   };
-  
+
   /**
    * Clear all markers from the map
    */
   const clearMarkers = (): void => {
     if (!map.value) return;
-    
+
     markers.value.forEach((marker: L.Marker) => marker.remove());
     markers.value = [];
     markerCount.value = 0;
     processedFeatures.value = 0;
   };
-  
+
   /**
    * Update markers from GeoJSON collection
    * @param collection - GeoJSON collection with features
    */
   const updateFromGeoJSON = (collection: GeoJSONCollection): void => {
     if (!map.value || !collection.features) return;
-    
+
     // Clear existing markers
     clearMarkers();
-    
+
     // Add markers for all features
     for (const feature of collection.features) {
       addMarker(feature);
     }
   };
-  
+
   /**
    * Create a featureGroup from all markers for operations like fitting bounds
    * @returns Leaflet featureGroup containing all markers
@@ -392,14 +387,14 @@ export function useMarkers(
     if (markers.value.length === 0) return null;
     return L.featureGroup(markers.value as L.Layer[]);
   };
-  
+
   /**
    * Update popup styling based on dark mode setting
    * @param isDark - Whether dark mode is enabled
    */
   const updatePopupStyles = (isDark: boolean): void => {
     if (!map.value) return;
-    
+
     // Re-apply popups to all markers with updated styling
     markers.value.forEach((marker: L.Marker) => {
       const popup = marker.getPopup();
@@ -415,7 +410,7 @@ export function useMarkers(
       }
     });
   };
-  
+
   return {
     markers,
     markerCount,
@@ -426,6 +421,6 @@ export function useMarkers(
     getFeatureGroup,
     updatePopupStyles,
     createWaterBottleIcon,
-    createPopupContent
+    createPopupContent,
   };
 }

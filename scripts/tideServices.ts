@@ -1,25 +1,25 @@
 import nodeFetch from 'node-fetch';
 import { parseDateUTC } from './parseDateUTC.js';
-import type { 
-  TideStation, 
-  TideReading, 
-  TideStatus, 
+import type {
+  TideStation,
+  TideReading,
+  TideStatus,
   ProcessedTideReading,
   NOAAStationsResponse,
-  NOAAWaterLevelResponse
+  NOAAWaterLevelResponse,
 } from '../src/types/tide';
-import { 
-  isTideStation, 
+import {
+  isTideStation,
   isTideReading,
   isNOAAStationsResponse,
-  isNOAAWaterLevelResponse 
+  isNOAAWaterLevelResponse,
 } from '../src/types/tide';
 
 const fetch = nodeFetch;
 
 /**
  * Calculates the distance between two geographic coordinates using the Haversine formula
- * 
+ *
  * @param lat1 - Latitude of the first point
  * @param lon1 - Longitude of the first point
  * @param lat2 - Latitude of the second point
@@ -42,7 +42,7 @@ export function calculateDistance(lat1: number, lon1: number, lat2: number, lon2
 
 /**
  * Formats a Date object for NOAA CO-OPS API (yyyy-MM-dd HH:mm)
- * 
+ *
  * @param date - Date to format
  * @returns Formatted date string in NOAA API format
  */
@@ -63,19 +63,22 @@ export function formatDate(date: Date): string {
 
 /**
  * Finds the nearest NOAA tide station within configurable distance of the given lat/lon
- * 
+ *
  * @param lat - Latitude to search near
  * @param lon - Longitude to search near
  * @returns Promise resolving to nearest station or null if none found
  */
-export async function findNearestTideStation(lat: number, lon: number): Promise<TideStation | null> {
+export async function findNearestTideStation(
+  lat: number,
+  lon: number
+): Promise<TideStation | null> {
   try {
     // NOAA CO-OPS API endpoint for listing all stations
     const response = await fetch(
       'https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations.json'
     );
     const data = await response.json();
-    
+
     // Validate the response using type guard
     if (!isNOAAStationsResponse(data)) {
       console.error('Invalid NOAA stations response format');
@@ -108,7 +111,7 @@ export async function findNearestTideStation(lat: number, lon: number): Promise<
 
 /**
  * Helper function to find the nearest station within a given radius
- * 
+ *
  * @param stations - Array of NOAA stations
  * @param lat - Latitude to search near
  * @param lon - Longitude to search near
@@ -122,9 +125,9 @@ export function findNearestStationWithinRadius(
     lat: number;
     lng: number;
     [key: string]: any;
-  }>, 
-  lat: number, 
-  lon: number, 
+  }>,
+  lat: number,
+  lon: number,
   maxDistanceKm: number
 ): TideStation | null {
   let nearestStation: TideStation | null = null;
@@ -152,12 +155,15 @@ export function findNearestStationWithinRadius(
 
 /**
  * Gets tide data for a specific station around a specific time
- * 
+ *
  * @param stationId - NOAA station ID
  * @param sampleTime - Time of the water sample
  * @returns Promise resolving to array of tide readings or null if error
  */
-export async function getTideData(stationId: string, sampleTime: string | Date): Promise<TideReading[] | null> {
+export async function getTideData(
+  stationId: string,
+  sampleTime: string | Date
+): Promise<TideReading[] | null> {
   try {
     // Parse the sample time with explicit UTC handling to avoid timezone ambiguity
     const sampleDate = parseDateUTC(sampleTime);
@@ -177,7 +183,7 @@ export async function getTideData(stationId: string, sampleTime: string | Date):
 
     const response = await fetch(url);
     const data = await response.json();
-    
+
     // Validate the response using type guard
     if (!isNOAAWaterLevelResponse(data)) {
       console.error('Invalid NOAA water level response format');
@@ -207,7 +213,7 @@ export async function getTideData(stationId: string, sampleTime: string | Date):
 
 /**
  * Determines tide status by analyzing tide data points
- * 
+ *
  * @param tideData - Array of tide data points from NOAA
  * @param sampleDate - Date object representing the sample time
  * @returns Object with tide status information or null if analysis fails
@@ -247,7 +253,8 @@ export function determineTideStatus(tideData: TideReading[], sampleDate: Date): 
   // Find points before the closest reading
   const pointsBefore: ProcessedTideReading[] = [];
   for (let i = closestIndex - 1; i >= 0; i--) {
-    const timeDiffMinutes = (readings[closestIndex].time.getTime() - readings[i].time.getTime()) / (1000 * 60);
+    const timeDiffMinutes =
+      (readings[closestIndex].time.getTime() - readings[i].time.getTime()) / (1000 * 60);
     if (timeDiffMinutes <= 12) {
       pointsBefore.unshift(readings[i]);
     }
@@ -259,7 +266,8 @@ export function determineTideStatus(tideData: TideReading[], sampleDate: Date): 
   // Find points after the closest reading
   const pointsAfter: ProcessedTideReading[] = [];
   for (let i = closestIndex + 1; i < readings.length; i++) {
-    const timeDiffMinutes = (readings[i].time.getTime() - readings[closestIndex].time.getTime()) / (1000 * 60);
+    const timeDiffMinutes =
+      (readings[i].time.getTime() - readings[closestIndex].time.getTime()) / (1000 * 60);
     if (timeDiffMinutes <= 12) {
       pointsAfter.push(readings[i]);
     }
@@ -314,7 +322,7 @@ export function determineTideStatus(tideData: TideReading[], sampleDate: Date): 
 
 /**
  * Analyzes tide data and formats a tide summary string
- * 
+ *
  * @param tideData - Array of tide readings
  * @param stationName - Name of the tide station
  * @param sampleTime - Time of the water sample

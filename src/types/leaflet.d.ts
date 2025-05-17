@@ -26,7 +26,7 @@ declare module 'leaflet' {
     removeLayer(layer: Layer): this;
     addLayer(layer: Layer): this;
   }
-  
+
   export class TileLayer extends Layer {
     [key: string]: any;
     _tileOnLoad: any;
@@ -42,7 +42,7 @@ declare module 'leaflet' {
       [key: string]: any;
     };
   }
-  
+
   export class Marker<T = any> extends Layer {
     [key: string]: any;
     _shadow: any; // Required for type compatibility
@@ -57,7 +57,7 @@ declare module 'leaflet' {
     setLatLng(latlng: LatLngExpression): Marker<T>;
     toGeoJSON(precision?: number | false): any;
   }
-  
+
   export class Layer {
     [key: string]: any;
     _map: any; // Required for type compatibility
@@ -66,30 +66,30 @@ declare module 'leaflet' {
     removeFrom(map: Map): this;
     getPane(name?: string): HTMLElement | undefined;
   }
-  
+
   export class FeatureGroup extends Layer {
     [key: string]: any;
     getBounds(): any;
   }
-  
+
   export interface LatLng {
     lat: number;
     lng: number;
     [key: string]: any;
   }
-  
+
   export interface Popup {
     [key: string]: any;
     getContent(): string;
   }
-  
+
   export interface DivIcon {
     [key: string]: any;
   }
-  
+
   // Additional types
-  export type LatLngExpression = LatLng | [number, number] | {lat: number, lng: number};
-  export type Coords = {x: number, y: number, z: number};
+  export type LatLngExpression = LatLng | [number, number] | { lat: number; lng: number };
+  export type Coords = { x: number; y: number; z: number };
   export interface LayerGroup<T = any> extends Layer {
     addLayer(layer: Layer): LayerGroup<T>;
     removeLayer(layer: Layer): LayerGroup<T>;
@@ -113,7 +113,7 @@ declare module 'leaflet' {
   export function marker(latLng: LatLngExpression, options?: any): Marker;
   export function featureGroup(layers?: Layer[]): FeatureGroup;
   export function divIcon(options?: any): DivIcon;
-  
+
   // Default export
   const L: any;
   export default L;

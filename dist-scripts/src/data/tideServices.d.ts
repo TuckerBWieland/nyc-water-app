@@ -9,19 +9,19 @@
  * Interface for tide station data
  */
 export interface TideStation {
-    id: string;
-    name: string;
-    lat: number;
-    lon: number;
-    state?: string;
+  id: string;
+  name: string;
+  lat: number;
+  lon: number;
+  state?: string;
 }
 /**
  * Interface for tide prediction data
  */
 export interface TidePrediction {
-    time: string;
-    height: number;
-    type: 'H' | 'L';
+  time: string;
+  height: number;
+  type: 'H' | 'L';
 }
 /**
  * Find the nearest tide station to given coordinates
@@ -29,7 +29,10 @@ export interface TidePrediction {
  * @param lon - Longitude of the location
  * @returns The nearest tide station or null if none found
  */
-export declare function findNearestTideStation(lat: number, lon: number): Promise<TideStation | null>;
+export declare function findNearestTideStation(
+  lat: number,
+  lon: number
+): Promise<TideStation | null>;
 /**
  * Format a date in ISO format with consistent timezone handling
  * @param date - Date to format
@@ -42,7 +45,10 @@ export declare function formatDate(date: Date): string;
  * @param dateTime - Date and time to get tide data for
  * @returns Array of tide predictions or null if error
  */
-export declare function getTideData(stationId: string, dateTime: string): Promise<TidePrediction[] | null>;
+export declare function getTideData(
+  stationId: string,
+  dateTime: string
+): Promise<TidePrediction[] | null>;
 /**
  * Analyze tide data to determine tide status at sample time
  * @param tides - Array of tide predictions
@@ -50,4 +56,8 @@ export declare function getTideData(stationId: string, dateTime: string): Promis
  * @param sampleTime - Time the sample was taken
  * @returns Tide status summary or null if unable to determine
  */
-export declare function analyzeTideData(tides: TidePrediction[], stationName: string, sampleTime: string): string | null;
+export declare function analyzeTideData(
+  tides: TidePrediction[],
+  stationName: string,
+  sampleTime: string
+): string | null;

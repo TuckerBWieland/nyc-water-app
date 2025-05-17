@@ -1,11 +1,14 @@
 import { AnalyticsEvent, EventPayloadMap, UserTraits } from './types/analytics';
-export declare const posthogClient: import("posthog-js").PostHog;
+export declare const posthogClient: import('posthog-js').PostHog;
 /**
  * Utility function to capture events only in production with type safety
  * @param eventName - Name of the event to capture from AnalyticsEvent enum
  * @param properties - Properties to attach to the event
  */
-export declare function captureTypedEvent<E extends AnalyticsEvent>(eventName: E, properties: EventPayloadMap[E]): void;
+export declare function captureTypedEvent<E extends AnalyticsEvent>(
+  eventName: E,
+  properties: EventPayloadMap[E]
+): void;
 /**
  * Utility function to capture events only in production (legacy)
  * @deprecated Use captureTypedEvent for type safety

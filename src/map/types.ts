@@ -4,12 +4,12 @@
  */
 
 /**
- * Water quality rating enumeration 
+ * Water quality rating enumeration
  */
 export enum WaterQuality {
   GOOD = 'good',
   MODERATE = 'moderate',
-  POOR = 'poor'
+  POOR = 'poor',
 }
 
 /**

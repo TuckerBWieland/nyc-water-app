@@ -5,29 +5,29 @@
  * NOAA rainfall data
  */
 export interface NOAARainfallData {
-    date: string;
-    PRCP: number;
-    station: string;
-    name?: string;
+  date: string;
+  PRCP: number;
+  station: string;
+  name?: string;
 }
 /**
  * NOAA rainfall station information
  */
 export interface RainfallStation {
-    id: string;
-    name: string;
-    lat: number;
-    lng: number;
-    distance?: string;
+  id: string;
+  name: string;
+  lat: number;
+  lng: number;
+  distance?: string;
 }
 /**
  * NOAA Rainfall API response
  */
 export interface NOAARainfallResponse {
-    data?: NOAARainfallData[];
-    error?: {
-        message: string;
-    };
+  data?: NOAARainfallData[];
+  error?: {
+    message: string;
+  };
 }
 /**
  * Type guard for NOAARainfallData

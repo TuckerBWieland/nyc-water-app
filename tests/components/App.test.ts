@@ -69,70 +69,70 @@ describe('App.vue', () => {
       }),
     } as unknown as Response);
   });
-  
+
   it('should mount successfully', async () => {
     const wrapper = mount(App);
-    
+
     // Wait for component to finish mounting and async operations
     await flushPromises();
-    
+
     // Verify child components are present
     expect(wrapper.find('[data-testid="map-viewer"]').exists()).toBe(true);
     expect(wrapper.find('[data-testid="header-overlay"]').exists()).toBe(true);
     expect(wrapper.find('[data-testid="date-scroller"]').exists()).toBe(true);
     expect(wrapper.find('[data-testid="info-popup"]').exists()).toBe(true);
   });
-  
+
   it('should fetch dates on mount', async () => {
     mount(App);
-    
+
     // Wait for component to finish mounting and async operations
     await flushPromises();
-    
+
     // Verify fetch was called with the correct URL
     expect(global.fetch).toHaveBeenCalledWith('/data/index.json');
   });
-  
+
   it('should update siteCount when MapViewer emits update:siteCount', async () => {
     const wrapper = mount(App);
-    
+
     // Wait for component to finish mounting
     await flushPromises();
-    
+
     // Find the MapViewer component
     const mapViewer = wrapper.findComponent({ name: 'MapViewer' });
-    
+
     // Emit the update:siteCount event
     await mapViewer.vm.$emit('update:siteCount', 10);
-    
+
     // Verify the siteCount prop is passed to HeaderOverlay
     const headerOverlay = wrapper.findComponent({ name: 'HeaderOverlay' });
     expect(headerOverlay.props('siteCount')).toBe(10);
   });
-  
+
   it('should toggle dark mode when button is clicked', async () => {
     const wrapper = mount(App);
-    
+
     // Wait for component to finish mounting
     await flushPromises();
-    
+
     // Find the dark mode toggle button
     const toggleButton = wrapper.find('button[aria-label="Toggle dark mode"]');
-    
+
     // Get initial dark mode state
     const initialIsDarkMode = wrapper.vm.isDarkMode;
-    
+
     // Click the toggle button
     await toggleButton.trigger('click');
-    
+
     // Verify the dark mode state is toggled
     expect(wrapper.vm.isDarkMode).toBe(!initialIsDarkMode);
-    
+
     // Verify the dark mode prop is passed to child components
     const mapViewer = wrapper.findComponent({ name: 'MapViewer' });
     expect(mapViewer.props('isDarkMode')).toBe(!initialIsDarkMode);
   });
-  
+
   it('should handle failed fetch gracefully', async () => {
     // Mock a failed fetch
     vi.spyOn(global, 'fetch').mockResolvedValue({
@@ -140,18 +140,18 @@ describe('App.vue', () => {
       status: 404,
       statusText: 'Not Found',
     } as unknown as Response);
-    
+
     // Mock console.error to prevent test output pollution
     vi.spyOn(console, 'error').mockImplementation(() => {});
-    
+
     const wrapper = mount(App);
-    
+
     // Wait for component to finish mounting and async operations
     await flushPromises();
-    
+
     // Verify the component mounted successfully despite the fetch error
     expect(wrapper.find('[data-testid="map-viewer"]').exists()).toBe(true);
-    
+
     // Verify dates is an empty array
     expect(wrapper.vm.dates).toEqual([]);
   });

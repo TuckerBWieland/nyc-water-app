@@ -10,14 +10,14 @@ import type { Plugin } from 'vite';
  * Options for the GeoJSON Enrichment Plugin
  */
 interface GeoJsonEnrichmentOptions {
-    /** Data directory (relative to project root) */
-    dataDir?: string;
-    /** Whether to skip enrichment in dev mode */
-    skipInDev?: boolean;
-    /** Only enrich files matching this pattern */
-    include?: RegExp;
-    /** Skip files matching this pattern */
-    exclude?: RegExp;
+  /** Data directory (relative to project root) */
+  dataDir?: string;
+  /** Whether to skip enrichment in dev mode */
+  skipInDev?: boolean;
+  /** Only enrich files matching this pattern */
+  include?: RegExp;
+  /** Skip files matching this pattern */
+  exclude?: RegExp;
 }
 /**
  * Create a Vite plugin that enriches GeoJSON files with tide data

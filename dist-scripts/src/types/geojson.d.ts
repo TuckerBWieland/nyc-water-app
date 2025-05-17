@@ -25,20 +25,20 @@
  * @property {number|null} [properties.rainfall_mm_7day] - 7-day rainfall total in mm
  */
 export interface GeoJSONFeature {
+  type: string;
+  geometry: {
     type: string;
-    geometry: {
-        type: string;
-        coordinates: number[];
-    };
-    properties: {
-        [key: string]: any;
-        site: string;
-        mpn: string | number;
-        sampleTime?: string;
-        timestamp?: string;
-        tideSummary?: string | null;
-        rainfall_mm_7day?: number | null;
-    };
+    coordinates: number[];
+  };
+  properties: {
+    [key: string]: any;
+    site: string;
+    mpn: string | number;
+    sampleTime?: string;
+    timestamp?: string;
+    tideSummary?: string | null;
+    rainfall_mm_7day?: number | null;
+  };
 }
 /**
  * GeoJSON Collection of water samples.
@@ -49,8 +49,8 @@ export interface GeoJSONFeature {
  * @property {GeoJSONFeature[]} features - Array of water sample features
  */
 export interface GeoJSONCollection {
-    type: string;
-    features: GeoJSONFeature[];
+  type: string;
+  features: GeoJSONFeature[];
 }
 /**
  * Sample data in regular JSON format (non-GeoJSON).
@@ -69,17 +69,17 @@ export interface GeoJSONCollection {
  * @property {number|null} [rainfall_mm_7day] - 7-day rainfall total in mm
  */
 export interface SampleData {
-    [key: string]: any;
-    site: string;
-    mpn: string | number;
-    latitude?: number;
-    longitude?: number;
-    lat?: number;
-    lon?: number;
-    sampleTime?: string;
-    timestamp?: string;
-    tideSummary?: string | null;
-    rainfall_mm_7day?: number | null;
+  [key: string]: any;
+  site: string;
+  mpn: string | number;
+  latitude?: number;
+  longitude?: number;
+  lat?: number;
+  lon?: number;
+  sampleTime?: string;
+  timestamp?: string;
+  tideSummary?: string | null;
+  rainfall_mm_7day?: number | null;
 }
 /**
  * Type guard to check if an object is a GeoJSON coordinates array

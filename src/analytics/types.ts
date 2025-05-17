@@ -13,7 +13,7 @@ export enum AnalyticsEvent {
   ZOOMED_MAP = 'zoomed_map',
   PANNED_MAP = 'panned_map',
   FAILED_LOADING_DATA = 'failed_loading_data',
-  ERROR_OCCURRED = 'error_occurred'
+  ERROR_OCCURRED = 'error_occurred',
 }
 
 /**

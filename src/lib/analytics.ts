@@ -3,11 +3,11 @@ import { analytics as analyticsService } from '../services/analytics';
 import eventDescriptions from './eventMapping.json';
 // Type assertion for eventDescriptions
 const typedEventDescriptions = eventDescriptions as Record<AnalyticsEvent, string>;
-import { 
-  AnalyticsEvent, 
-  EventPayload, 
+import {
+  AnalyticsEvent,
+  EventPayload,
   EventPayloadMap,
-  UserTraits as UserTraitsType
+  UserTraits as UserTraitsType,
 } from '../types/analytics';
 
 /**
@@ -41,21 +41,18 @@ export type UserTraits = UserTraitsType;
 /**
  * Type-safe track function for known events with proper payload types
  */
-export function trackEvent<E extends AnalyticsEvent>(
-  event: E,
-  payload: EventPayloadMap[E]
-): void {
+export function trackEvent<E extends AnalyticsEvent>(event: E, payload: EventPayloadMap[E]): void {
   // Add standard properties to all events
   const enhancedProps = {
     ...payload,
     eventDescription: typedEventDescriptions[event] || '',
   };
-  
+
   // Log event in development for debugging
   if (import.meta.env.DEV) {
     console.info(`[Analytics] ${event} (legacy API)`, enhancedProps);
   }
-  
+
   // Delegate to the new service
   analyticsService.track(event, enhancedProps as EventPayloadMap[E]);
 }
@@ -73,18 +70,18 @@ export const track = (eventKey: string, properties: Record<string, any> = {}): v
     );
     return;
   }
-  
+
   // Add standard properties to all events
   const enhancedProps = {
     ...properties,
     eventDescription: typedEventDescriptions[eventKey as AnalyticsEvent] || '',
   };
-  
+
   // Log event in development for debugging
   if (import.meta.env.DEV) {
     console.info(`[Analytics] ${eventKey} (legacy API)`, enhancedProps);
   }
-  
+
   // Delegate to the new service
   analyticsService.track(eventKey as AnalyticsEvent, enhancedProps as any);
 };

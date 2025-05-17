@@ -8,7 +8,12 @@ import type { TideStation, TideReading, TideStatus } from '../src/types/tide';
  * @param lon2 - Longitude of the second point
  * @returns Distance in kilometers
  */
-export declare function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number;
+export declare function calculateDistance(
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number
+): number;
 /**
  * Formats a Date object for NOAA CO-OPS API (yyyy-MM-dd HH:mm)
  *
@@ -23,7 +28,10 @@ export declare function formatDate(date: Date): string;
  * @param lon - Longitude to search near
  * @returns Promise resolving to nearest station or null if none found
  */
-export declare function findNearestTideStation(lat: number, lon: number): Promise<TideStation | null>;
+export declare function findNearestTideStation(
+  lat: number,
+  lon: number
+): Promise<TideStation | null>;
 /**
  * Helper function to find the nearest station within a given radius
  *
@@ -33,13 +41,18 @@ export declare function findNearestTideStation(lat: number, lon: number): Promis
  * @param maxDistanceKm - Maximum distance to search within
  * @returns Nearest station or null if none found
  */
-export declare function findNearestStationWithinRadius(stations: Array<{
+export declare function findNearestStationWithinRadius(
+  stations: Array<{
     id: string;
     name: string;
     lat: number;
     lng: number;
     [key: string]: any;
-}>, lat: number, lon: number, maxDistanceKm: number): TideStation | null;
+  }>,
+  lat: number,
+  lon: number,
+  maxDistanceKm: number
+): TideStation | null;
 /**
  * Gets tide data for a specific station around a specific time
  *
@@ -47,7 +60,10 @@ export declare function findNearestStationWithinRadius(stations: Array<{
  * @param sampleTime - Time of the water sample
  * @returns Promise resolving to array of tide readings or null if error
  */
-export declare function getTideData(stationId: string, sampleTime: string | Date): Promise<TideReading[] | null>;
+export declare function getTideData(
+  stationId: string,
+  sampleTime: string | Date
+): Promise<TideReading[] | null>;
 /**
  * Determines tide status by analyzing tide data points
  *
@@ -55,7 +71,10 @@ export declare function getTideData(stationId: string, sampleTime: string | Date
  * @param sampleDate - Date object representing the sample time
  * @returns Object with tide status information or null if analysis fails
  */
-export declare function determineTideStatus(tideData: TideReading[], sampleDate: Date): TideStatus | null;
+export declare function determineTideStatus(
+  tideData: TideReading[],
+  sampleDate: Date
+): TideStatus | null;
 /**
  * Analyzes tide data and formats a tide summary string
  *
@@ -64,4 +83,8 @@ export declare function determineTideStatus(tideData: TideReading[], sampleDate:
  * @param sampleTime - Time of the water sample
  * @returns Formatted tide summary string or null if analysis fails
  */
-export declare function analyzeTideData(tideData: TideReading[], stationName: string, sampleTime: string | Date): string | null;
+export declare function analyzeTideData(
+  tideData: TideReading[],
+  stationName: string,
+  sampleTime: string | Date
+): string | null;

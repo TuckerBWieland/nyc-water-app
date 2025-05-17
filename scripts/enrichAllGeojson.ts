@@ -49,17 +49,17 @@ function checkNodeExists(): boolean {
  */
 function checkEnrichmentScriptsExist(): boolean {
   let allScriptsExist = true;
-  
+
   if (!fs.existsSync(TIDE_ENRICHMENT_SCRIPT)) {
     console.error(`Tide enrichment script not found at ${TIDE_ENRICHMENT_SCRIPT}`);
     allScriptsExist = false;
   }
-  
+
   if (!fs.existsSync(RAINFALL_ENRICHMENT_SCRIPT)) {
     console.error(`Rainfall enrichment script not found at ${RAINFALL_ENRICHMENT_SCRIPT}`);
     allScriptsExist = false;
   }
-  
+
   return allScriptsExist;
 }
 
@@ -131,14 +131,14 @@ function enrichAllGeoJsonFiles(): void {
 
     try {
       console.log(`Processing ${file}...`);
-      
+
       // First, run the tide enrichment script
       console.log(`- Adding tide data to ${file}...`);
       execSync(`node ${TIDE_ENRICHMENT_SCRIPT} "${filePath}"`, {
         stdio: 'inherit',
         timeout: 300000, // 5 minute timeout
       });
-      
+
       // Then run the rainfall enrichment script on the enriched file
       console.log(`- Adding rainfall data to ${file}...`);
       const enrichedFilePath = filePath.replace('.geojson', '.enriched.geojson');

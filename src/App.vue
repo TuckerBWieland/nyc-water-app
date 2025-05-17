@@ -40,12 +40,12 @@
     <!-- Legend components in top-left corner - only visible when header is collapsed -->
     <div v-if="!isHeaderExpanded" class="absolute top-4 left-4 z-40 flex flex-col space-y-2">
       <SampleBarLegend :samples="sampleData" :is-dark-mode="isDarkMode" />
-      <RainDropLegend 
-        :rainfall="rainfall" 
-        :rainfall-by-day-in="rainfallByDayIn" 
+      <RainDropLegend
+        :rainfall="rainfall"
+        :rainfall-by-day-in="rainfallByDayIn"
         :rain-data="rainData"
         :total-rain="totalRain"
-        :is-dark-mode="isDarkMode" 
+        :is-dark-mode="isDarkMode"
       />
     </div>
 
@@ -114,7 +114,7 @@ const isHeaderExpanded = ref<boolean>(false);
  * Sample data for the legends
  * @type {import('vue').Ref<Array<{ site: string, mpn: string | number }>>}
  */
-const sampleData = ref<Array<{ site: string, mpn: string | number }>>([]);
+const sampleData = ref<Array<{ site: string; mpn: string | number }>>([]);
 
 /**
  * Rainfall amount in inches (for the rain drop legend)
@@ -143,7 +143,7 @@ const totalRain = ref<number>(0);
 /**
  * Update the count of water sampling sites
  * Called by MapViewer when new data is loaded
- * 
+ *
  * @param {number} count - Number of sampling sites
  */
 const updateSiteCount = (count: number): void => {
@@ -153,10 +153,10 @@ const updateSiteCount = (count: number): void => {
 /**
  * Update the sample data for the legend
  * Called by MapViewer when new data is loaded
- * 
+ *
  * @param {Array<{ site: string, mpn: string | number }>} data - Sample data for legend
  */
-const updateSampleData = (data: Array<{ site: string, mpn: string | number }>): void => {
+const updateSampleData = (data: Array<{ site: string; mpn: string | number }>): void => {
   sampleData.value = data;
 };
 
@@ -169,7 +169,7 @@ const toggleDarkMode = (): void => {
 
 /**
  * Update the map mode based on header control
- * 
+ *
  * @param {boolean} darkMode - Whether dark mode is enabled
  */
 const updateMapMode = (darkMode: boolean): void => {
@@ -179,12 +179,12 @@ const updateMapMode = (darkMode: boolean): void => {
 /**
  * Update the rainfall by day data - legacy format
  * Called by MapViewer when new data is loaded
- * 
+ *
  * @param {Array<number | null>} data - Rainfall by day data in inches
  */
 const updateRainfallByDayIn = (data: Array<number | null>): void => {
   rainfallByDayIn.value = data;
-  
+
   // Also update the total rainfall value (for backward compatibility)
   const total = data.reduce((sum, val) => sum + (val || 0), 0);
   rainfall.value = Number(total.toFixed(1));
@@ -193,7 +193,7 @@ const updateRainfallByDayIn = (data: Array<number | null>): void => {
 /**
  * Update the new rainfall data array
  * Called by MapViewer when new data is loaded
- * 
+ *
  * @param {Array<number>} data - Rainfall data array in inches
  */
 const updateRainData = (data: Array<number>): void => {
@@ -203,7 +203,7 @@ const updateRainData = (data: Array<number>): void => {
 /**
  * Update the total rainfall value
  * Called by MapViewer when new data is loaded
- * 
+ *
  * @param {number} value - Total rainfall in inches
  */
 const updateTotalRain = (value: number): void => {
@@ -215,29 +215,31 @@ const updateTotalRain = (value: number): void => {
  * Fetches available dates and sets the default date
  */
 onMounted(async (): Promise<void> => {
-  await handleAsyncOperation(async () => {
-    const url = `${import.meta.env.BASE_URL}data/index.json`;
-    const res = await fetch(url);
-    
-    if (!res.ok) {
-      throw new Error(`Failed to load dates index: ${res.status} ${res.statusText}`);
+  await handleAsyncOperation(
+    async () => {
+      const url = `${import.meta.env.BASE_URL}data/index.json`;
+      const res = await fetch(url);
+
+      if (!res.ok) {
+        throw new Error(`Failed to load dates index: ${res.status} ${res.statusText}`);
+      }
+
+      const index = await res.json();
+
+      if (!index || !Array.isArray(index.dates) || typeof index.latest !== 'string') {
+        throw new Error('Invalid index data format');
+      }
+
+      dates.value = index.dates;
+      selectedDate.value = index.latest;
+    },
+    { component: 'App', operation: 'loadDates' },
+    {
+      logToConsole: true,
+      reportToAnalytics: true,
+      showToUser: true,
+      fallbackValue: undefined,
     }
-    
-    const index = await res.json();
-    
-    if (!index || !Array.isArray(index.dates) || typeof index.latest !== 'string') {
-      throw new Error('Invalid index data format');
-    }
-    
-    dates.value = index.dates;
-    selectedDate.value = index.latest;
-  }, 
-  { component: 'App', operation: 'loadDates' },
-  { 
-    logToConsole: true,
-    reportToAnalytics: true,
-    showToUser: true,
-    fallbackValue: undefined
-  });
+  );
 });
 </script>

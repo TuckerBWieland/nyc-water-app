@@ -1,6 +1,6 @@
 # Analytics Service
 
-This module provides a standardized API for tracking analytics events across the application. 
+This module provides a standardized API for tracking analytics events across the application.
 
 ## Usage
 
@@ -12,7 +12,7 @@ import { analytics, AnalyticsEvent } from '@/services/analytics';
 // Track an event with type-safe payload
 analytics.track(AnalyticsEvent.VIEWED_SAMPLE_PIN, {
   sampleId: '123',
-  location: 'Manhattan Beach'
+  location: 'Manhattan Beach',
 });
 ```
 
@@ -33,7 +33,7 @@ import { analytics } from '@/services/analytics';
 // Identify a user with properties
 analytics.identify('user-123', {
   name: 'Jane Doe',
-  email: 'jane@example.com'
+  email: 'jane@example.com',
 });
 ```
 

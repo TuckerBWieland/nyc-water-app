@@ -19,11 +19,11 @@
  * @property {string} [distance] - Optional distance from sampling point (with units)
  */
 export interface TideStation {
-    id: string;
-    name: string;
-    lat: number;
-    lng: number;
-    distance?: string;
+  id: string;
+  name: string;
+  lat: number;
+  lng: number;
+  distance?: string;
 }
 /**
  * Raw tide reading from NOAA API
@@ -34,8 +34,8 @@ export interface TideStation {
  * @property {string} v - Water level value as string (converted to number in processing)
  */
 export interface TideReading {
-    t: string;
-    v: string;
+  t: string;
+  v: string;
 }
 /**
  * Processed tide reading with parsed date and numeric value
@@ -46,8 +46,8 @@ export interface TideReading {
  * @property {number} height - Water level height in meters or feet (depends on API units parameter)
  */
 export interface ProcessedTideReading {
-    time: Date;
-    height: number;
+  time: Date;
+  height: number;
 }
 /**
  * Analyzed tide status information
@@ -61,11 +61,11 @@ export interface ProcessedTideReading {
  * @property {number} maxHeight - Maximum water level in the analyzed time period
  */
 export interface TideStatus {
-    state: string;
-    isRising: boolean;
-    currentHeight: number;
-    minHeight: number;
-    maxHeight: number;
+  state: string;
+  isRising: boolean;
+  currentHeight: number;
+  minHeight: number;
+  maxHeight: number;
 }
 /**
  * NOAA Station API response
@@ -79,13 +79,13 @@ export interface TideStatus {
  * @property {number} stations[].lng - Station longitude
  */
 export interface NOAAStationsResponse {
-    stations: Array<{
-        id: string;
-        name: string;
-        lat: number;
-        lng: number;
-        [key: string]: any;
-    }>;
+  stations: Array<{
+    id: string;
+    name: string;
+    lat: number;
+    lng: number;
+    [key: string]: any;
+  }>;
 }
 /**
  * NOAA Water Level API response
@@ -97,10 +97,10 @@ export interface NOAAStationsResponse {
  * @property {string} error.message - Error message describing the problem
  */
 export interface NOAAWaterLevelResponse {
-    data?: TideReading[];
-    error?: {
-        message: string;
-    };
+  data?: TideReading[];
+  error?: {
+    message: string;
+  };
 }
 /**
  * Type guard for TideStation

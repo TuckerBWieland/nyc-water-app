@@ -2,23 +2,13 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { parseDateUTC } from './parseDateUTC.js';
-import { 
-  getOpen7DayRainfallTotal
-} from './rainfallServices.js';
-import type { 
-  GeoJSONCollection,
-  GeoJSONFeature,
-  SampleData
-} from '../src/types/geojson';
-import {
-  isGeoJSONCollection,
-  isGeoJSONFeature,
-  isSampleData
-} from '../src/types/geojson';
+import { getOpen7DayRainfallTotal } from './rainfallServices.js';
+import type { GeoJSONCollection, GeoJSONFeature, SampleData } from '../src/types/geojson';
+import { isGeoJSONCollection, isGeoJSONFeature, isSampleData } from '../src/types/geojson';
 
 /**
  * Main function to enrich samples with rainfall data
- * 
+ *
  * @param inputFilePath - Path to the GeoJSON or JSON file to enrich
  * @returns Promise that resolves when the enrichment is complete
  */
@@ -31,7 +21,7 @@ export async function enrichSamplesWithRainfallData(inputFilePath: string): Prom
     // Validate and determine the data type
     let samples: (GeoJSONFeature | SampleData)[] = [];
     let isGeoJSON = false;
-    
+
     if (isGeoJSONCollection(parsedData)) {
       isGeoJSON = true;
       samples = parsedData.features;
@@ -45,7 +35,7 @@ export async function enrichSamplesWithRainfallData(inputFilePath: string): Prom
     } else {
       throw new Error('Unrecognized data format: Not a GeoJSON collection or sample data array');
     }
-    
+
     // Store the original data structure for writing back later
     const sampleData = parsedData;
 
@@ -57,10 +47,10 @@ export async function enrichSamplesWithRainfallData(inputFilePath: string): Prom
       processedCount++;
 
       // Extract coordinates and sample time based on data format
-      let lat: number | undefined, 
-          lon: number | undefined, 
-          sampleDate: string | undefined, 
-          properties: Record<string, any>;
+      let lat: number | undefined,
+        lon: number | undefined,
+        sampleDate: string | undefined,
+        properties: Record<string, any>;
 
       if ('geometry' in sample && 'properties' in sample) {
         // GeoJSON format
@@ -86,13 +76,13 @@ export async function enrichSamplesWithRainfallData(inputFilePath: string): Prom
             properties.date = dateFromFilename;
           }
         }
-        
+
         // Skip if we still don't have required data
         if (!lat || !lon || !sampleDate) {
           console.warn('Missing required data for sample enrichment:', {
             hasLat: !!lat,
             hasLon: !!lon,
-            hasSampleDate: !!sampleDate
+            hasSampleDate: !!sampleDate,
           });
           continue;
         }
@@ -103,7 +93,7 @@ export async function enrichSamplesWithRainfallData(inputFilePath: string): Prom
 
       // Add rainfall data to the properties
       properties.rainfall_mm_7day = rainfallTotal;
-      
+
       if (rainfallTotal !== null) {
         enrichedCount++;
       }
@@ -112,17 +102,17 @@ export async function enrichSamplesWithRainfallData(inputFilePath: string): Prom
       await new Promise(resolve => setTimeout(resolve, 100));
     }
 
-    console.log(`Processed ${processedCount} samples, enriched ${enrichedCount} with rainfall data`);
+    console.log(
+      `Processed ${processedCount} samples, enriched ${enrichedCount} with rainfall data`
+    );
 
     // Write the updated data to output file
     // For .enriched.geojson files, update them in-place
     // For regular files, create a new .enriched version
     const outputFilePath = inputFilePath.includes('.enriched.')
       ? inputFilePath
-      : inputFilePath
-          .replace('.json', '.enriched.json')
-          .replace('.geojson', '.enriched.geojson');
-          
+      : inputFilePath.replace('.json', '.enriched.json').replace('.geojson', '.enriched.geojson');
+
     fs.writeFileSync(outputFilePath, JSON.stringify(sampleData, null, 2), 'utf8');
     console.log(`Wrote enriched data to ${outputFilePath}`);
   } catch (error) {

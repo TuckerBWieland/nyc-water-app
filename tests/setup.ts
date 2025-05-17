@@ -1,6 +1,6 @@
 /**
  * Global test setup for Vitest
- * 
+ *
  * This file runs before tests to set up the testing environment.
  */
 import { vi } from 'vitest';

@@ -8,12 +8,12 @@ This file contains standardized JSDoc templates for use throughout the codebase.
 /**
  * @component ComponentName
  * @description Brief description of what the component does
- * 
+ *
  * @example
  * <template>
  *   <ComponentName :prop1="value" @event="handler" />
  * </template>
- * 
+ *
  * @displayName ComponentName (for Vue DevTools)
  */
 ```
@@ -41,7 +41,7 @@ This file contains standardized JSDoc templates for use throughout the codebase.
 ```js
 /**
  * Brief description of what the method does
- * 
+ *
  * @param {Type} paramName - Description of the parameter
  * @returns {ReturnType} Description of the return value
  * @throws {ErrorType} Description of when this error is thrown
@@ -54,11 +54,11 @@ This file contains standardized JSDoc templates for use throughout the codebase.
 /**
  * @composable useName
  * @description Brief description of what the composable does
- * 
+ *
  * @param {Type} options - Configuration options
  * @returns {Object} Returned reactive state and methods
  * @property {Type} returnProperty - Description of a returned property
- * 
+ *
  * @example
  * const { prop1, method1 } = useName({ option1: value })
  */
@@ -79,7 +79,7 @@ This file contains standardized JSDoc templates for use throughout the codebase.
 ```js
 /**
  * Description of the interface
- * 
+ *
  * @interface InterfaceName
  * @property {Type} propertyName - Description of the property
  * @property {Type} [optionalProperty] - Description of an optional property
@@ -98,5 +98,5 @@ const EnumName = {
   OPTION1: 'value1',
   /** Description of OPTION2 */
   OPTION2: 'value2',
-}
+};
 ```

@@ -2,26 +2,26 @@
   <div v-if="hasError" class="error-boundary">
     <div class="error-container">
       <div class="error-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-12 h-12">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          class="w-12 h-12"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+          />
         </svg>
       </div>
       <h2 class="error-title">{{ errorTitle }}</h2>
       <p class="error-message">{{ errorMessage }}</p>
       <div class="error-actions">
-        <button 
-          class="retry-button"
-          v-if="canRetry" 
-          @click="handleRetry"
-        >
-          Try Again
-        </button>
-        <button 
-          class="reset-button"
-          @click="handleReset"
-        >
-          Reset
-        </button>
+        <button v-if="canRetry" class="retry-button" @click="handleRetry">Try Again</button>
+        <button class="reset-button" @click="handleReset">Reset</button>
       </div>
       <div v-if="showDetails && errorDetails" class="error-details">
         <details>
@@ -56,7 +56,7 @@ const props = withDefaults(defineProps<Props>(), {
   errorMessage: 'We encountered an error while loading this section',
   canRetry: true,
   showDetails: false,
-  onError: undefined
+  onError: undefined,
 });
 
 const emit = defineEmits(['retry', 'reset']);
@@ -75,7 +75,7 @@ const errorDetails = computed(() => {
     message: error.value.message,
     stack: error.value.stack,
     component: errorComponent.value ? errorComponent.value.$options?.name : 'Unknown',
-    info: errorInfo.value
+    info: errorInfo.value,
   };
 });
 
@@ -85,22 +85,27 @@ onErrorCaptured((err, instance, info) => {
   error.value = err instanceof Error ? err : new Error(String(err));
   errorComponent.value = instance;
   errorInfo.value = info;
-  
+
   // Call onError callback if provided
   if (props.onError) {
     props.onError(error.value, instance, info);
   }
-  
+
   // Log error with our error handling utility
-  handleError(err, {
-    component: instance?.$options?.name || 'Unknown',
-    operation: info
-  }, ErrorSeverity.ERROR, {
-    reportToAnalytics: true,
-    logToConsole: true,
-    showToUser: false
-  });
-  
+  handleError(
+    err,
+    {
+      component: instance?.$options?.name || 'Unknown',
+      operation: info,
+    },
+    ErrorSeverity.ERROR,
+    {
+      reportToAnalytics: true,
+      logToConsole: true,
+      showToUser: false,
+    }
+  );
+
   // Stop error propagation to parent
   return false;
 });
