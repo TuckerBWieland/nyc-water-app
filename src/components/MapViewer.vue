@@ -325,6 +325,7 @@ export default {
                 if (enrichedResponse.ok) {
                   const enrichedData = await enrichedResponse.json();
                   mapData.value = enrichedData;
+                  updateMap(mapData.value);
                 }
               },
               { component: 'MapViewer', operation: 'loadEnrichedData' },

@@ -5,6 +5,7 @@
       :is-dark-mode="isDarkMode"
       @update:site-count="updateSiteCount"
       @update:sample-data="updateSampleData"
+      @update:rain-data="updateRainData"
     />
     <HeaderOverlay
       v-model:is-expanded="isHeaderExpanded"
@@ -37,7 +38,7 @@
     <!-- Legend components in top-left corner - only visible when header is collapsed -->
     <div v-if="!isHeaderExpanded" class="absolute top-4 left-4 z-40 flex flex-col space-y-2">
       <SampleBarLegend :samples="sampleData" :is-dark-mode="isDarkMode" />
-      <RainDropLegend :selected-date="selectedDate" :is-dark-mode="isDarkMode" />
+      <RainDropLegend :selected-date="selectedDate" :is-dark-mode="isDarkMode" :rainfall-data="rainData" />
     </div>
 
     <!-- Bottom navigation elements stacked in proper order -->
@@ -96,6 +97,11 @@ export default {
      * Sample data for the legends
      */
     const sampleData = ref([]);
+    
+    /**
+     * Rainfall data for the RainDropLegend
+     */
+    const rainData = ref([]);
 
     /**
      * Update the count of water sampling sites
@@ -115,6 +121,16 @@ export default {
      */
     const updateSampleData = data => {
       sampleData.value = data;
+    };
+    
+    /**
+     * Update the rainfall data
+     * Called by MapViewer when new data is loaded
+     * 
+     * @param {Array} data - Rainfall data array
+     */
+    const updateRainData = data => {
+      rainData.value = data;
     };
 
     /**
@@ -173,8 +189,10 @@ export default {
       isDarkMode,
       isHeaderExpanded,
       sampleData,
+      rainData,
       updateSiteCount,
       updateSampleData,
+      updateRainData,
       toggleDarkMode,
       updateMapMode,
     };

@@ -66,10 +66,19 @@ export default {
       type: Boolean,
       default: false,
     },
+    rainfallData: {
+      type: Array,
+      default: () => [],
+    },
   },
   setup(props) {
     // Compute the rainfall array for the selected date
     const activeRainData = computed(() => {
+      // First check if we have rainfall data from props
+      if (props.rainfallData && props.rainfallData.length > 0) {
+        return props.rainfallData;
+      }
+      // Fallback to static data if no dynamic data is provided
       return rainfallBySampleDate[props.selectedDate] ?? [];
     });
 
@@ -106,20 +115,8 @@ export default {
 
     // Calculate bar height percentage based on rainfall amount
     const getBarHeight = value => {
-      if (value === null || value === undefined || value === 0) return 5; // Minimal height for zero rainfall
-
-      // Use a more linear scale to better show differences between values
-      // Scale ranges from 15% to 100% for values between 0.01 and 2.0 inches
-      const maxRainfall = 2.0; // Max height at 2 inches of rain
-      const minHeight = 15;
-      const maxHeight = 100;
-
-      const heightPercentage = Math.max(
-        minHeight,
-        Math.min(maxHeight, minHeight + (Number(value) / maxRainfall) * (maxHeight - minHeight))
-      );
-
-      return heightPercentage;
+      const max = Math.max(...activeRainData.value, 0.1);
+      return (value / max) * 100;
     };
 
     return {
