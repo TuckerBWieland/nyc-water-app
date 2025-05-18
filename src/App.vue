@@ -54,7 +54,7 @@ import DateScroller from './components/DateScroller.vue';
 import InfoPopup from './components/InfoPopup.vue';
 import SampleBarLegend from './components/SampleBarLegend.vue';
 import RainDropLegend from './components/RainDropLegend.vue';
-import { handleAsyncOperation, ErrorSeverity } from './utils/errorHandler';
+import { handleAsyncOperation } from './utils/errorHandler';
 
 export default {
   name: 'App',

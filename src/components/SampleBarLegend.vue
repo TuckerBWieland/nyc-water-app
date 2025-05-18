@@ -47,9 +47,9 @@
         <span>{{ redCount }}</span>
       </div>
     </div>
-    
+
     <!-- Total sites sampled display -->
-    <div 
+    <div
       class="text-xs text-center mt-2 pt-2 border-t"
       :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
     >

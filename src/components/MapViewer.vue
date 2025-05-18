@@ -382,7 +382,7 @@ export default {
       // Log total number of features
       console.log(`Total features on map: ${data.features.length}`);
 
-      let markersAdded = 0;
+      // Initialize marker counter
 
       for (const feature of data.features) {
         try {
@@ -442,9 +442,6 @@ export default {
 
           // Extract properties with correct field names (handle both formats)
           const site = feature.properties.site || feature.properties['Site Name'] || '';
-          const mpn = feature.properties.mpn || feature.properties['MPN'] || '';
-          const sampleTime =
-            feature.properties.sampleTime || feature.properties['Sample Time'] || '';
 
           // Create water bottle icon
           const bottleIcon = createWaterBottleIcon(mpn);
@@ -574,7 +571,6 @@ export default {
           });
 
           markers.value.push(marker);
-          markersAdded++;
         } catch (error) {
           handleError(
             error,

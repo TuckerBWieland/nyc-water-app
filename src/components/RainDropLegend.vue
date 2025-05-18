@@ -14,10 +14,7 @@
         class="flex flex-col items-center group"
       >
         <div class="flex flex-col items-center">
-          <div 
-            class="text-xs opacity-70 mb-1 font-medium"
-            v-if="value > 0"
-          >
+          <div v-if="value > 0" class="text-xs opacity-70 mb-1 font-medium">
             {{ value.toFixed(1) }}
           </div>
           <div
@@ -110,18 +107,18 @@ export default {
     // Calculate bar height percentage based on rainfall amount
     const getBarHeight = value => {
       if (value === null || value === undefined || value === 0) return 5; // Minimal height for zero rainfall
-      
+
       // Use a more linear scale to better show differences between values
       // Scale ranges from 15% to 100% for values between 0.01 and 2.0 inches
       const maxRainfall = 2.0; // Max height at 2 inches of rain
       const minHeight = 15;
       const maxHeight = 100;
-      
+
       const heightPercentage = Math.max(
-        minHeight, 
-        Math.min(maxHeight, minHeight + ((Number(value) / maxRainfall) * (maxHeight - minHeight)))
+        minHeight,
+        Math.min(maxHeight, minHeight + (Number(value) / maxRainfall) * (maxHeight - minHeight))
       );
-      
+
       return heightPercentage;
     };
 
