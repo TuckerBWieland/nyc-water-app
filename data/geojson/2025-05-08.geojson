@@ -3,7 +3,66 @@
   "features": [
     {
       "type": "Feature",
-      "id": 0,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.89769,
+          40.956632
+        ]
+      },
+      "properties": {
+        "site": "Hudson River, JFK Marina (Yonkers)",
+        "mpn": 10,
+        "sampleTime": "9:02"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.903492,
+          40.937939
+        ]
+      },
+      "properties": {
+        "site": "Hudson River, Yonkers Paddling and Rowing Club",
+        "mpn": 97,
+        "sampleTime": "1:14 PM"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.901795,
+          40.935655
+        ]
+      },
+      "properties": {
+        "site": "Saw Mill River, daylighted section (Yonkers)",
+        "mpn": 368,
+        "sampleTime": "11:20 AM"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.9319,
+          40.8689
+        ]
+      },
+      "properties": {
+        "site": "Hudson River, Dyckman Marina",
+        "mpn": 10,
+        "sampleTime": "8:40 AM"
+      }
+    },
+    {
+      "type": "Feature",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -12,15 +71,12 @@
         ]
       },
       "properties": {
-        "Site Name": "Bronx River, Starlight Park, North Dock",
-        "Sample Time": "12:45 PM",
-        "MPN": 1860,
-        "date": "2025-05-14"
+        "site": "Bronx River, Starlight Park, North Dock",
+        "mpn": null
       }
     },
     {
       "type": "Feature",
-      "id": 1,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -29,15 +85,12 @@
         ]
       },
       "properties": {
-        "Site Name": "Bronx River, Concrete Plant Park Canoe Launch",
-        "Sample Time": "11:32 AM",
-        "MPN": 1835,
-        "date": "2025-05-14"
+        "site": "Bronx River, Concrete Plant Park Canoe Launch",
+        "mpn": null
       }
     },
     {
       "type": "Feature",
-      "id": 2,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -46,15 +99,12 @@
         ]
       },
       "properties": {
-        "Site Name": "Bronx River, Hunts Point Riverside Park",
-        "Sample Time": "9:10 AM",
-        "MPN": 2603,
-        "date": "2025-05-14"
+        "site": "Bronx River, Hunts Point Riverside Park",
+        "mpn": null
       }
     },
     {
       "type": "Feature",
-      "id": 3,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -63,15 +113,12 @@
         ]
       },
       "properties": {
-        "Site Name": "Bronx River, Soundview Park, HP009",
-        "Sample Time": "12:15 PM",
-        "MPN": 411,
-        "date": "2025-05-14"
+        "site": "Bronx River, Soundview Park, HP009",
+        "mpn": null
       }
     },
     {
       "type": "Feature",
-      "id": 4,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -80,15 +127,12 @@
         ]
       },
       "properties": {
-        "Site Name": "Bronx River, Soundview Park (mouth)",
-        "Sample Time": "9:14 AM",
-        "MPN": 573,
-        "date": "2025-05-14"
+        "site": "Bronx River, Soundview Park (mouth)",
+        "mpn": null
       }
     },
     {
       "type": "Feature",
-      "id": 5,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -97,15 +141,13 @@
         ]
       },
       "properties": {
-        "Site Name": "Bronx Kill, west end",
-        "Sample Time": "8:53 AM",
-        "MPN": 122,
-        "date": "2025-05-14"
+        "site": "Bronx Kill, west end",
+        "mpn": 20,
+        "sampleTime": "9:02 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 6,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -114,15 +156,13 @@
         ]
       },
       "properties": {
-        "Site Name": "Bronx Kill, east end",
-        "Sample Time": "8:41 AM",
-        "MPN": 573,
-        "date": "2025-05-14"
+        "site": "Bronx Kill, east end",
+        "mpn": 10,
+        "sampleTime": "8:53 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 7,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -131,15 +171,13 @@
         ]
       },
       "properties": {
-        "Site Name": "Harlem River, Little Hell Gate",
-        "Sample Time": "9:06 AM",
-        "MPN": 404,
-        "date": "2025-05-14"
+        "site": "Harlem River, Little Hell Gate",
+        "mpn": 41,
+        "sampleTime": "9:20 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 8,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -148,15 +186,13 @@
         ]
       },
       "properties": {
-        "Site Name": "Harlem River, Water's Edge Garden Beach",
-        "Sample Time": "9:16 AM",
-        "MPN": 520,
-        "date": "2025-05-14"
+        "site": "Harlem River, Water's Edge Garden Beach",
+        "mpn": 30,
+        "sampleTime": "9:26 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 9,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -165,15 +201,72 @@
         ]
       },
       "properties": {
-        "Site Name": "Harlem River, Lincoln Avenue 2",
-        "Sample Time": "9:06 AM",
-        "MPN": 431,
-        "date": "2025-05-14"
+        "site": "Harlem River, Lincoln Avenue 2",
+        "mpn": 10,
+        "sampleTime": "9:47 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 10,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.9464,
+          40.846143
+        ]
+      },
+      "properties": {
+        "site": "Hudson River, West 172nd Street, Riverside Park ",
+        "mpn": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.993778,
+          40.773522
+        ]
+      },
+      "properties": {
+        "site": "Hudson River, Pier 99 Boat Launch",
+        "mpn": 41,
+        "sampleTime": "2:10 PM"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.995991,
+          40.771322
+        ]
+      },
+      "properties": {
+        "site": "Hudson River, Pier 96",
+        "mpn": 31,
+        "sampleTime": "9:43 AM"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.002129,
+          40.764275
+        ]
+      },
+      "properties": {
+        "site": "Hudson River, Pier 84",
+        "mpn": 30,
+        "sampleTime": "9:33 AM"
+      }
+    },
+    {
+      "type": "Feature",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -182,15 +275,13 @@
         ]
       },
       "properties": {
-        "Site Name": "Hudson River, Pier 66",
-        "Sample Time": "9:54 AM",
-        "MPN": 98,
-        "date": "2025-05-14"
+        "site": "Hudson River, Pier 66",
+        "mpn": 20,
+        "sampleTime": "10:16 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 11,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -199,15 +290,13 @@
         ]
       },
       "properties": {
-        "Site Name": "Hudson River, Gansevoort Peninsula, North",
-        "Sample Time": "10:02 AM",
-        "MPN": 98,
-        "date": "2025-05-14"
+        "site": "Hudson River, Gansevoort Peninsula, North",
+        "mpn": 20,
+        "sampleTime": "10:46 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 12,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -216,15 +305,13 @@
         ]
       },
       "properties": {
-        "Site Name": "Hudson River, Gansevoort Peninsula, South",
-        "Sample Time": "10:07 AM",
-        "MPN": 146,
-        "date": "2025-05-14"
+        "site": "Hudson River, Gansevoort Peninsula, South",
+        "mpn": 10,
+        "sampleTime": "10:51 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 13,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -233,15 +320,13 @@
         ]
       },
       "properties": {
-        "Site Name": "Hudson River, Pier 40",
-        "Sample Time": "9:30 AM",
-        "MPN": 161,
-        "date": "2025-05-14"
+        "site": "Hudson River, Pier 40",
+        "mpn": 20,
+        "sampleTime": "10:21 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 14,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -250,15 +335,13 @@
         ]
       },
       "properties": {
-        "Site Name": "Hudson River, Pier 26",
-        "Sample Time": "9:37 AM",
-        "MPN": 75,
-        "date": "2025-05-14"
+        "site": "Hudson River, Pier 26",
+        "mpn": 10,
+        "sampleTime": "10:31 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 15,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -267,15 +350,13 @@
         ]
       },
       "properties": {
-        "Site Name": "Hudson River, Battery Park City, Rockefeller Park",
-        "Sample Time": "9:58 AM",
-        "MPN": 134,
-        "date": "2025-05-14"
+        "site": "Hudson River, Battery Park City, Rockefeller Park",
+        "mpn": null,
+        "sampleTime": "9:33 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 16,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -284,15 +365,13 @@
         ]
       },
       "properties": {
-        "Site Name": "Hudson River, Weehawken Cove, Hoboken NJ",
-        "Sample Time": "9:20 AM",
-        "MPN": 203,
-        "date": "2025-05-14"
+        "site": "Hudson River, Weehawken Cove, Hoboken NJ",
+        "mpn": null,
+        "sampleTime": "9:33 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 17,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -301,15 +380,13 @@
         ]
       },
       "properties": {
-        "Site Name": "Hudson River, Pier 13, Hoboken, NJ",
-        "Sample Time": "9:30 AM",
-        "MPN": 135,
-        "date": "2025-05-14"
+        "site": "Hudson River, Pier 13, Hoboken, NJ",
+        "mpn": 31,
+        "sampleTime": "9:27 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 18,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -318,15 +395,13 @@
         ]
       },
       "properties": {
-        "Site Name": "Hudson River, Hoboken Cove Beach, Hoboken NJ",
-        "Sample Time": "9:35 AM",
-        "MPN": 97,
-        "date": "2025-05-14"
+        "site": "Hudson River, Hoboken Cove Beach, Hoboken NJ",
+        "mpn": 146,
+        "sampleTime": "9:35 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 19,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -335,15 +410,13 @@
         ]
       },
       "properties": {
-        "Site Name": "Hudson River, Frank Sinatra Park, Hoboken NJ",
-        "Sample Time": "9:45 AM",
-        "MPN": 135,
-        "date": "2025-05-14"
+        "site": "Hudson River, Frank Sinatra Park, Hoboken NJ",
+        "mpn": 10,
+        "sampleTime": "9:45 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 20,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -352,15 +425,27 @@
         ]
       },
       "properties": {
-        "Site Name": "Flushing Bay, 28th Avenue (Big Rock Beach)",
-        "Sample Time": "11:25 AM",
-        "MPN": 187,
-        "date": "2025-05-14"
+        "site": "Flushing Bay, 28th Avenue (Big Rock Beach)",
+        "mpn": 28,
+        "sampleTime": "11:05 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 21,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.849571,
+          40.760445
+        ]
+      },
+      "properties": {
+        "site": "Flushing Bay, World's Fair Marina Pier 1 East",
+        "mpn": null
+      }
+    },
+    {
+      "type": "Feature",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -369,15 +454,13 @@
         ]
       },
       "properties": {
-        "Site Name": "Flushing Bay, World's Fair Marina Boat Ramp",
-        "Sample Time": "11:03 AM",
-        "MPN": 8164,
-        "date": "2025-05-14"
+        "site": "Flushing Bay, World's Fair Marina Boat Ramp",
+        "mpn": 2809,
+        "sampleTime": "9:20 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 22,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -386,15 +469,13 @@
         ]
       },
       "properties": {
-        "Site Name": "Flushing Creek",
-        "Sample Time": "7:11 AM",
-        "MPN": null,
-        "date": "2025-05-14"
+        "site": "Flushing Creek",
+        "mpn": 1510,
+        "sampleTime": "8:55 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 23,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -403,15 +484,12 @@
         ]
       },
       "properties": {
-        "Site Name": "Kissena Lake",
-        "Sample Time": "10:15 AM",
-        "MPN": 41,
-        "date": "2025-05-14"
+        "site": "Kissena Lake",
+        "mpn": null
       }
     },
     {
       "type": "Feature",
-      "id": 24,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -420,15 +498,28 @@
         ]
       },
       "properties": {
-        "Site Name": "Meadow Lake (Flushing Meadows-Corona Park)",
-        "Sample Time": "11:47 AM",
-        "MPN": 7701,
-        "date": "2025-05-14"
+        "site": "Meadow Lake (Flushing Meadows-Corona Park)",
+        "mpn": 4786,
+        "sampleTime": "11:24 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 25,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.768804,
+          40.780171
+        ]
+      },
+      "properties": {
+        "site": "Little Neck Bay",
+        "mpn": 41,
+        "sampleTime": "8:45 AM"
+      }
+    },
+    {
+      "type": "Feature",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -437,15 +528,13 @@
         ]
       },
       "properties": {
-        "Site Name": "East River, E 90th St Ferry",
-        "Sample Time": "10:25 AM",
-        "MPN": 292,
-        "date": "2025-05-14"
+        "site": "East River, E 90th St Ferry",
+        "mpn": 41,
+        "sampleTime": "9:04 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 26,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -454,15 +543,13 @@
         ]
       },
       "properties": {
-        "Site Name": "East River, Hallets Cove",
-        "Sample Time": "10:21 AM",
-        "MPN": 272,
-        "date": "2025-05-14"
+        "site": "East River, Hallets Cove",
+        "mpn": 51,
+        "sampleTime": "8:58 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 27,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -471,15 +558,13 @@
         ]
       },
       "properties": {
-        "Site Name": "East River, Gantry State Park",
-        "Sample Time": "11:22 AM",
-        "MPN": 269,
-        "date": "2025-05-14"
+        "site": "East River, Gantry State Park",
+        "mpn": 98,
+        "sampleTime": "11:17 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 28,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -488,15 +573,13 @@
         ]
       },
       "properties": {
-        "Site Name": "Newtown Creek, Second Street Kayak Launch",
-        "Sample Time": "11:07 AM",
-        "MPN": 1892,
-        "date": "2025-05-14"
+        "site": "Newtown Creek, Second Street Kayak Launch",
+        "mpn": 9139,
+        "sampleTime": "10:57 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 29,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -505,15 +588,13 @@
         ]
       },
       "properties": {
-        "Site Name": "Newtown Creek, Pulaski Bridge, Queens",
-        "Sample Time": "6:18 AM",
-        "MPN": 17329,
-        "date": "2025-05-14"
+        "site": "Newtown Creek, Pulaski Bridge, Queens",
+        "mpn": 20,
+        "sampleTime": "7:08 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 30,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -522,15 +603,13 @@
         ]
       },
       "properties": {
-        "Site Name": "Newtown Creek, Dutch Kills (head)",
-        "Sample Time": "10:20 AM",
-        "MPN": null,
-        "date": "2025-05-14"
+        "site": "Newtown Creek, Dutch Kills (head)",
+        "mpn": 344.8,
+        "sampleTime": "6:57 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 31,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -539,15 +618,13 @@
         ]
       },
       "properties": {
-        "Site Name": "Newtown Creek, Apollo Street",
-        "Sample Time": "9:10 AM",
-        "MPN": 6488,
-        "date": "2025-05-14"
+        "site": "Newtown Creek, Apollo Street",
+        "mpn": 20,
+        "sampleTime": "9:47 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 32,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -556,15 +633,13 @@
         ]
       },
       "properties": {
-        "Site Name": "Newtown Creek, East Branch",
-        "Sample Time": "9:19 AM",
-        "MPN": null,
-        "date": "2025-05-14"
+        "site": "Newtown Creek, East Branch",
+        "mpn": 259,
+        "sampleTime": "9:18 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 33,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -573,15 +648,13 @@
         ]
       },
       "properties": {
-        "Site Name": "Newtown Creek, English Kills",
-        "Sample Time": "8:00 AM",
-        "MPN": null,
-        "date": "2025-05-14"
+        "site": "Newtown Creek, English Kills",
+        "mpn": 214,
+        "sampleTime": "6:54 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 34,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -590,15 +663,13 @@
         ]
       },
       "properties": {
-        "Site Name": "East River, Stuy Cove Park",
-        "Sample Time": "7:19 AM",
-        "MPN": 520,
-        "date": "2025-05-14"
+        "site": "East River, Stuy Cove Park",
+        "mpn": null,
+        "sampleTime": "9:45 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 35,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -607,15 +678,13 @@
         ]
       },
       "properties": {
-        "Site Name": "East River, India Street",
-        "Sample Time": "6:41 AM",
-        "MPN": 457,
-        "date": "2025-05-14"
+        "site": "East River, India Street",
+        "mpn": 20,
+        "sampleTime": "8:08 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 36,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -624,15 +693,13 @@
         ]
       },
       "properties": {
-        "Site Name": "East River, WNYC Transmitter Park",
-        "Sample Time": "6:59 AM",
-        "MPN": 487,
-        "date": "2025-05-14"
+        "site": "East River, WNYC Transmitter Park",
+        "mpn": 41,
+        "sampleTime": "6:52 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 37,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -641,15 +708,13 @@
         ]
       },
       "properties": {
-        "Site Name": "East River, Marsha P Johnson State Park",
-        "Sample Time": "10:20 AM",
-        "MPN": 211,
-        "date": "2025-05-14"
+        "site": "East River, Marsha P Johnson State Park",
+        "mpn": 52,
+        "sampleTime": "9:50 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 38,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -658,15 +723,13 @@
         ]
       },
       "properties": {
-        "Site Name": "Bushwick Inlet",
-        "Sample Time": "10:05 AM",
-        "MPN": 213,
-        "date": "2025-05-14"
+        "site": "Bushwick Inlet",
+        "mpn": 74,
+        "sampleTime": "8:45 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 39,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -675,15 +738,13 @@
         ]
       },
       "properties": {
-        "Site Name": "East River, Bushwick Inlet Park Beach",
-        "Sample Time": "8:25 AM",
-        "MPN": 657,
-        "date": "2025-05-14"
+        "site": "East River, Bushwick Inlet Park Beach",
+        "mpn": 97,
+        "sampleTime": "8:31 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 40,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -692,15 +753,13 @@
         ]
       },
       "properties": {
-        "Site Name": "East River, North 3rd Street",
-        "Sample Time": "8:40 AM",
-        "MPN": 272,
-        "date": "2025-05-14"
+        "site": "East River, North 3rd Street",
+        "mpn": 119,
+        "sampleTime": "10:01 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 41,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -709,15 +768,13 @@
         ]
       },
       "properties": {
-        "Site Name": "East River, Grand Ferry Park",
-        "Sample Time": "10:01 AM",
-        "MPN": 317,
-        "date": "2025-05-14"
+        "site": "East River, Grand Ferry Park",
+        "mpn": 20,
+        "sampleTime": "10:15 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 42,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -726,15 +783,13 @@
         ]
       },
       "properties": {
-        "Site Name": "East River, South 5th Street/Domino Park",
-        "Sample Time": "9:56 AM",
-        "MPN": 160,
-        "date": "2025-05-14"
+        "site": "East River, South 5th Street/Domino Park",
+        "mpn": 31,
+        "sampleTime": "8:19 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 43,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -743,15 +798,13 @@
         ]
       },
       "properties": {
-        "Site Name": "East River, South 8th St",
-        "Sample Time": "7:03 AM",
-        "MPN": 573,
-        "date": "2025-05-14"
+        "site": "East River, South 8th St",
+        "mpn": 74,
+        "sampleTime": "7:33 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 44,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -760,15 +813,13 @@
         ]
       },
       "properties": {
-        "Site Name": "Wallabout Channel (Brooklyn Navy Yard)",
-        "Sample Time": "9:40 AM",
-        "MPN": 591,
-        "date": "2025-05-14"
+        "site": "Wallabout Channel (Brooklyn Navy Yard)",
+        "mpn": 130,
+        "sampleTime": "9:37 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 45,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -777,15 +828,12 @@
         ]
       },
       "properties": {
-        "Site Name": "East River, Esplanade (+Pool)",
-        "Sample Time": "9:41 AM",
-        "MPN": 292,
-        "date": "2025-05-14"
+        "site": "East River, Esplanade (+Pool)",
+        "mpn": null
       }
     },
     {
       "type": "Feature",
-      "id": 46,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -794,15 +842,13 @@
         ]
       },
       "properties": {
-        "Site Name": "East River, Brooklyn Bridge Beach (Manhattan)",
-        "Sample Time": "11:10 AM",
-        "MPN": 933,
-        "date": "2025-05-14"
+        "site": "East River, Brooklyn Bridge Beach (Manhattan)",
+        "mpn": 84,
+        "sampleTime": "10:50 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 47,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -811,15 +857,13 @@
         ]
       },
       "properties": {
-        "Site Name": "East River, Dumbo Cove",
-        "Sample Time": "10:12 AM",
-        "MPN": 134,
-        "date": "2025-05-14"
+        "site": "East River, Dumbo Cove",
+        "mpn": 74,
+        "sampleTime": "8:15 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 48,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -828,15 +872,13 @@
         ]
       },
       "properties": {
-        "Site Name": "East River, Pier 2 Kayak Dock (Brooklyn Bridge Park)",
-        "Sample Time": "8:58 AM",
-        "MPN": 145,
-        "date": "2025-05-14"
+        "site": "East River, Pier 2 Kayak Dock (Brooklyn Bridge Park)",
+        "mpn": 85,
+        "sampleTime": "9:50 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 49,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -845,15 +887,13 @@
         ]
       },
       "properties": {
-        "Site Name": "East River, Pier 4 Beach (Brooklyn Bridge Park)",
-        "Sample Time": "8:46 AM",
-        "MPN": 187,
-        "date": "2025-05-14"
+        "site": "East River, Pier 4 Beach (Brooklyn Bridge Park)",
+        "mpn": 21,
+        "sampleTime": "8:12 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 50,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -862,15 +902,13 @@
         ]
       },
       "properties": {
-        "Site Name": "Buttermilk Channel, Pier 101 (Governors Island)",
-        "Sample Time": "9:31 AM",
-        "MPN": 145,
-        "date": "2025-05-14"
+        "site": "Buttermilk Channel, Pier 101 (Governors Island)",
+        "mpn": 41,
+        "sampleTime": "8:33 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 51,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -879,15 +917,13 @@
         ]
       },
       "properties": {
-        "Site Name": "Buttermilk Channel, Valentino Pier",
-        "Sample Time": "9:40 AM",
-        "MPN": 135,
-        "date": "2025-05-14"
+        "site": "Buttermilk Channel, Valentino Pier",
+        "mpn": null,
+        "sampleTime": "9:23 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 52,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -896,15 +932,27 @@
         ]
       },
       "properties": {
-        "Site Name": "Gowanus Canal, Second Street Sponge Park",
-        "Sample Time": "8:00 AM",
-        "MPN": null,
-        "date": "2025-05-14"
+        "site": "Gowanus Canal, Second Street Sponge Park",
+        "mpn": 171,
+        "sampleTime": "7:37 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 53,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.989916,
+          40.676814
+        ]
+      },
+      "properties": {
+        "site": "Gowanus Canal, Lowlands Nursery",
+        "mpn": null
+      }
+    },
+    {
+      "type": "Feature",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -913,15 +961,13 @@
         ]
       },
       "properties": {
-        "Site Name": "Upper Harbor, Bush Terminal Park (Inner Lagoon)",
-        "Sample Time": "7:00 AM",
-        "MPN": 75,
-        "date": "2025-05-14"
+        "site": "Upper Harbor, Bush Terminal Park (Inner Lagoon)",
+        "mpn": 63,
+        "sampleTime": "7:00 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 54,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -930,15 +976,13 @@
         ]
       },
       "properties": {
-        "Site Name": "Upper Harbor, Bush Terminal Park (North Embayment)",
-        "Sample Time": "7:05 AM",
-        "MPN": 75,
-        "date": "2025-05-14"
+        "site": "Upper Harbor, Bush Terminal Park (North Embayment)",
+        "mpn": null,
+        "sampleTime": "7:05 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 55,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -947,15 +991,12 @@
         ]
       },
       "properties": {
-        "Site Name": "Upper Harbor, Pier 69",
-        "Sample Time": "1:00 PM",
-        "MPN": 110,
-        "date": "2025-05-14"
+        "site": "Upper Harbor, Pier 69",
+        "mpn": null
       }
     },
     {
       "type": "Feature",
-      "id": 56,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -964,15 +1005,13 @@
         ]
       },
       "properties": {
-        "Site Name": "Prospect Park Lake",
-        "Sample Time": "7:30 AM",
-        "MPN": null,
-        "date": "2025-05-14"
+        "site": "Prospect Park Lake",
+        "mpn": 275,
+        "sampleTime": "7:05 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 57,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -981,15 +1020,13 @@
         ]
       },
       "properties": {
-        "Site Name": "Coney Island Creek, Kaiser Park",
-        "Sample Time": "7:00 AM",
-        "MPN": null,
-        "date": "2025-05-14"
+        "site": "Coney Island Creek, Kaiser Park",
+        "mpn": 41,
+        "sampleTime": "7:20 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 58,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -998,15 +1035,12 @@
         ]
       },
       "properties": {
-        "Site Name": "Paerdegat Basin, Jamaica Bay (Sebago Canoe Club)",
-        "Sample Time": "11:26 AM",
-        "MPN": 173,
-        "date": "2025-05-14"
+        "site": "Paerdegat Basin, Jamaica Bay (Sebago Canoe Club)",
+        "mpn": null
       }
     },
     {
       "type": "Feature",
-      "id": 59,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1015,15 +1049,13 @@
         ]
       },
       "properties": {
-        "Site Name": "Gravesend Bay, Calvert Vaux Cove",
-        "Sample Time": "1:08 PM",
-        "MPN": 122,
-        "date": "2025-05-14"
+        "site": "Gravesend Bay, Calvert Vaux Cove",
+        "mpn": 10,
+        "sampleTime": "11:25 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 60,
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1032,15 +1064,69 @@
         ]
       },
       "properties": {
-        "Site Name": "Gravesend Bay, OH-015",
-        "Sample Time": "1:30 PM",
-        "MPN": 10462,
-        "date": "2025-05-14"
+        "site": "Gravesend Bay, OH-015",
+        "mpn": 74,
+        "sampleTime": "11:55 AM"
       }
     },
     {
       "type": "Feature",
-      "id": 61,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.08794,
+          40.572109
+        ]
+      },
+      "properties": {
+        "site": "Raritan Bay, Midlland Beach",
+        "mpn": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.091456,
+          40.566537
+        ]
+      },
+      "properties": {
+        "site": "Raritan Bay, New Dorp Beach",
+        "mpn": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.111618,
+          40.549642
+        ]
+      },
+      "properties": {
+        "site": "Raritan Bay, Oakwood Beach",
+        "mpn": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.1254,
+          40.5422
+        ]
+      },
+      "properties": {
+        "site": "Raritan Bay, Great Kills Beach",
+        "mpn": null
+      }
+    },
+    {
+      "type": "Feature",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1049,10 +1135,9 @@
         ]
       },
       "properties": {
-        "Site Name": "Arthur Kill, Conference House Park",
-        "Sample Time": "7:00 AM",
-        "MPN": 2005,
-        "date": "2025-05-14"
+        "site": "Arthur Kill, Conference House Park",
+        "mpn": 10,
+        "sampleTime": "3:00 PM"
       }
     }
   ]
