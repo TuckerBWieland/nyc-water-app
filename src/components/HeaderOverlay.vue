@@ -87,36 +87,36 @@ export default {
   props: {
     latestDate: {
       type: String,
-      required: true
+      required: true,
     },
     siteCount: {
       type: Number,
-      default: 0
+      default: 0,
     },
     isDarkMode: {
       type: Boolean,
-      default: false
+      default: false,
     },
     isExpanded: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   emits: ['toggleMapMode', 'update:isExpanded'],
   setup(props, { emit }) {
     // State
     const headerRef = ref(null);
-    
+
     // Toggle header expanded state
     const toggleExpanded = () => {
       const newExpanded = !props.isExpanded;
-      
+
       // Emit the expanded state to parent
       emit('update:isExpanded', newExpanded);
-      
+
       // Track the action
       analytics.track('toggled_header', { expanded: newExpanded });
-      
+
       // If expanding, wait for next tick then measure and set header height
       if (newExpanded) {
         nextTick(() => {
@@ -124,7 +124,7 @@ export default {
         });
       }
     };
-    
+
     // Update the CSS variable for header height
     const updateHeaderHeight = () => {
       if (headerRef.value) {
@@ -132,17 +132,17 @@ export default {
         document.documentElement.style.setProperty('--header-height', `${height}px`);
       }
     };
-    
+
     // Toggle map mode and emit event to parent
     const toggleMapMode = () => {
       emit('toggleMapMode', !props.isDarkMode);
       analytics.track('toggled_map_mode', { dark_mode: !props.isDarkMode });
     };
-    
+
     // Computed properties
     const formattedDate = computed(() => {
       if (!props.latestDate) return '';
-      
+
       try {
         // Parse the date string and adjust for timezone
         const [year, month, day] = props.latestDate.split('-').map(Number);
@@ -158,14 +158,14 @@ export default {
         return props.latestDate;
       }
     });
-    
+
     // Initialize header height on mount and when content changes
     onMounted(() => {
       nextTick(() => {
         updateHeaderHeight();
       });
     });
-    
+
     // Update height when site count changes (content might change size)
     watch(
       () => props.siteCount,
@@ -175,14 +175,14 @@ export default {
         });
       }
     );
-    
+
     return {
       headerRef,
       formattedDate,
       toggleExpanded,
-      toggleMapMode
+      toggleMapMode,
     };
-  }
+  },
 };
 </script>
 

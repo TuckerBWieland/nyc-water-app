@@ -64,7 +64,7 @@ export default {
     DateScroller,
     InfoPopup,
     SampleBarLegend,
-    RainDropLegend
+    RainDropLegend,
   },
   setup() {
     /**
@@ -103,7 +103,7 @@ export default {
      *
      * @param {number} count - Number of sampling sites
      */
-    const updateSiteCount = (count) => {
+    const updateSiteCount = count => {
       siteCount.value = count;
     };
 
@@ -113,7 +113,7 @@ export default {
      *
      * @param {Array} data - Sample data for legend
      */
-    const updateSampleData = (data) => {
+    const updateSampleData = data => {
       sampleData.value = data;
     };
 
@@ -129,7 +129,7 @@ export default {
      *
      * @param {boolean} darkMode - Whether dark mode is enabled
      */
-    const updateMapMode = (darkMode) => {
+    const updateMapMode = darkMode => {
       isDarkMode.value = darkMode;
     };
 
@@ -176,8 +176,8 @@ export default {
       updateSiteCount,
       updateSampleData,
       toggleDarkMode,
-      updateMapMode
+      updateMapMode,
     };
-  }
+  },
 };
 </script>

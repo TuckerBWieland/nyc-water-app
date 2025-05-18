@@ -55,16 +55,16 @@ export default {
   props: {
     dates: {
       type: Array,
-      required: true
+      required: true,
     },
     modelValue: {
       type: String,
-      required: true
+      required: true,
     },
     isDarkMode: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   emits: ['update:modelValue'],
   setup(props, { emit }) {
@@ -123,8 +123,8 @@ export default {
       hasNext,
       formattedModelValue,
       selectPrevious,
-      selectNext
+      selectNext,
     };
-  }
+  },
 };
 </script>

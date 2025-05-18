@@ -30,14 +30,20 @@ export default {
   props: {
     selectedDate: {
       type: String,
-      required: true
+      required: true,
     },
     isDarkMode: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
-  emits: ['update:siteCount', 'update:sampleData', 'update:rainfallByDayIn', 'update:rainData', 'update:totalRain'],
+  emits: [
+    'update:siteCount',
+    'update:sampleData',
+    'update:rainfallByDayIn',
+    'update:rainData',
+    'update:totalRain',
+  ],
   setup(props, { emit }) {
     // Reactive references
     const mapData = ref(null);
@@ -55,7 +61,7 @@ export default {
      * @param {string|number|null} mpn - MPN value to evaluate
      * @returns {string} Hex color code based on MPN threshold
      */
-    const getColorForMPN = (mpn) => {
+    const getColorForMPN = mpn => {
       if (mpn === null) {
         return COLOR_YELLOW; // Use yellow for null/unknown values
       }
@@ -76,7 +82,7 @@ export default {
      * @param {string|number} mpn - MPN value to determine the icon color
      * @returns {L.DivIcon} Leaflet divIcon for the marker
      */
-    const createWaterBottleIcon = (mpn) => {
+    const createWaterBottleIcon = mpn => {
       const color = getColorForMPN(mpn);
 
       return L.divIcon({
@@ -182,7 +188,7 @@ export default {
     });
 
     // Load map data for the selected date
-    const loadMapData = async (date) => {
+    const loadMapData = async date => {
       return handleAsyncOperation(
         async () => {
           // Track date selection
@@ -196,7 +202,9 @@ export default {
               date,
               error: `${response.status} ${response.statusText}`,
             });
-            throw new Error(`Failed to load data for ${date}: ${response.status} ${response.statusText}`);
+            throw new Error(
+              `Failed to load data for ${date}: ${response.status} ${response.statusText}`
+            );
           }
 
           try {
@@ -217,12 +225,16 @@ export default {
               // First check if we have the rainfall_by_day_in array in the GeoJSON
               if (
                 mapData.value.features.some(
-                  f => f.properties.rainfall_by_day_in && Array.isArray(f.properties.rainfall_by_day_in)
+                  f =>
+                    f.properties.rainfall_by_day_in &&
+                    Array.isArray(f.properties.rainfall_by_day_in)
                 )
               ) {
                 // Get the first feature that has rainfall_by_day_in data
                 const featureWithRainfall = mapData.value.features.find(
-                  f => f.properties.rainfall_by_day_in && Array.isArray(f.properties.rainfall_by_day_in)
+                  f =>
+                    f.properties.rainfall_by_day_in &&
+                    Array.isArray(f.properties.rainfall_by_day_in)
                 );
 
                 if (featureWithRainfall) {
@@ -248,7 +260,9 @@ export default {
                 }
               }
               // Fallback to synthetic data if no rainfall_by_day_in is available
-              else if (mapData.value.features.some(f => f.properties.rainfall_mm_7day !== undefined)) {
+              else if (
+                mapData.value.features.some(f => f.properties.rainfall_mm_7day !== undefined)
+              ) {
                 // Create a synthetic 7-day distribution from the average rainfall_mm_7day
                 // Calculate average 7-day rainfall across all points and convert from mm to inches
                 const totalRainfall = mapData.value.features.reduce((sum, feature) => {
@@ -284,7 +298,11 @@ export default {
                 emit('update:totalRain', Number(totalRainfallInches.toFixed(2)));
 
                 // Log synthetic 7-day rainfall in inches
-                console.log(`Total 7-day rainfall (synthetic): ${Number(totalRainfallInches.toFixed(2))} inches`);
+                console.log(
+                  `Total 7-day rainfall (synthetic): ${Number(
+                    totalRainfallInches.toFixed(2)
+                  )} inches`
+                );
 
                 emit('update:rainfallByDayIn', rainfallByDay);
               }
@@ -339,7 +357,7 @@ export default {
      * Clears existing markers and adds new ones based on the data
      * @param {Object} data - GeoJSON collection containing sample data
      */
-    const updateMap = (data) => {
+    const updateMap = data => {
       if (!map.value) {
         console.error('Map instance is not available');
         return;
@@ -396,7 +414,9 @@ export default {
           // Extract properties with support for different case formats
           const siteName = feature.properties.site || feature.properties['Site Name'] || '';
           const mpnValue =
-            feature.properties.mpn !== undefined ? feature.properties.mpn : feature.properties['MPN'];
+            feature.properties.mpn !== undefined
+              ? feature.properties.mpn
+              : feature.properties['MPN'];
           const sampleTimeValue =
             feature.properties.sampleTime || feature.properties['Sample Time'] || '';
 
@@ -423,7 +443,8 @@ export default {
           // Extract properties with correct field names (handle both formats)
           const site = feature.properties.site || feature.properties['Site Name'] || '';
           const mpn = feature.properties.mpn || feature.properties['MPN'] || '';
-          const sampleTime = feature.properties.sampleTime || feature.properties['Sample Time'] || '';
+          const sampleTime =
+            feature.properties.sampleTime || feature.properties['Sample Time'] || '';
 
           // Create water bottle icon
           const bottleIcon = createWaterBottleIcon(mpn);
@@ -448,7 +469,7 @@ export default {
           }
 
           // Create simple popup content with sanitized values
-          const sanitize = (str) =>
+          const sanitize = str =>
             String(str)
               .replace(/&/g, '&amp;')
               .replace(/</g, '&lt;')
@@ -653,9 +674,9 @@ export default {
       hasAutoFitted,
       updateTileLayer,
       loadMapData,
-      updateMap
+      updateMap,
     };
-  }
+  },
 };
 </script>
 

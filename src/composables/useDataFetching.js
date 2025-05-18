@@ -2,11 +2,7 @@
  * Composable for data fetching operations with error handling and state management
  */
 import { ref } from 'vue';
-import {
-  handleError,
-  handleAsyncOperation,
-  ErrorSeverity,
-} from '../utils/errorHandler.js';
+import { handleError, handleAsyncOperation, ErrorSeverity } from '../utils/errorHandler.js';
 import { analytics } from '../services/analytics/index.js';
 import config from '../config/index.js';
 
@@ -66,7 +62,7 @@ export function useDataFetching(options = {}) {
    * @param {string} date - Date string in the specified format
    * @returns {Promise<Object|null>} Promise resolving to the fetched data or null
    */
-  const fetchForDate = async (date) => {
+  const fetchForDate = async date => {
     // Update state
     status.value = FetchStatus.LOADING;
     error.value = null;

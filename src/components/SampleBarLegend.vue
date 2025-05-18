@@ -47,6 +47,15 @@
         <span>{{ redCount }}</span>
       </div>
     </div>
+    
+    <!-- Total sites sampled display -->
+    <div 
+      class="text-xs text-center mt-2 pt-2 border-t"
+      :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
+    >
+      <span class="font-semibold">Total sites:</span>
+      <span class="font-bold">{{ totalCount }}</span>
+    </div>
   </div>
 </template>
 
@@ -59,47 +68,47 @@ export default {
     samples: {
       type: Array,
       required: true,
-      default: () => []
+      default: () => [],
     },
     isDarkMode: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   setup(props) {
     // Compute counts for each category
     const greenCount = computed(() => {
       return props.samples.filter(sample => Number(sample.mpn) < 35).length;
     });
-    
+
     const yellowCount = computed(() => {
       return props.samples.filter(sample => {
         const mpn = Number(sample.mpn);
         return mpn >= 35 && mpn <= 104;
       }).length;
     });
-    
+
     const redCount = computed(() => {
       return props.samples.filter(sample => Number(sample.mpn) > 104).length;
     });
-    
+
     const totalCount = computed(() => {
       return props.samples.length;
     });
-    
+
     // Compute percentages for width
     const greenPercentage = computed(() => {
       return totalCount.value > 0 ? (greenCount.value / totalCount.value) * 100 : 0;
     });
-    
+
     const yellowPercentage = computed(() => {
       return totalCount.value > 0 ? (yellowCount.value / totalCount.value) * 100 : 0;
     });
-    
+
     const redPercentage = computed(() => {
       return totalCount.value > 0 ? (redCount.value / totalCount.value) * 100 : 0;
     });
-    
+
     return {
       greenCount,
       yellowCount,
@@ -107,9 +116,9 @@ export default {
       totalCount,
       greenPercentage,
       yellowPercentage,
-      redPercentage
+      redPercentage,
     };
-  }
+  },
 };
 </script>
 

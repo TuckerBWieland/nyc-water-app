@@ -89,7 +89,7 @@ export function useTheme(options = {}) {
    * Set theme preference and apply it
    * @param {string} theme - New theme preference ('light', 'dark', or 'system')
    */
-  const setTheme = (theme) => {
+  const setTheme = theme => {
     preference.value = theme;
     savePreference();
     applyTheme();

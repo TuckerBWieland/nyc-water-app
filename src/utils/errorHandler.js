@@ -51,12 +51,7 @@ export const errorNotifications = {
  * @param {Object} options - Configuration for how to handle the error
  * @returns {Object} Formatted error result
  */
-export function handleError(
-  error,
-  context = {},
-  severity = ErrorSeverity.ERROR,
-  options = {}
-) {
+export function handleError(error, context = {}, severity = ErrorSeverity.ERROR, options = {}) {
   // Merge with default options
   const opts = { ...defaultOptions, ...options };
 
@@ -113,11 +108,7 @@ export function handleError(
  * @param {Object} options - Error handling options
  * @returns {Promise<Object>} Promise resolving to structured response with data and error fields
  */
-export async function handleAsyncOperation(
-  fn,
-  context = {},
-  options = {}
-) {
+export async function handleAsyncOperation(fn, context = {}, options = {}) {
   try {
     const result = await fn();
     return {
@@ -138,11 +129,7 @@ export async function handleAsyncOperation(
  * @param {Object} options - Error handling options
  * @returns {Function} Wrapped function with error handling and consistent return type
  */
-export function withErrorHandling(
-  fn,
-  context = {},
-  options = {}
-) {
+export function withErrorHandling(fn, context = {}, options = {}) {
   return (...args) => {
     try {
       const result = fn(...args);

@@ -156,7 +156,9 @@ export default function geoJsonEnrichmentPlugin(options = {}) {
       }
 
       // Watch for changes to GeoJSON files
-      server.watcher.add(path.join(config.geojsonDir || path.join(dataDir, 'geojson'), '*.geojson'));
+      server.watcher.add(
+        path.join(config.geojsonDir || path.join(dataDir, 'geojson'), '*.geojson')
+      );
 
       server.watcher.on('change', async changedPath => {
         // Check if it's a GeoJSON file and not already enriched

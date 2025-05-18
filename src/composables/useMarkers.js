@@ -158,7 +158,7 @@ export function useMarkers(map, options = {}) {
    * @param {string|number} mpn - MPN value for determining color
    * @returns {Object} Leaflet divIcon configured as a water bottle
    */
-  const createWaterBottleIcon = (mpn) => {
+  const createWaterBottleIcon = mpn => {
     const color = getColorForMPN(mpn, lowThreshold, mediumThreshold);
 
     return L.divIcon({
@@ -191,7 +191,7 @@ export function useMarkers(map, options = {}) {
    * @param {Object} feature - GeoJSON feature with water sample data
    * @returns {string} HTML string for the popup content
    */
-  const createPopupContent = (feature) => {
+  const createPopupContent = feature => {
     const { properties } = feature;
     const { site, mpn, sampleTime, tideSummary } = properties;
 
@@ -255,7 +255,7 @@ export function useMarkers(map, options = {}) {
    * @param {Object} feature - GeoJSON feature with water sample data
    * @returns {Object|null} The created marker or null if invalid
    */
-  const addMarker = (feature) => {
+  const addMarker = feature => {
     if (!map.value) return null;
 
     try {
@@ -357,7 +357,7 @@ export function useMarkers(map, options = {}) {
    * Update markers from GeoJSON collection
    * @param {Object} collection - GeoJSON collection with features
    */
-  const updateFromGeoJSON = (collection) => {
+  const updateFromGeoJSON = collection => {
     if (!map.value || !collection.features) return;
 
     // Clear existing markers
@@ -382,7 +382,7 @@ export function useMarkers(map, options = {}) {
    * Update popup styling based on dark mode setting
    * @param {boolean} isDark - Whether dark mode is enabled
    */
-  const updatePopupStyles = (isDark) => {
+  const updatePopupStyles = isDark => {
     if (!map.value) return;
 
     // Re-apply popups to all markers with updated styling

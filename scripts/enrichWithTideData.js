@@ -95,7 +95,9 @@ export async function enrichSamplesWithTideData(inputFilePath) {
           // Format to consistent string format
           sampleTime = formatDate(sampleDate);
           console.log(
-            `Converted sample time "${hours}:${minutes}${isPM ? ' PM' : ''}" to "${sampleTime}" (UTC)`
+            `Converted sample time "${hours}:${minutes}${
+              isPM ? ' PM' : ''
+            }" to "${sampleTime}" (UTC)`
           );
         }
       }

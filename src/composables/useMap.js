@@ -1,5 +1,5 @@
 /**
- * Composable for Leaflet map functionality 
+ * Composable for Leaflet map functionality
  */
 import { ref, onMounted, onUnmounted, watch } from 'vue';
 import L from 'leaflet';
@@ -43,7 +43,7 @@ export function useMap(options) {
    * Set the appropriate tile layer based on theme
    * @param {boolean} isDark - Whether dark mode is enabled
    */
-  const updateTileLayer = (isDark) => {
+  const updateTileLayer = isDark => {
     if (!instance.value) return;
 
     // Remove existing tile layer if it exists

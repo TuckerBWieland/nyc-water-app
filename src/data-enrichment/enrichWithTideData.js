@@ -7,7 +7,12 @@
 
 import fs from 'fs';
 import path from 'path';
-import { findNearestTideStation, getTideData, analyzeTideData, formatDate } from './tideServices.js';
+import {
+  findNearestTideStation,
+  getTideData,
+  analyzeTideData,
+  formatDate,
+} from './tideServices.js';
 
 /**
  * Checks if the data is a valid GeoJSON collection
@@ -166,7 +171,8 @@ export async function enrichSamplesWithTideData(inputFilePath) {
     let outputFilePath;
     if (inputFilePath.includes('/geojson/')) {
       // If input is from geojson directory, put output in enriched directory
-      const filename = path.basename(inputFilePath)
+      const filename = path
+        .basename(inputFilePath)
         .replace('.json', '.enriched.json')
         .replace('.geojson', '.enriched.geojson');
       const dir = path.dirname(path.dirname(inputFilePath));
@@ -177,13 +183,13 @@ export async function enrichSamplesWithTideData(inputFilePath) {
         .replace('.json', '.enriched.json')
         .replace('.geojson', '.enriched.geojson');
     }
-    
+
     // Create the directory if it doesn't exist
     const outputDir = path.dirname(outputFilePath);
     if (!fs.existsSync(outputDir)) {
       fs.mkdirSync(outputDir, { recursive: true });
     }
-    
+
     fs.writeFileSync(outputFilePath, JSON.stringify(sampleData, null, 2), 'utf8');
     console.log(`Wrote enriched data to ${outputFilePath}`);
   } catch (error) {

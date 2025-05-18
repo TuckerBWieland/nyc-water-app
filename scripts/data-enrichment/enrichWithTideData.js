@@ -95,7 +95,9 @@ export async function enrichSamplesWithTideData(inputFilePath) {
           // Format to consistent string format
           sampleTime = formatDate(sampleDate);
           console.log(
-            `Converted sample time "${hours}:${minutes}${isPM ? ' PM' : ''}" to "${sampleTime}" (UTC)`
+            `Converted sample time "${hours}:${minutes}${
+              isPM ? ' PM' : ''
+            }" to "${sampleTime}" (UTC)`
           );
         }
       }
@@ -140,7 +142,8 @@ export async function enrichSamplesWithTideData(inputFilePath) {
     let outputFilePath;
     if (inputFilePath.includes('/geojson/')) {
       // If input is from geojson directory, put output in enriched directory
-      const filename = path.basename(inputFilePath)
+      const filename = path
+        .basename(inputFilePath)
         .replace('.json', '.enriched.json')
         .replace('.geojson', '.enriched.geojson');
       const dir = path.dirname(path.dirname(inputFilePath));
@@ -151,13 +154,13 @@ export async function enrichSamplesWithTideData(inputFilePath) {
         .replace('.json', '.enriched.json')
         .replace('.geojson', '.enriched.geojson');
     }
-    
+
     // Create the directory if it doesn't exist
     const outputDir = path.dirname(outputFilePath);
     if (!fs.existsSync(outputDir)) {
       fs.mkdirSync(outputDir, { recursive: true });
     }
-    
+
     fs.writeFileSync(outputFilePath, JSON.stringify(sampleData, null, 2), 'utf8');
     console.log(`Wrote enriched data to ${outputFilePath}`);
   } catch (error) {

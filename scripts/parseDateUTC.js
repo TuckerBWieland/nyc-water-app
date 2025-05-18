@@ -21,17 +21,19 @@ export function parseDateUTC(dateStr) {
     const [month, day, year] = dateStr.split('/').map(Number);
     return new Date(Date.UTC(year, month - 1, day));
   }
-  
+
   // Fall back to standard date parsing (in UTC)
   const parsedDate = new Date(dateStr);
-  return new Date(Date.UTC(
-    parsedDate.getFullYear(),
-    parsedDate.getMonth(),
-    parsedDate.getDate(),
-    parsedDate.getHours(),
-    parsedDate.getMinutes(),
-    parsedDate.getSeconds()
-  ));
+  return new Date(
+    Date.UTC(
+      parsedDate.getFullYear(),
+      parsedDate.getMonth(),
+      parsedDate.getDate(),
+      parsedDate.getHours(),
+      parsedDate.getMinutes(),
+      parsedDate.getSeconds()
+    )
+  );
 }
 
 /**
@@ -52,13 +54,13 @@ export function formatYYYYMMDD(date) {
  * @returns {string} Formatted date string
  */
 export function formatReadable(date) {
-  const options = { 
-    year: 'numeric', 
-    month: 'short', 
+  const options = {
+    year: 'numeric',
+    month: 'short',
     day: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
-    timeZone: 'UTC' 
+    timeZone: 'UTC',
   };
   return date.toLocaleDateString('en-US', options) + ' UTC';
 }

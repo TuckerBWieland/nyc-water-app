@@ -26,16 +26,16 @@
         presence of enterococcus bacteria—an indicator of water safety for recreational activities.
       </p>
       <p class="mt-2">
-        <span class="text-lime-500 font-medium">Green</span>: &lt; 35 MPN/100mL - 
-        Acceptable for swimming
+        <span class="text-lime-500 font-medium">Green</span>: &lt; 35 MPN/100mL - Acceptable for
+        swimming
       </p>
       <p class="mt-1">
-        <span class="text-yellow-400 font-medium">Yellow</span>: 35-104 MPN/100mL - 
-        Unacceptable if levels persist
+        <span class="text-yellow-400 font-medium">Yellow</span>: 35-104 MPN/100mL - Unacceptable if
+        levels persist
       </p>
       <p class="mt-1">
-        <span class="text-red-500 font-medium">Red</span>: &gt; 104 MPN/100mL - 
-        Unacceptable for swimming
+        <span class="text-red-500 font-medium">Red</span>: &gt; 104 MPN/100mL - Unacceptable for
+        swimming
       </p>
     </div>
   </div>
@@ -61,15 +61,15 @@ export default {
   props: {
     isDarkMode: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   setup() {
     // State
     const isOpen = ref(true);
-    
+
     // Watch for changes to track in analytics
-    const watchIsOpen = (newValue) => {
+    const watchIsOpen = newValue => {
       if (newValue) {
         analytics.track('viewed_info_popup');
       }
@@ -77,11 +77,11 @@ export default {
 
     return {
       isOpen,
-      watchIsOpen
+      watchIsOpen,
     };
   },
   watch: {
-    isOpen: 'watchIsOpen'
-  }
+    isOpen: 'watchIsOpen',
+  },
 };
 </script>
