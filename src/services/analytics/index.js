@@ -1,77 +1,200 @@
 /**
- * Analytics service module for tracking user events
- * Using PostHog for event tracking
+ * Unified Analytics Service
+ *
+ * This module provides a standardized API for tracking analytics events
+ * across the application. It uses PostHog for implementation but keeps
+ * the API abstract to allow changing providers in the future.
  */
+
 import posthog from 'posthog-js';
-import config from '../../config';
-
-// Initialize PostHog with configuration from environment
-if (config.analytics.enabled && config.analytics.posthogApiKey) {
-  posthog.init(config.analytics.posthogApiKey, {
-    api_host: config.analytics.posthogHost,
-    loaded: function(posthog) {
-      console.log('PostHog analytics initialized');
-    },
-    capture_pageview: true,
-    autocapture: true,
-  });
-} else {
-  console.log('Analytics disabled or missing API key');
-}
+import config from '../../config/index.js';
 
 /**
- * Track an event with PostHog
- * @param {string} eventName - Name of the event
- * @param {Object} [properties] - Properties to include with the event
+ * AnalyticsEvent - Standardized event names for analytics tracking
+ * @enum {string}
  */
-function track(eventName, properties = {}) {
-  if (!config.analytics.enabled) {
-    // Just log the event in development
-    if (config.isDevelopment) {
-      console.log(`[Analytics] ${eventName}`, properties);
-    }
-    return;
-  }
-
-  try {
-    posthog.capture(eventName, properties);
-  } catch (error) {
-    console.error('[Analytics Error]', error);
-  }
-}
-
-/**
- * Identify a user with PostHog
- * @param {string} userId - User identifier
- * @param {Object} [traits] - Additional user traits to track
- */
-function identify(userId, traits = {}) {
-  if (!config.analytics.enabled) return;
-
-  try {
-    posthog.identify(userId, traits);
-  } catch (error) {
-    console.error('[Analytics Error]', error);
-  }
-}
-
-/**
- * Common event names used throughout the application
- */
-const AnalyticsEvents = {
+export const AnalyticsEvent = {
+  VIEWED_PAGE: 'viewed_page',
   VIEWED_SAMPLE_PIN: 'viewed_sample_pin',
+  CHANGED_THEME: 'changed_theme',
   SELECTED_DATE: 'selected_date',
   ZOOMED_MAP: 'zoomed_map',
   PANNED_MAP: 'panned_map',
-  CHANGED_THEME: 'changed_theme',
+  FAILED_LOADING_DATA: 'failed_loading_data',
   ERROR_OCCURRED: 'error_occurred',
-  FAILED_LOADING_DATA: 'failed_loading_data'
 };
 
-// Export the analytics service
-export const analytics = {
-  track,
-  identify,
+/**
+ * Analytics Service class for managing analytics operations
+ */
+class AnalyticsService {
+  constructor() {
+    this.initialized = false;
+    this.client = this.initClient();
+  }
+
+  /**
+   * Initializes the analytics client based on configuration
+   * @returns {Object} The initialized analytics client
+   */
+  initClient() {
+    // Already initialized, return existing client
+    if (this.initialized) {
+      return this.client;
+    }
+
+    // Extract configuration
+    const { enabled, posthogApiKey, posthogHost } = config.analytics;
+
+    if (!posthogApiKey && enabled) {
+      console.warn(
+        'Analytics API key not found in environment variables. Analytics will be disabled.'
+      );
+    }
+
+    if (enabled && posthogApiKey) {
+      // Initialize PostHog with API key from environment variables
+      posthog.init(posthogApiKey, {
+        api_host: posthogHost,
+        // Disable capturing by default
+        capture_pageview: false,
+        // Disable auto-capturing of events like clicks
+        autocapture: false,
+        // Debug mode in development
+        debug: config.isDevelopment,
+      });
+
+      if (config.isDevelopment) {
+        console.info('[Analytics] PostHog initialized with API key:', posthogApiKey);
+        console.info('[Analytics] API host:', posthogHost);
+        console.info('[Analytics] Debug mode enabled');
+      }
+    } else {
+      // In development or when disabled, replace methods with mocks
+      this.mockAnalyticsClient(posthog);
+
+      if (config.isDevelopment) {
+        console.info('[Analytics] PostHog initialized in mock mode (events will not be sent)');
+        console.info(
+          '[Analytics] To enable real analytics tracking in development, set VITE_ENABLE_ANALYTICS=true'
+        );
+      }
+    }
+
+    this.initialized = true;
+    return posthog;
+  }
+
+  /**
+   * Mocks analytics client methods for development environment
+   * @param {Object} client - The analytics client to mock
+   */
+  mockAnalyticsClient(client) {
+    Object.keys(client).forEach(key => {
+      if (typeof client[key] === 'function') {
+        // Mock the function to log to console instead
+        client[key] = (...args) => {
+          console.log(`[Analytics Mock] ${key}:`, ...args);
+          return client;
+        };
+      }
+    });
+  }
+
+  /**
+   * Track an analytics event
+   * @param {string} event - Event name from AnalyticsEvent enum
+   * @param {Object} payload - Payload object for the specific event
+   */
+  track(event, payload) {
+    // Add standard properties to all events
+    const enhancedProps = {
+      ...payload,
+      timestamp: new Date().toISOString(),
+    };
+
+    // Development logging (always log in development for debugging)
+    if (config.isDevelopment) {
+      console.info(`[Analytics] ${event}`, enhancedProps);
+    }
+
+    // Send to provider
+    this.client.capture(event, enhancedProps);
+
+    // Log success in development mode
+    if (config.isDevelopment && config.analytics.enabled) {
+      console.info(`[Analytics] Event sent to PostHog: ${event}`);
+    }
+  }
+
+  /**
+   * Track a page view event
+   * @param {string} path - Current page path
+   * @param {string} [referrer] - Optional referrer path
+   */
+  trackPageView(path, referrer) {
+    this.track(AnalyticsEvent.VIEWED_PAGE, {
+      page: path,
+      referrer,
+    });
+  }
+
+  /**
+   * Identify a user
+   * @param {string} userId - User identifier
+   * @param {Object} [traits={}] - Optional user properties
+   */
+  identify(userId, traits = {}) {
+    if (!userId) {
+      console.warn('User ID is required for identification');
+      return;
+    }
+
+    this.client.identify(userId, traits);
+
+    if (config.isDevelopment) {
+      console.info(`[Analytics] Identified user: ${userId}`, traits);
+    }
+  }
+
+  /**
+   * Reset the current user (for logout)
+   */
+  reset() {
+    this.client.reset();
+
+    if (config.isDevelopment) {
+      console.info('[Analytics] User reset');
+    }
+  }
+}
+
+// Export singleton instance
+export const analytics = new AnalyticsService();
+
+// Backward compatibility exports
+export const track = (event, payload) => {
+  analytics.track(event, payload);
 };
 
-export { AnalyticsEvents };
+export const identify = (userId, traits = {}) => {
+  analytics.identify(userId, traits);
+};
+
+export const reset = () => {
+  analytics.reset();
+};
+
+// Legacy event names object (for backward compatibility)
+export const EVENTS = {
+  VIEWED_PAGE: AnalyticsEvent.VIEWED_PAGE,
+  VIEWED_SAMPLE_PIN: AnalyticsEvent.VIEWED_SAMPLE_PIN,
+  CHANGED_THEME: AnalyticsEvent.CHANGED_THEME,
+  SELECTED_DATE: AnalyticsEvent.SELECTED_DATE,
+  ZOOMED_MAP: AnalyticsEvent.ZOOMED_MAP,
+  PANNED_MAP: AnalyticsEvent.PANNED_MAP,
+  FAILED_LOADING_DATA: AnalyticsEvent.FAILED_LOADING_DATA,
+  ERROR_OCCURRED: AnalyticsEvent.ERROR_OCCURRED,
+};
+
+export default analytics;
