@@ -22,17 +22,6 @@
             <p><span class="font-medium">Total sites sampled:</span> {{ siteCount }}</p>
             <p><span class="font-medium">7-day rainfall:</span> 1.25 inches</p>
             <div class="mt-2 flex justify-center gap-4 items-center">
-              <a
-                href="https://docs.google.com/spreadsheets/d/12wNiul0QSymg3gO9OdwKkvAms-iHkz2i0hyxl6AP8eQ/edit?gid=0#gid=0"
-                target="_blank"
-                rel="noopener noreferrer"
-                :class="
-                  isDarkMode ? 'text-blue-400 hover:underline' : 'text-blue-600 hover:underline'
-                "
-              >
-                Detailed Source Data
-              </a>
-
               <!-- Mode switch in header -->
               <button
                 class="rounded-full p-2 shadow-md focus:outline-none transition-colors duration-300"
@@ -89,98 +78,112 @@
   </div>
 </template>
 
-<script setup>
+<script>
 import { computed, ref, nextTick, onMounted, watch } from 'vue';
+import { analytics } from '../services/analytics';
 
-// State
-const isExpanded = ref(false);
-
-// Emit events
-const emit = defineEmits(['toggleMapMode', 'update:isExpanded']);
-
-// References
-const headerRef = ref(null);
-
-// Toggle header expanded state
-const toggleExpanded = () => {
-  isExpanded.value = !isExpanded.value;
-
-  // Emit the expanded state to parent
-  emit('update:isExpanded', isExpanded.value);
-
-  // If expanding, wait for next tick then measure and set header height
-  if (isExpanded.value) {
-    nextTick(() => {
-      updateHeaderHeight();
+export default {
+  name: 'HeaderOverlay',
+  props: {
+    latestDate: {
+      type: String,
+      required: true
+    },
+    siteCount: {
+      type: Number,
+      default: 0
+    },
+    isDarkMode: {
+      type: Boolean,
+      default: false
+    },
+    isExpanded: {
+      type: Boolean,
+      default: false
+    }
+  },
+  emits: ['toggleMapMode', 'update:isExpanded'],
+  setup(props, { emit }) {
+    // State
+    const headerRef = ref(null);
+    
+    // Toggle header expanded state
+    const toggleExpanded = () => {
+      const newExpanded = !props.isExpanded;
+      
+      // Emit the expanded state to parent
+      emit('update:isExpanded', newExpanded);
+      
+      // Track the action
+      analytics.track('toggled_header', { expanded: newExpanded });
+      
+      // If expanding, wait for next tick then measure and set header height
+      if (newExpanded) {
+        nextTick(() => {
+          updateHeaderHeight();
+        });
+      }
+    };
+    
+    // Update the CSS variable for header height
+    const updateHeaderHeight = () => {
+      if (headerRef.value) {
+        const height = headerRef.value.offsetHeight;
+        document.documentElement.style.setProperty('--header-height', `${height}px`);
+      }
+    };
+    
+    // Toggle map mode and emit event to parent
+    const toggleMapMode = () => {
+      emit('toggleMapMode', !props.isDarkMode);
+      analytics.track('toggled_map_mode', { dark_mode: !props.isDarkMode });
+    };
+    
+    // Computed properties
+    const formattedDate = computed(() => {
+      if (!props.latestDate) return '';
+      
+      try {
+        // Parse the date string and adjust for timezone
+        const [year, month, day] = props.latestDate.split('-').map(Number);
+        // Create date using UTC to prevent timezone issues (months are 0-indexed in JS Date)
+        const date = new Date(Date.UTC(year, month - 1, day));
+        return date.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          timeZone: 'UTC', // Use UTC to avoid timezone shifts
+        });
+      } catch (e) {
+        return props.latestDate;
+      }
     });
+    
+    // Initialize header height on mount and when content changes
+    onMounted(() => {
+      nextTick(() => {
+        updateHeaderHeight();
+      });
+    });
+    
+    // Update height when site count changes (content might change size)
+    watch(
+      () => props.siteCount,
+      () => {
+        nextTick(() => {
+          updateHeaderHeight();
+        });
+      }
+    );
+    
+    return {
+      headerRef,
+      formattedDate,
+      toggleExpanded,
+      toggleMapMode
+    };
   }
 };
-
-// Update the CSS variable for header height
-const updateHeaderHeight = () => {
-  if (headerRef.value) {
-    const height = headerRef.value.offsetHeight;
-    document.documentElement.style.setProperty('--header-height', `${height}px`);
-  }
-};
-
-// Toggle map mode and emit event to parent
-const toggleMapMode = () => {
-  emit('toggleMapMode', !props.isDarkMode);
-};
-
-// Props
-const props = defineProps({
-  latestDate: {
-    type: String,
-    required: true,
-  },
-  siteCount: {
-    type: Number,
-    default: 0,
-  },
-  isDarkMode: {
-    type: Boolean,
-    default: false,
-  },
-});
-
-// Computed properties
-const formattedDate = computed(() => {
-  if (!props.latestDate) return '';
-
-  try {
-    // Parse the date string and adjust for timezone
-    const [year, month, day] = props.latestDate.split('-').map(Number);
-    // Create date using UTC to prevent timezone issues (months are 0-indexed in JS Date)
-    const date = new Date(Date.UTC(year, month - 1, day));
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      timeZone: 'UTC', // Use UTC to avoid timezone shifts
-    });
-  } catch (e) {
-    return props.latestDate;
-  }
-});
-
-// Initialize header height on mount and when content changes
-onMounted(() => {
-  nextTick(() => {
-    updateHeaderHeight();
-  });
-});
-
-// Update height when site count changes (content might change size)
-watch(
-  () => props.siteCount,
-  () => {
-    nextTick(() => {
-      updateHeaderHeight();
-    });
-  }
-);
 </script>
 
 <style scoped>

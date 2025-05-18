@@ -18,7 +18,7 @@
     <div class="prose text-sm" :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'">
       <p>
         This interactive map displays weekly water quality data collected by community scientists
-        through the Billion Oyster Project's Community Water Quality Testing (CWQT) program.
+        through the NYC Water Quality Monitoring program.
       </p>
       <br />
       <p>
@@ -26,14 +26,16 @@
         presence of enterococcus bacteria—an indicator of water safety for recreational activities.
       </p>
       <p class="mt-2">
-        <a
-          href="https://www.billionoysterproject.org/water-quality"
-          target="_blank"
-          rel="noopener noreferrer"
-          :class="isDarkMode ? 'text-blue-400 hover:underline' : 'text-blue-600 hover:underline'"
-        >
-          Learn more about the program
-        </a>
+        <span class="text-lime-500 font-medium">Green</span>: &lt; 35 MPN/100mL - 
+        Acceptable for swimming
+      </p>
+      <p class="mt-1">
+        <span class="text-yellow-400 font-medium">Yellow</span>: 35-104 MPN/100mL - 
+        Unacceptable if levels persist
+      </p>
+      <p class="mt-1">
+        <span class="text-red-500 font-medium">Red</span>: &gt; 104 MPN/100mL - 
+        Unacceptable for swimming
       </p>
     </div>
   </div>
@@ -50,17 +52,36 @@
   </button>
 </template>
 
-<script setup>
+<script>
 import { ref } from 'vue';
+import { analytics } from '../services/analytics';
 
-// Props
-const props = defineProps({
-  isDarkMode: {
-    type: Boolean,
-    default: false,
+export default {
+  name: 'InfoPopup',
+  props: {
+    isDarkMode: {
+      type: Boolean,
+      default: false
+    }
   },
-});
+  setup() {
+    // State
+    const isOpen = ref(true);
+    
+    // Watch for changes to track in analytics
+    const watchIsOpen = (newValue) => {
+      if (newValue) {
+        analytics.track('viewed_info_popup');
+      }
+    };
 
-// State
-const isOpen = ref(true);
+    return {
+      isOpen,
+      watchIsOpen
+    };
+  },
+  watch: {
+    isOpen: 'watchIsOpen'
+  }
+};
 </script>

@@ -37,70 +37,89 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script>
 import { computed } from 'vue';
 
 // Days of the week labels (Friday to Thursday, ending with sample day)
 const dayLabels = ['F', 'S', 'S', 'M', 'T', 'W', 'Th'];
 
 // Static rainfall data map by sampling date (in inches)
-const rainfallBySampleDate: Record<string, number[]> = {
+const rainfallBySampleDate = {
   '2025-05-14': [0.0, 0.95, 0.15, 0.74, 0.24, 0.02, 0.01],
-  '2025-05-07': [0.69, 0.01, 0.0, 0.0, 0.16, 1.22, 0.0],
+  '2025-05-08': [0.69, 0.01, 0.0, 0.0, 0.16, 1.22, 0.0],
   // Add future sampling weeks here as needed
 };
 
-// Accept the selected sampling date and dark mode as props
-const props = defineProps<{
-  selectedDate: string;
-  isDarkMode: boolean;
-}>();
-
-// Compute the rainfall array for the selected date
-const activeRainData = computed(() => {
-  return rainfallBySampleDate[props.selectedDate] ?? [];
-});
-
-// Compute the total rainfall from that array
-const totalRainfall = computed(() => {
-  return activeRainData.value.reduce((sum, val) => sum + (val || 0), 0);
-});
-
-// Formatted total rainfall with two decimal places
-const totalRainfallValue = computed(() => totalRainfall.value.toFixed(2));
-
-// Check if we have valid rainfall data to display
-const hasValidRainfallData = computed<boolean>(() => {
-  return (
-    activeRainData.value.length > 0 &&
-    activeRainData.value.some(val => val !== null && val !== undefined && val > 0)
-  );
-});
-
-// Determine color class based on rainfall amount
-const getBarColorClass = (value: number | null): string => {
-  if (value === null || value === undefined)
-    return props.isDarkMode ? 'bg-gray-500' : 'bg-gray-300';
-
-  if (value < 0.5) return props.isDarkMode ? 'bg-green-600' : 'bg-green-500';
-  if (value < 3.0) return props.isDarkMode ? 'bg-yellow-500' : 'bg-yellow-400';
-  return props.isDarkMode ? 'bg-red-600' : 'bg-red-500';
-};
-
-// Get day label for each bar
-const getDayLabel = (index: number): string => {
-  return dayLabels[index % 7];
-};
-
-// Calculate bar height percentage based on rainfall amount
-const getBarHeight = (value: number | null): number => {
-  if (value === null || value === undefined || value === 0) return 10; // Increased minimum height
-
-  // Height is proportional to rainfall, max height at 4 inches
-  // Use a logarithmic scale to better show differences in small values
-  // More aggressive scaling (50 instead of 20, min 10% instead of 5%)
-  const heightPercentage = Math.max(10, Math.min(100, 50 * Math.log2(1 + Number(value) * 2)));
-  return heightPercentage;
+export default {
+  name: 'RainDropLegend',
+  props: {
+    selectedDate: {
+      type: String,
+      required: true
+    },
+    isDarkMode: {
+      type: Boolean,
+      default: false
+    }
+  },
+  setup(props) {
+    // Compute the rainfall array for the selected date
+    const activeRainData = computed(() => {
+      return rainfallBySampleDate[props.selectedDate] ?? [];
+    });
+    
+    // Compute the total rainfall from that array
+    const totalRainfall = computed(() => {
+      return activeRainData.value.reduce((sum, val) => sum + (val || 0), 0);
+    });
+    
+    // Formatted total rainfall with two decimal places
+    const totalRainfallValue = computed(() => totalRainfall.value.toFixed(2));
+    
+    // Check if we have valid rainfall data to display
+    const hasValidRainfallData = computed(() => {
+      return (
+        activeRainData.value.length > 0 &&
+        activeRainData.value.some(val => val !== null && val !== undefined && val > 0)
+      );
+    });
+    
+    // Determine color class based on rainfall amount
+    const getBarColorClass = (value) => {
+      if (value === null || value === undefined)
+        return props.isDarkMode ? 'bg-gray-500' : 'bg-gray-300';
+    
+      if (value < 0.5) return props.isDarkMode ? 'bg-green-600' : 'bg-green-500';
+      if (value < 3.0) return props.isDarkMode ? 'bg-yellow-500' : 'bg-yellow-400';
+      return props.isDarkMode ? 'bg-red-600' : 'bg-red-500';
+    };
+    
+    // Get day label for each bar
+    const getDayLabel = (index) => {
+      return dayLabels[index % 7];
+    };
+    
+    // Calculate bar height percentage based on rainfall amount
+    const getBarHeight = (value) => {
+      if (value === null || value === undefined || value === 0) return 10; // Increased minimum height
+    
+      // Height is proportional to rainfall, max height at 4 inches
+      // Use a logarithmic scale to better show differences in small values
+      // More aggressive scaling (50 instead of 20, min 10% instead of 5%)
+      const heightPercentage = Math.max(10, Math.min(100, 50 * Math.log2(1 + Number(value) * 2)));
+      return heightPercentage;
+    };
+    
+    return {
+      activeRainData,
+      totalRainfall,
+      totalRainfallValue,
+      hasValidRainfallData,
+      getBarColorClass,
+      getDayLabel,
+      getBarHeight
+    };
+  }
 };
 </script>
 

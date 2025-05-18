@@ -50,54 +50,67 @@
   </div>
 </template>
 
-<script setup>
+<script>
 import { computed } from 'vue';
 
-// Props
-const props = defineProps({
-  samples: {
-    type: Array,
-    required: true,
-    default: () => [],
+export default {
+  name: 'SampleBarLegend',
+  props: {
+    samples: {
+      type: Array,
+      required: true,
+      default: () => []
+    },
+    isDarkMode: {
+      type: Boolean,
+      default: false
+    }
   },
-  isDarkMode: {
-    type: Boolean,
-    default: false,
-  },
-});
-
-// Compute counts for each category
-const greenCount = computed(() => {
-  return props.samples.filter(sample => Number(sample.mpn) < 35).length;
-});
-
-const yellowCount = computed(() => {
-  return props.samples.filter(sample => {
-    const mpn = Number(sample.mpn);
-    return mpn >= 35 && mpn <= 104;
-  }).length;
-});
-
-const redCount = computed(() => {
-  return props.samples.filter(sample => Number(sample.mpn) > 104).length;
-});
-
-const totalCount = computed(() => {
-  return props.samples.length;
-});
-
-// Compute percentages for width
-const greenPercentage = computed(() => {
-  return totalCount.value > 0 ? (greenCount.value / totalCount.value) * 100 : 0;
-});
-
-const yellowPercentage = computed(() => {
-  return totalCount.value > 0 ? (yellowCount.value / totalCount.value) * 100 : 0;
-});
-
-const redPercentage = computed(() => {
-  return totalCount.value > 0 ? (redCount.value / totalCount.value) * 100 : 0;
-});
+  setup(props) {
+    // Compute counts for each category
+    const greenCount = computed(() => {
+      return props.samples.filter(sample => Number(sample.mpn) < 35).length;
+    });
+    
+    const yellowCount = computed(() => {
+      return props.samples.filter(sample => {
+        const mpn = Number(sample.mpn);
+        return mpn >= 35 && mpn <= 104;
+      }).length;
+    });
+    
+    const redCount = computed(() => {
+      return props.samples.filter(sample => Number(sample.mpn) > 104).length;
+    });
+    
+    const totalCount = computed(() => {
+      return props.samples.length;
+    });
+    
+    // Compute percentages for width
+    const greenPercentage = computed(() => {
+      return totalCount.value > 0 ? (greenCount.value / totalCount.value) * 100 : 0;
+    });
+    
+    const yellowPercentage = computed(() => {
+      return totalCount.value > 0 ? (yellowCount.value / totalCount.value) * 100 : 0;
+    });
+    
+    const redPercentage = computed(() => {
+      return totalCount.value > 0 ? (redCount.value / totalCount.value) * 100 : 0;
+    });
+    
+    return {
+      greenCount,
+      yellowCount,
+      redCount,
+      totalCount,
+      greenPercentage,
+      yellowPercentage,
+      redPercentage
+    };
+  }
+};
 </script>
 
 <style scoped>

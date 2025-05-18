@@ -46,22 +46,7 @@
   </div>
 </template>
 
-<!--
-/**
- * @component App
- * @description Root application component that orchestrates the NYC Water App
- * It manages the global state and coordinates interactions between child components.
- * 
- * This component is responsible for:
- * - Loading and managing available dates
- * - Tracking the selected date
- * - Managing dark/light mode theme
- * - Coordinating component interactions
- * 
- * @displayName App
- */
--->
-<script setup lang="ts">
+<script>
 import { ref, onMounted } from 'vue';
 import MapViewer from './components/MapViewer.vue';
 import HeaderOverlay from './components/HeaderOverlay.vue';
@@ -71,113 +56,128 @@ import SampleBarLegend from './components/SampleBarLegend.vue';
 import RainDropLegend from './components/RainDropLegend.vue';
 import { handleAsyncOperation, ErrorSeverity } from './utils/errorHandler';
 
-/**
- * Available data dates from the API
- * @type {import('vue').Ref<string[]>}
- */
-const dates = ref<string[]>([]);
+export default {
+  name: 'App',
+  components: {
+    MapViewer,
+    HeaderOverlay,
+    DateScroller,
+    InfoPopup,
+    SampleBarLegend,
+    RainDropLegend
+  },
+  setup() {
+    /**
+     * Available data dates from the API
+     */
+    const dates = ref([]);
 
-/**
- * Currently selected date for data display
- * @type {import('vue').Ref<string>}
- */
-const selectedDate = ref<string>('');
+    /**
+     * Currently selected date for data display
+     */
+    const selectedDate = ref('');
 
-/**
- * Count of water sampling sites for current date
- * @type {import('vue').Ref<number>}
- */
-const siteCount = ref<number>(0);
+    /**
+     * Count of water sampling sites for current date
+     */
+    const siteCount = ref(0);
 
-/**
- * Whether the app is in dark mode
- * @type {import('vue').Ref<boolean>}
- */
-const isDarkMode = ref<boolean>(true); // Default to dark mode
+    /**
+     * Whether the app is in dark mode
+     */
+    const isDarkMode = ref(true); // Default to dark mode
 
-/**
- * Whether the header overlay is expanded
- * @type {import('vue').Ref<boolean>}
- */
-const isHeaderExpanded = ref<boolean>(false);
+    /**
+     * Whether the header overlay is expanded
+     */
+    const isHeaderExpanded = ref(false);
 
-/**
- * Sample data for the legends
- * @type {import('vue').Ref<Array<{ site: string, mpn: string | number }>>}
- */
-const sampleData = ref<Array<{ site: string; mpn: string | number }>>([]);
+    /**
+     * Sample data for the legends
+     */
+    const sampleData = ref([]);
 
-// Rainfall data is now handled directly in the RainDropLegend component
-// using a static mapping of dates to rainfall arrays
+    /**
+     * Update the count of water sampling sites
+     * Called by MapViewer when new data is loaded
+     *
+     * @param {number} count - Number of sampling sites
+     */
+    const updateSiteCount = (count) => {
+      siteCount.value = count;
+    };
 
-/**
- * Update the count of water sampling sites
- * Called by MapViewer when new data is loaded
- *
- * @param {number} count - Number of sampling sites
- */
-const updateSiteCount = (count: number): void => {
-  siteCount.value = count;
+    /**
+     * Update the sample data for the legend
+     * Called by MapViewer when new data is loaded
+     *
+     * @param {Array} data - Sample data for legend
+     */
+    const updateSampleData = (data) => {
+      sampleData.value = data;
+    };
+
+    /**
+     * Toggle between dark and light mode
+     */
+    const toggleDarkMode = () => {
+      isDarkMode.value = !isDarkMode.value;
+    };
+
+    /**
+     * Update the map mode based on header control
+     *
+     * @param {boolean} darkMode - Whether dark mode is enabled
+     */
+    const updateMapMode = (darkMode) => {
+      isDarkMode.value = darkMode;
+    };
+
+    /**
+     * Initialize the component on mount
+     * Fetches available dates and sets the default date
+     */
+    onMounted(async () => {
+      await handleAsyncOperation(
+        async () => {
+          const url = `${import.meta.env.BASE_URL}data/index.json`;
+          const res = await fetch(url);
+
+          if (!res.ok) {
+            throw new Error(`Failed to load dates index: ${res.status} ${res.statusText}`);
+          }
+
+          const index = await res.json();
+
+          if (!index || !Array.isArray(index.dates) || typeof index.latest !== 'string') {
+            throw new Error('Invalid index data format');
+          }
+
+          dates.value = index.dates;
+          selectedDate.value = index.latest;
+        },
+        { component: 'App', operation: 'loadDates' },
+        {
+          logToConsole: true,
+          reportToAnalytics: true,
+          showToUser: true,
+          fallbackValue: undefined,
+        }
+      );
+    });
+
+    return {
+      dates,
+      selectedDate,
+      siteCount,
+      isDarkMode,
+      isHeaderExpanded,
+      sampleData,
+      updateSiteCount,
+      updateSampleData,
+      toggleDarkMode,
+      updateMapMode
+    };
+  }
 };
-
-/**
- * Update the sample data for the legend
- * Called by MapViewer when new data is loaded
- *
- * @param {Array<{ site: string, mpn: string | number }>} data - Sample data for legend
- */
-const updateSampleData = (data: Array<{ site: string; mpn: string | number }>): void => {
-  sampleData.value = data;
-};
-
-/**
- * Toggle between dark and light mode
- */
-const toggleDarkMode = (): void => {
-  isDarkMode.value = !isDarkMode.value;
-};
-
-/**
- * Update the map mode based on header control
- *
- * @param {boolean} darkMode - Whether dark mode is enabled
- */
-const updateMapMode = (darkMode: boolean): void => {
-  isDarkMode.value = darkMode;
-};
-
-// Rainfall data handlers have been removed as we now use static data in RainDropLegend component
-
-/**
- * Initialize the component on mount
- * Fetches available dates and sets the default date
- */
-onMounted(async (): Promise<void> => {
-  await handleAsyncOperation(
-    async () => {
-      const url = `${import.meta.env.BASE_URL}data/index.json`;
-      const res = await fetch(url);
-
-      if (!res.ok) {
-        throw new Error(`Failed to load dates index: ${res.status} ${res.statusText}`);
-      }
-
-      const index = await res.json();
-
-      if (!index || !Array.isArray(index.dates) || typeof index.latest !== 'string') {
-        throw new Error('Invalid index data format');
-      }
-
-      dates.value = index.dates;
-      selectedDate.value = index.latest;
-    },
-    { component: 'App', operation: 'loadDates' },
-    {
-      logToConsole: true,
-      reportToAnalytics: true,
-      showToUser: true,
-      fallbackValue: undefined,
-    }
-  );
-});
 </script>

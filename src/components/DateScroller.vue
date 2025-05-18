@@ -46,70 +46,85 @@
   </div>
 </template>
 
-<script setup>
+<script>
 import { computed } from 'vue';
+import { analytics } from '../services/analytics';
 
-// Props
-const props = defineProps({
-  dates: {
-    type: Array,
-    required: true,
+export default {
+  name: 'DateScroller',
+  props: {
+    dates: {
+      type: Array,
+      required: true
+    },
+    modelValue: {
+      type: String,
+      required: true
+    },
+    isDarkMode: {
+      type: Boolean,
+      default: false
+    }
   },
-  modelValue: {
-    type: String,
-    required: true,
-  },
-  isDarkMode: {
-    type: Boolean,
-    default: false,
-  },
-});
-
-// Emits
-const emit = defineEmits(['update:modelValue']);
-
-// Computed properties
-const currentIndex = computed(() => {
-  return props.dates.indexOf(props.modelValue);
-});
-
-const hasPrevious = computed(() => {
-  return currentIndex.value > 0;
-});
-
-const hasNext = computed(() => {
-  return currentIndex.value < props.dates.length - 1;
-});
-
-const formattedModelValue = computed(() => {
-  if (!props.modelValue) return '';
-
-  try {
-    // Parse the date string and adjust for timezone
-    const [year, month, day] = props.modelValue.split('-').map(Number);
-    // Create date using UTC to prevent timezone issues (months are 0-indexed in JS Date)
-    const date = new Date(Date.UTC(year, month - 1, day));
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      timeZone: 'UTC', // Use UTC to avoid timezone shifts
+  emits: ['update:modelValue'],
+  setup(props, { emit }) {
+    // Computed properties
+    const currentIndex = computed(() => {
+      return props.dates.indexOf(props.modelValue);
     });
-  } catch (e) {
-    return props.modelValue;
-  }
-});
 
-// Methods
-const selectPrevious = () => {
-  if (hasPrevious.value) {
-    emit('update:modelValue', props.dates[currentIndex.value - 1]);
-  }
-};
+    const hasPrevious = computed(() => {
+      return currentIndex.value > 0;
+    });
 
-const selectNext = () => {
-  if (hasNext.value) {
-    emit('update:modelValue', props.dates[currentIndex.value + 1]);
+    const hasNext = computed(() => {
+      return currentIndex.value < props.dates.length - 1;
+    });
+
+    const formattedModelValue = computed(() => {
+      if (!props.modelValue) return '';
+
+      try {
+        // Parse the date string and adjust for timezone
+        const [year, month, day] = props.modelValue.split('-').map(Number);
+        // Create date using UTC to prevent timezone issues (months are 0-indexed in JS Date)
+        const date = new Date(Date.UTC(year, month - 1, day));
+        return date.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          timeZone: 'UTC', // Use UTC to avoid timezone shifts
+        });
+      } catch (e) {
+        return props.modelValue;
+      }
+    });
+
+    // Methods
+    const selectPrevious = () => {
+      if (hasPrevious.value) {
+        const newDate = props.dates[currentIndex.value - 1];
+        emit('update:modelValue', newDate);
+        analytics.track('selected_previous_date', { date: newDate });
+      }
+    };
+
+    const selectNext = () => {
+      if (hasNext.value) {
+        const newDate = props.dates[currentIndex.value + 1];
+        emit('update:modelValue', newDate);
+        analytics.track('selected_next_date', { date: newDate });
+      }
+    };
+
+    return {
+      currentIndex,
+      hasPrevious,
+      hasNext,
+      formattedModelValue,
+      selectPrevious,
+      selectNext
+    };
   }
 };
 </script>
