@@ -1,46 +1,22 @@
 /**
- * GeoJSON Enrichment Module
- *
- * Adds tide data to water quality sample GeoJSON files.
- * This module is used by the Vite plugin and can also be used standalone.
+ * Script to enrich GeoJSON data with tide information
+ * Adds tide data to sample points based on the nearest NOAA tide station
  */
-
 import fs from 'fs';
 import path from 'path';
-import { findNearestTideStation, getTideData, analyzeTideData, formatDate } from './tideServices.js';
-
-/**
- * Checks if the data is a valid GeoJSON collection
- * @param {Object} data - The data to check
- * @returns {boolean} Whether the data is a valid GeoJSON collection
- */
-function isGeoJSONCollection(data) {
-  return (
-    data &&
-    typeof data === 'object' &&
-    data.type === 'FeatureCollection' &&
-    Array.isArray(data.features)
-  );
-}
-
-/**
- * Checks if the data is a valid sample data object
- * @param {Object} data - The data to check
- * @returns {boolean} Whether the data is a valid sample data object
- */
-function isSampleData(data) {
-  return (
-    data &&
-    typeof data === 'object' &&
-    ((data.latitude !== undefined && data.longitude !== undefined) ||
-      (data.lat !== undefined && data.lon !== undefined))
-  );
-}
+import { fileURLToPath } from 'url';
+import { parseDateUTC } from '../utilities/parseDateUTC.js';
+import {
+  findNearestTideStation,
+  getTideData,
+  analyzeTideData,
+  formatDate,
+} from '../utilities/tideServices.js';
 
 /**
  * Main function to enrich samples with tide data
  *
- * @param {string} inputFilePath - Path to the GeoJSON or JSON file to enrich
+ * @param {string} inputFilePath - Path to the GeoJSON file to enrich
  * @returns {Promise<void>} Promise that resolves when the enrichment is complete
  */
 export async function enrichSamplesWithTideData(inputFilePath) {
@@ -53,12 +29,12 @@ export async function enrichSamplesWithTideData(inputFilePath) {
     let samples = [];
     let isGeoJSON = false;
 
-    if (isGeoJSONCollection(parsedData)) {
+    if (parsedData.type === 'FeatureCollection' && Array.isArray(parsedData.features)) {
       isGeoJSON = true;
       samples = parsedData.features;
     } else if (Array.isArray(parsedData)) {
       // Check if it's an array of sample data
-      if (parsedData.length > 0 && isSampleData(parsedData[0])) {
+      if (parsedData.length > 0 && (parsedData[0].lat || parsedData[0].latitude)) {
         samples = parsedData;
       } else {
         throw new Error('Unrecognized data format: Array does not contain valid sample data');
@@ -97,9 +73,9 @@ export async function enrichSamplesWithTideData(inputFilePath) {
       // Standardize sample time format if it's not already a full ISO string
       if (sampleTime && !sampleTime.includes('T')) {
         // If it's just a time like "9:02", assume it's for the sample date
-        if (/^\\d{1,2}:\\d{2}(:\\d{2})?(\\s*[AP]M)?$/i.test(sampleTime)) {
+        if (/^\d{1,2}:\d{2}(:\d{2})?(\s*[AP]M)?$/i.test(sampleTime)) {
           const [hours, minutes] = sampleTime
-            .replace(/\\s*[AP]M/i, '')
+            .replace(/\s*[AP]M/i, '')
             .split(':')
             .map(Number);
           const isPM = /PM/i.test(sampleTime);
@@ -119,9 +95,7 @@ export async function enrichSamplesWithTideData(inputFilePath) {
           // Format to consistent string format
           sampleTime = formatDate(sampleDate);
           console.log(
-            `Converted sample time "${hours}:${minutes}${
-              isPM ? ' PM' : ''
-            }" to "${sampleTime}" (UTC)`
+            `Converted sample time "${hours}:${minutes}${isPM ? ' PM' : ''}" to "${sampleTime}" (UTC)`
           );
         }
       }
@@ -163,12 +137,55 @@ export async function enrichSamplesWithTideData(inputFilePath) {
     console.log(`Processed ${processedCount} samples, enriched ${enrichedCount} with tide data`);
 
     // Write the updated data to output file
-    const outputFilePath = inputFilePath
-      .replace('.json', '.enriched.json')
-      .replace('.geojson', '.enriched.geojson');
+    let outputFilePath;
+    if (inputFilePath.includes('/geojson/')) {
+      // If input is from geojson directory, put output in enriched directory
+      const filename = path.basename(inputFilePath)
+        .replace('.json', '.enriched.json')
+        .replace('.geojson', '.enriched.geojson');
+      const dir = path.dirname(path.dirname(inputFilePath));
+      outputFilePath = path.join(dir, 'enriched', filename);
+    } else {
+      // Default behavior for backward compatibility
+      outputFilePath = inputFilePath
+        .replace('.json', '.enriched.json')
+        .replace('.geojson', '.enriched.geojson');
+    }
+    
+    // Create the directory if it doesn't exist
+    const outputDir = path.dirname(outputFilePath);
+    if (!fs.existsSync(outputDir)) {
+      fs.mkdirSync(outputDir, { recursive: true });
+    }
+    
     fs.writeFileSync(outputFilePath, JSON.stringify(sampleData, null, 2), 'utf8');
     console.log(`Wrote enriched data to ${outputFilePath}`);
   } catch (error) {
     console.error('Error enriching samples with tide data:', error);
   }
+}
+
+// Only run directly if this script is called directly (not imported)
+if (import.meta.url === `file://${process.argv[1]}`) {
+  // Get __dirname equivalent in ES modules
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
+
+  // Check for input file argument
+  if (process.argv.length < 3) {
+    console.error('Please provide a path to a GeoJSON or JSON file to enrich');
+    process.exit(1);
+  }
+
+  const inputFilePath = process.argv[2];
+
+  // Execute the main function
+  enrichSamplesWithTideData(inputFilePath)
+    .then(() => {
+      console.log('Enrichment completed successfully');
+    })
+    .catch(error => {
+      console.error('Enrichment failed:', error);
+      process.exit(1);
+    });
 }

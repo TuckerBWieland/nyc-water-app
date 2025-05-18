@@ -8,7 +8,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { enrichSamplesWithTideData } from '../data/enrichWithTideData.js';
+import { enrichSamplesWithTideData } from '../data-enrichment/enrichWithTideData.js';
 
 /**
  * Default options for the plugin
@@ -16,6 +16,8 @@ import { enrichSamplesWithTideData } from '../data/enrichWithTideData.js';
  */
 const defaultOptions = {
   dataDir: 'public/data',
+  geojsonDir: 'public/data/geojson',
+  enrichedDir: 'public/data/enriched',
   skipInDev: false,
   include: /\.geojson$/,
   exclude: /\.enriched\.geojson$/,
@@ -78,8 +80,11 @@ export default function geoJsonEnrichmentPlugin(options = {}) {
       let enrichedCount = 0;
 
       for (const file of filesToProcess) {
-        const filePath = path.join(dataDir, file);
-        const enrichedPath = filePath.replace('.geojson', '.enriched.geojson');
+        const filePath = path.join(config.geojsonDir || path.join(dataDir, 'geojson'), file);
+        const enrichedPath = path.join(
+          config.enrichedDir || path.join(dataDir, 'enriched'),
+          file.replace('.geojson', '.enriched.geojson')
+        );
 
         // Skip if already has an enriched version
         if (fs.existsSync(enrichedPath)) {
@@ -129,8 +134,11 @@ export default function geoJsonEnrichmentPlugin(options = {}) {
 
       // Process each file
       for (const file of filesToProcess) {
-        const filePath = path.join(dataDir, file);
-        const enrichedPath = filePath.replace('.geojson', '.enriched.geojson');
+        const filePath = path.join(config.geojsonDir || path.join(dataDir, 'geojson'), file);
+        const enrichedPath = path.join(
+          config.enrichedDir || path.join(dataDir, 'enriched'),
+          file.replace('.geojson', '.enriched.geojson')
+        );
 
         // Skip if already has an enriched version
         if (fs.existsSync(enrichedPath)) {
@@ -148,7 +156,7 @@ export default function geoJsonEnrichmentPlugin(options = {}) {
       }
 
       // Watch for changes to GeoJSON files
-      server.watcher.add(path.join(dataDir, '*.geojson'));
+      server.watcher.add(path.join(config.geojsonDir || path.join(dataDir, 'geojson'), '*.geojson'));
 
       server.watcher.on('change', async changedPath => {
         // Check if it's a GeoJSON file and not already enriched

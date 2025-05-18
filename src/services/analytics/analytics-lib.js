@@ -1,6 +1,6 @@
 // Import from the new centralized analytics service
-import { analytics as analyticsService } from '../services/analytics/index.js';
-import eventDescriptions from './eventMapping.json';
+import { analytics as analyticsService } from './index.js';
+import eventDescriptions from './lib/eventMapping.json';
 
 /**
  * AnalyticsEvent - Standardized event names for analytics tracking

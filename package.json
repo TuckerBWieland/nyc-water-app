@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "transform-csv": "node scripts/csvToGeoJSON.js",
-    "enrich-data": "node scripts/enrichAllGeojson.js",
+    "transform-csv": "node scripts/csv-processing/csvToGeoJSON.js",
+    "enrich-data": "node scripts/data-enrichment/enrichAllGeojson.js",
     "prebuild": "npm run transform-csv && npm run enrich-data",
     "build": "vite build",
     "preview": "vite preview",

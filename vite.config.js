@@ -9,6 +9,8 @@ export default defineConfig({
     vue(),
     geoJsonEnrichmentPlugin({
       dataDir: 'public/data',
+      geojsonDir: 'public/data/geojson',
+      enrichedDir: 'public/data/enriched',
       skipInDev: false, // Set to true to skip enrichment in dev mode
     }),
   ],

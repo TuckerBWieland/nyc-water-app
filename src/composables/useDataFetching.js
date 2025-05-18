@@ -80,7 +80,7 @@ export function useDataFetching(options = {}) {
     const result = await handleAsyncOperation(
       async () => {
         // Construct the URL based on the date format and path
-        const url = `${baseUrl}${dataPath}/${date}.geojson`;
+        const url = `${baseUrl}${dataPath}/geojson/${date}.geojson`;
 
         // Fetch the data
         const response = await fetch(url);
@@ -119,7 +119,7 @@ export function useDataFetching(options = {}) {
         if (tryEnriched) {
           await handleAsyncOperation(
             async () => {
-              const enrichedUrl = `${baseUrl}${dataPath}/${date}.enriched.geojson`;
+              const enrichedUrl = `${baseUrl}${dataPath}/enriched/${date}.enriched.geojson`;
               const enrichedResponse = await fetch(enrichedUrl);
 
               if (enrichedResponse.ok) {

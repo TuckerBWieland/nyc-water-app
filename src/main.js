@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import './index.css';
-import { track, EVENTS } from './lib/analytics.js';
+import { track, EVENTS } from './services/analytics/analytics-lib.js';
 
 // Initialize Vue app
 const app = createApp(App);
