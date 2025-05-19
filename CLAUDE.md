@@ -4,25 +4,25 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Build Commands
 - Development server: `npm run dev`
-- Production build: `npm run build` (automatically runs enrichment before building)
+- Production build: `npm run build`
 - Preview build: `npm run preview`
 - Lint code: `npm run lint`
 - Format code: `npm run format`
-- Data enrichment: `npm run enrich-data` (enhances GeoJSON files with tide data)
+- Data enrichment: `npm run enrich` (converts CSV samples to enriched GeoJSON)
 - Deployment: `npm run deploy` (deploys to GitHub Pages)
 
 ## Architecture
 
 ### Data Flow
-1. The app loads `public/data/index.json` to get available dates and the latest date
-2. GeoJSON data is loaded from `public/data/[date].geojson` or `public/data/[date].enriched.geojson`
+1. The app reads `public/data/latest.txt` to determine the most recent dataset
+2. GeoJSON and metadata are loaded from `public/data/<date>/enriched.geojson` and `public/data/<date>/metadata.json`
 3. The MapViewer component displays water quality samples as markers on a Leaflet map
 4. Interactive components allow filtering and displaying details about sample points
 
 ### Data Enrichment
-- Raw GeoJSON files are enhanced with tide data from NOAA APIs
-- The enrichment process adds tide information to each water sample point
-- This happens automatically during the build process via the `prebuild` script
+- CSV sample and rainfall files are combined into GeoJSON using `scripts/enrich-data.js`
+- The enrichment process adds rainfall totals and basic metadata
+- Run `npm run enrich` whenever new CSV files are added
 
 ### Analytics
 - Analytics are implemented using PostHog (`posthog-js`)
@@ -77,3 +77,4 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - The application supports both light and dark themes
 - Theme state is managed via the `useTheme` composable
 - Map tiles and UI elements adapt to the current theme
+
