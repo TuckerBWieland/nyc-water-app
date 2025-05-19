@@ -1,15 +1,17 @@
-import { ref } from 'vue';
+import { ref, unref } from 'vue';
 
-export function useStaticData(date) {
+// Accepts a ref to a date string so the composable can
+// load new data when the date value changes.
+export function useStaticData(dateRef) {
   const data = ref(null);
   const metadata = ref(null);
   const loading = ref(false);
   const error = ref(null);
   
-  async function load() {
-    console.log(`Loading data for date: ${date}`);
+  async function load(currentDate = unref(dateRef)) {
+    console.log(`Loading data for date: ${currentDate}`);
     
-    if (!date) {
+    if (!currentDate) {
       console.error('No date provided');
       error.value = 'No date provided';
       return;
@@ -23,8 +25,8 @@ export function useStaticData(date) {
       const base = import.meta.env.MODE === 'production' ? '/nyc-water-app' : '';
       
       // Build URLs with correct base path
-      const geojsonUrl = `${base}/data/${date}/enriched.geojson`;
-      const metadataUrl = `${base}/data/${date}/metadata.json`;
+      const geojsonUrl = `${base}/data/${currentDate}/enriched.geojson`;
+      const metadataUrl = `${base}/data/${currentDate}/metadata.json`;
       
       console.log(`Fetching from: ${geojsonUrl} and ${metadataUrl}`);
       
