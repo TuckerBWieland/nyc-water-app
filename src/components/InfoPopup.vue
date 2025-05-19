@@ -26,7 +26,7 @@
         presence of enterococcus bacteria—an indicator of water safety for recreational activities.
       </p>
       <p class="mt-2">
-        <span class="text-lime-500 font-medium">Green</span>: &lt; 35 MPN/100mL - Acceptable for
+        <span class="text-green-500 font-medium">Green</span>: &lt; 35 MPN/100mL - Acceptable for
         swimming
       </p>
       <p class="mt-1">

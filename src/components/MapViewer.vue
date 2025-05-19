@@ -15,7 +15,7 @@ const MPN_THRESHOLD_LOW = 35;
 const MPN_THRESHOLD_MEDIUM = 104;
 
 // Color constants
-const COLOR_GREEN = '#84cc16';
+const COLOR_GREEN = '#22c55e';
 const COLOR_YELLOW = '#facc15';
 const COLOR_RED = '#ef4444';
 
@@ -243,7 +243,7 @@ export default {
           const mpnNumber = Number(mpnValue);
 
           if (mpnNumber < 35) {
-            qualityColor = 'text-lime-500';
+            qualityColor = 'text-green-500';
             qualityMessage = 'Acceptable for swimming';
           } else if (mpnNumber <= 104) {
             qualityColor = 'text-yellow-400';
@@ -461,8 +461,8 @@ export default {
 }
 
 /* Quality indicators */
-.site-popup .text-lime-500 {
-  color: #84cc16;
+.site-popup .text-green-500 {
+  color: #22c55e;
 }
 
 .site-popup .text-yellow-400 {
