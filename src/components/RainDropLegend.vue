@@ -11,22 +11,20 @@
       <div
         v-for="(value, index) in activeRainData"
         :key="index"
-        class="flex flex-col items-center group"
+        class="flex flex-col items-center group h-full"
       >
-        <div class="flex flex-col items-center">
-          <div v-if="value > 0" class="text-xs opacity-70 mb-1 font-medium">
-            {{ value.toFixed(1) }}
-          </div>
-          <div
-            class="w-4 md:w-5 rounded-t transition-all duration-300 shadow-md border border-black/10"
-            :class="getBarColorClass(value)"
-            :style="{ height: `${getBarHeight(value)}%` }"
-            :title="`${
-              value !== null && value !== undefined ? Number(value).toFixed(2) : 'No data'
-            } inches`"
-          ></div>
-          <span class="text-xs mt-1 font-medium">{{ getDayLabel(index) }}</span>
+        <div v-if="value > 0" class="text-xs opacity-70 mb-1 font-medium">
+          {{ value.toFixed(1) }}
         </div>
+        <div
+          class="w-4 md:w-5 rounded-t transition-all duration-300 shadow-md border border-black/10"
+          :class="getBarColorClass(value)"
+          :style="{ height: `${getBarHeight(value)}%` }"
+          :title="`${
+            value !== null && value !== undefined ? Number(value).toFixed(2) : 'No data'
+          } inches`"
+        ></div>
+        <span class="text-xs mt-1 font-medium">{{ getDayLabel(index) }}</span>
       </div>
     </div>
 
