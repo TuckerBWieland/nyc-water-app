@@ -70,21 +70,58 @@ async function fetchTideStatus(lat, lng, time) {
     if (!s.Latitude || !s.Longitude || !s.MPN || isNaN(parseFloat(s.MPN))) continue;
 
     const coords = [parseFloat(s.Longitude), parseFloat(s.Latitude)];
-    const sampleTime = s['Sample Time'] || SAMPLE_DATE;
-    const tide = await fetchTideStatus(s.Latitude, s.Longitude, sampleTime);
+    // Process sample time to create a proper ISO datetime
+    let formattedSampleTime;
+    if (s['Sample Time']) {
+      // Try to parse the time from the CSV
+      try {
+        // Standardize time format (handle both "8:30 AM" and "8:30")
+        let timeStr = s['Sample Time'];
+        
+        // Ensure we have AM/PM if it's not there
+        if (!timeStr.includes('AM') && !timeStr.includes('PM')) {
+          // Default to AM if time is before 12, PM if 12 or after
+          const hourPart = parseInt(timeStr.split(':')[0]);
+          timeStr = hourPart >= 12 ? `${timeStr} PM` : `${timeStr} AM`;
+        }
+        
+        // Create a date object from the date and time
+        const dateTimeStr = `${SAMPLE_DATE} ${timeStr}`;
+        const dateObj = new Date(dateTimeStr);
+        
+        // If valid, convert to ISO format
+        if (!isNaN(dateObj.getTime())) {
+          formattedSampleTime = dateObj.toISOString();
+        } else {
+          formattedSampleTime = `${SAMPLE_DATE}T12:00:00Z`; // Default to noon
+          console.warn(`Could not parse time: ${s['Sample Time']}, using default noon time`);
+        }
+      } catch (e) {
+        formattedSampleTime = `${SAMPLE_DATE}T12:00:00Z`; // Default to noon
+        console.warn(`Error parsing time: ${s['Sample Time']}, using default noon time`, e);
+      }
+    } else {
+      // No time provided, default to noon
+      formattedSampleTime = `${SAMPLE_DATE}T12:00:00Z`;
+    }
+    
+    const tide = await fetchTideStatus(s.Latitude, s.Longitude, s['Sample Time']);
+    const tideFormatted = tide + " Tide (Battery)";
 
-    features.push({
+    const feature = {
       type: 'Feature',
       geometry: { type: 'Point', coordinates: coords },
       properties: {
-        site: s['Site Name'], // Match the property name your components expect
+        siteName: s['Site Name'], // Renamed from site to siteName
         mpn: parseFloat(s.MPN),
-        sampleTime,
+        sampleTime: formattedSampleTime, // Now in ISO format
         rainByDay,
-        totalRain,
-        tideSummary: tide + " Tide (Battery)"
+        totalRain, // Rainfall value in the expected property
+        tide: tideFormatted // Renamed from tideSummary to tide
       }
-    });
+    };
+    
+    features.push(feature);
   }
 
   const outputPath = path.join(OUTPUT_DIR, SAMPLE_DATE);
@@ -94,4 +131,10 @@ async function fetchTideStatus(lat, lng, time) {
   fs.writeFileSync(path.join(OUTPUT_DIR, 'latest.txt'), SAMPLE_DATE);
 
   console.log(`✅ Enriched ${features.length} samples with tide + rain for ${SAMPLE_DATE}`);
+  
+  // Log the first feature's properties for schema validation
+  if (features.length > 0) {
+    console.log('\n🧪 Sample feature properties (first item):');
+    console.log(JSON.stringify(features[0].properties, null, 2));
+  }
 })();
