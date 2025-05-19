@@ -48,7 +48,6 @@
 
 <script>
 import { computed } from 'vue';
-import { analytics } from '../services/analytics';
 
 export default {
   name: 'DateScroller',
@@ -105,7 +104,6 @@ export default {
       if (hasPrevious.value) {
         const newDate = props.dates[currentIndex.value - 1];
         emit('update:modelValue', newDate);
-        analytics.track('selected_previous_date', { date: newDate });
       }
     };
 
@@ -113,7 +111,6 @@ export default {
       if (hasNext.value) {
         const newDate = props.dates[currentIndex.value + 1];
         emit('update:modelValue', newDate);
-        analytics.track('selected_next_date', { date: newDate });
       }
     };
 

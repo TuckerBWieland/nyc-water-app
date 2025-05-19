@@ -9,22 +9,19 @@
 import { ref, onMounted, watch, onUnmounted } from 'vue';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { analytics } from '../services/analytics';
-import { handleError, ErrorSeverity } from '../utils/errorHandler';
-import config from '../config';
-import { useStaticData } from '../composables/useStaticData.js';
-
-// Import constants from configuration
-const { waterQuality, map: mapConfig } = config;
 
 // Constants for MPN threshold values
-const MPN_THRESHOLD_LOW = waterQuality.mpnThresholds.low;
-const MPN_THRESHOLD_MEDIUM = waterQuality.mpnThresholds.medium;
+const MPN_THRESHOLD_LOW = 35;
+const MPN_THRESHOLD_MEDIUM = 104;
 
 // Color constants
-const COLOR_GREEN = waterQuality.colors.good;
-const COLOR_YELLOW = waterQuality.colors.moderate;
-const COLOR_RED = waterQuality.colors.poor;
+const COLOR_GREEN = '#84cc16';
+const COLOR_YELLOW = '#facc15';
+const COLOR_RED = '#ef4444';
+
+// Tile layer URLs
+const LIGHT_TILE_URL = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+const DARK_TILE_URL = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
 
 export default {
   name: 'MapViewer',
@@ -37,25 +34,17 @@ export default {
       type: Boolean,
       default: false,
     },
+    geojson: {
+      type: Object,
+      default: null
+    }
   },
-  emits: [
-    'update:siteCount',
-    'update:sampleData',
-    'update:rainfallByDayIn',
-    'update:rainData',
-    'update:totalRain',
-  ],
-  setup(props, { emit }) {
+  setup(props) {
     // Reactive references
-    const mapData = ref(null);
     const map = ref(null);
     const markers = ref([]);
     const tileLayer = ref(null);
     const hasAutoFitted = ref(false);
-
-    // Tile layer URLs from configuration
-    const LIGHT_TILE_URL = mapConfig.tileUrls.light;
-    const DARK_TILE_URL = mapConfig.tileUrls.dark;
 
     /**
      * Function to get color based on MPN value
@@ -161,46 +150,21 @@ export default {
     // Watch for changes in dark mode setting
     watch(
       () => props.isDarkMode,
-      newMode => {
+      () => {
         updateTileLayer();
-        analytics.track('changed_theme', {
-          theme: newMode ? 'dark' : 'light',
-          previousTheme: newMode ? 'light' : 'dark',
-        });
       }
     );
 
-    // Get static data for the current date
-    const { currentData: staticData, isLoading: isDataLoading } = useStaticData();
-
-    // Watch for changes in selected date
+    // Watch for changes in GeoJSON data
     watch(
-      () => props.selectedDate,
-      newDate => {
-        if (newDate && staticData.value) {
-          // Track date selection
-          analytics.track('selected_date', { date: newDate });
-          
-          // Update map with the data
-          mapData.value = staticData.value;
+      () => props.geojson,
+      (newData) => {
+        if (newData && map.value) {
+          updateMap(newData);
         }
       },
       { immediate: true }
     );
-
-    // Watch for changes in static data
-    watch(staticData, newData => {
-      if (newData) {
-        mapData.value = newData;
-      }
-    });
-
-    // Watch for changes in map data and update map
-    watch(mapData, newData => {
-      if (newData && map.value) {
-        updateMap(newData);
-      }
-    });
 
     /**
      * Updates the map with new GeoJSON data
@@ -232,8 +196,6 @@ export default {
       // Log total number of features
       console.log(`Total features on map: ${data.features.length}`);
 
-      // Initialize marker counter
-
       for (const feature of data.features) {
         try {
           if (
@@ -241,36 +203,21 @@ export default {
             !feature.geometry.coordinates ||
             feature.geometry.coordinates.length < 2
           ) {
-            handleError(
-              new Error('Invalid feature geometry or coordinates'),
-              { component: 'MapViewer', operation: 'updateMap', data: { feature } },
-              ErrorSeverity.WARNING,
-              { showToUser: false }
-            );
+            console.warn('Invalid feature geometry or coordinates');
             continue;
           }
 
           if (!feature.properties) {
-            handleError(
-              new Error('Missing properties in feature'),
-              { component: 'MapViewer', operation: 'updateMap', data: { feature } },
-              ErrorSeverity.WARNING,
-              { showToUser: false }
-            );
-            console.warn('Skipping feature with missing properties:', feature);
+            console.warn('Missing properties in feature');
             continue;
           }
 
-          // Extract properties with support for different case formats
-          const siteName = feature.properties.site || feature.properties['Site Name'] || '';
-          const mpnValue =
-            feature.properties.mpn !== undefined
-              ? feature.properties.mpn
-              : feature.properties['MPN'];
-          const sampleTimeValue =
-            feature.properties.sampleTime || feature.properties['Sample Time'] || '';
+          // Extract properties
+          const siteName = feature.properties.site || '';
+          const mpnValue = feature.properties.mpn;
+          const sampleTimeValue = feature.properties.sampleTime || '';
 
-          // Skip if we couldn't find MPN at all
+          // Skip if we couldn't find MPN
           if (mpnValue === undefined) {
             console.warn('Feature is missing MPN property:', feature);
             continue;
@@ -281,27 +228,18 @@ export default {
           const lng = coords[0];
 
           if (isNaN(lat) || isNaN(lng)) {
-            handleError(
-              new Error('Invalid coordinates (NaN values)'),
-              { component: 'MapViewer', operation: 'updateMap', data: { coordinates: coords } },
-              ErrorSeverity.WARNING,
-              { showToUser: false }
-            );
+            console.warn('Invalid coordinates (NaN values)');
             continue;
           }
 
-          // Extract properties with correct field names (handle both formats)
-          const site = feature.properties.site || feature.properties['Site Name'] || '';
-
           // Create water bottle icon
-          const bottleIcon = createWaterBottleIcon(mpn);
+          const bottleIcon = createWaterBottleIcon(mpnValue);
 
           // Update the popupAnchor to increase distance from the icon
           bottleIcon.options.popupAnchor = [0, -40];
 
           // Determine quality message
           let qualityColor, qualityMessage;
-          // Use the mpnValue we already extracted and validated
           const mpnNumber = Number(mpnValue);
 
           if (mpnNumber < 35) {
@@ -349,28 +287,9 @@ export default {
             popupContent += `<div class="text-xs font-medium mt-3 pt-2 border-t border-gray-200">Environmental Conditions:</div>`;
           }
 
-          // Add tide info if available - with conditional formatting
+          // Add tide info if available
           if (feature.properties.tideSummary) {
-            // Parse the tide summary
-            const tideSummary = feature.properties.tideSummary;
-            let displaySummary = tideSummary;
-
-            // For intuitive combinations, show only the tide state (no direction at all)
-            if (tideSummary.includes('Low Tide – ⬇️ Falling')) {
-              // Extract just the "Low Tide" part and the station
-              const stationInfo = tideSummary.includes('(')
-                ? tideSummary.substring(tideSummary.indexOf('('))
-                : '';
-              displaySummary = `Low Tide ${stationInfo}`;
-            } else if (tideSummary.includes('High Tide – ⬆️ Rising')) {
-              // Extract just the "High Tide" part and the station
-              const stationInfo = tideSummary.includes('(')
-                ? tideSummary.substring(tideSummary.indexOf('('))
-                : '';
-              displaySummary = `High Tide ${stationInfo}`;
-            }
-
-            const sanitizedTideSummary = sanitize(displaySummary);
+            const sanitizedTideSummary = sanitize(feature.properties.tideSummary);
             popupContent += `<div class="text-xs opacity-75 mt-1">
               <span title="Tidal data is taken from nearest NOAA station and is only approximate">${sanitizedTideSummary}</span>
             </div>`;
@@ -388,17 +307,8 @@ export default {
             const sanitizedRainfall = sanitize(rainfallText);
 
             popupContent += `<div class="text-xs opacity-75 mt-1">
-              <span title="Rainfall data for the 7 days prior to sample date from Open-Meteo API">${sanitizedRainfall}</span>
+              <span title="Rainfall data for the 7 days prior to sample date">Rainfall: ${sanitizedRainfall}</span>
             </div>`;
-
-            // Add rainfall station name if available
-            if (feature.properties.rainfall_station_name) {
-              const stationName = feature.properties.rainfall_station_name;
-              const sanitizedStationName = sanitize(stationName);
-              popupContent += `<div class="text-xs opacity-75 mt-1">
-                <span title="Weather station providing rainfall data">Station: ${sanitizedStationName}</span>
-              </div>`;
-            }
           }
 
           // Close the popup div
@@ -411,27 +321,9 @@ export default {
             })
             .addTo(map.value);
 
-          // Add popup open event tracking
-          marker.on('popupopen', () => {
-            analytics.track('viewed_sample_pin', {
-              sampleId: site,
-              result: mpn.toString(),
-              location: `${lat.toFixed(4)},${lng.toFixed(4)}`,
-            });
-          });
-
           markers.value.push(marker);
         } catch (error) {
-          handleError(
-            error,
-            { component: 'MapViewer', operation: 'processFeature' },
-            ErrorSeverity.ERROR,
-            {
-              logToConsole: true,
-              reportToAnalytics: true,
-              showToUser: false,
-            }
-          );
+          console.error('Error processing feature:', error);
         }
       }
 
@@ -450,58 +342,18 @@ export default {
     };
 
     onMounted(() => {
-      // Initialize map with coordinates from configuration
-      map.value = L.map('map').setView(
-        [mapConfig.defaultLatitude, mapConfig.defaultLongitude],
-        mapConfig.defaultZoom
-      );
+      // Initialize map with default coordinates
+      map.value = L.map('map').setView([40.7128, -74.0060], 12);
 
       // Initialize tile layer using our updateTileLayer function
       updateTileLayer();
 
-      // Add map interaction analytics with debouncing
-      let zoomTimeout;
-      map.value.on('zoomend', () => {
-        // Clear any existing timeout
-        if (zoomTimeout) {
-          window.clearTimeout(zoomTimeout);
-        }
-
-        // Set a new timeout to avoid sending too many events
-        zoomTimeout = window.setTimeout(() => {
-          analytics.track('zoomed_map', {
-            zoomLevel: map.value?.getZoom() || 0,
-          });
-        }, 500); // 500ms debounce
-      });
-
-      let panTimeout;
-      map.value.on('moveend', () => {
-        // Clear any existing timeout
-        if (panTimeout) {
-          window.clearTimeout(panTimeout);
-        }
-
-        // Set a new timeout to avoid sending too many events
-        panTimeout = window.setTimeout(() => {
-          const center = map.value?.getCenter();
-          if (center) {
-            analytics.track('panned_map', {
-              center: {
-                lat: Number(center.lat.toFixed(4)),
-                lng: Number(center.lng.toFixed(4)),
-              },
-            });
-          }
-        }, 500); // 500ms debounce
-      });
-
-      // Remove zoom control
+      // Remove zoom control (optional)
       map.value.removeControl(map.value.zoomControl);
 
-      // Load map data if we have a selected date
-      if (props.selectedDate) {
-        loadMapData(props.selectedDate);
+      // Load map data if we have it
+      if (props.geojson) {
+        updateMap(props.geojson);
       }
     });
 
@@ -513,13 +365,11 @@ export default {
     });
 
     return {
-      mapData,
       map,
       markers,
       tileLayer,
       hasAutoFitted,
       updateTileLayer,
-      loadMapData,
       updateMap,
     };
   },

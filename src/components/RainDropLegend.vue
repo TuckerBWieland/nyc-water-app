@@ -48,13 +48,6 @@ import { computed } from 'vue';
 // Days of the week labels (Friday to Thursday, ending with sample day)
 const dayLabels = ['F', 'S', 'S', 'M', 'T', 'W', 'Th'];
 
-// Static rainfall data map by sampling date (in inches)
-const rainfallBySampleDate = {
-  '2025-05-08': [0.0, 0.95, 0.15, 0.74, 0.24, 0.02, 0.01],
-  '2025-05-14': [0.69, 0.01, 0.0, 0.0, 0.16, 1.22, 0.0],
-  // Add future sampling weeks here as needed
-};
-
 export default {
   name: 'RainDropLegend',
   props: {
@@ -74,12 +67,9 @@ export default {
   setup(props) {
     // Compute the rainfall array for the selected date
     const activeRainData = computed(() => {
-      // First check if we have rainfall data from props
-      if (props.rainfallData && props.rainfallData.length > 0) {
-        return props.rainfallData;
-      }
-      // Fallback to static data if no dynamic data is provided
-      return rainfallBySampleDate[props.selectedDate] ?? [];
+      return props.rainfallData && props.rainfallData.length > 0
+        ? props.rainfallData
+        : [];
     });
 
     // Compute the total rainfall from that array

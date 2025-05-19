@@ -54,7 +54,6 @@
 
 <script>
 import { ref } from 'vue';
-import { analytics } from '../services/analytics';
 
 export default {
   name: 'InfoPopup',
@@ -66,22 +65,11 @@ export default {
   },
   setup() {
     // State
-    const isOpen = ref(true);
-
-    // Watch for changes to track in analytics
-    const watchIsOpen = newValue => {
-      if (newValue) {
-        analytics.track('viewed_info_popup');
-      }
-    };
+    const isOpen = ref(false);
 
     return {
       isOpen,
-      watchIsOpen,
     };
-  },
-  watch: {
-    isOpen: 'watchIsOpen',
   },
 };
 </script>

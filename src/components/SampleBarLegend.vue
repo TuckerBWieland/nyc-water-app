@@ -68,7 +68,6 @@ export default {
     samples: {
       type: Array,
       required: true,
-      default: () => [],
     },
     isDarkMode: {
       type: Boolean,
@@ -78,18 +77,18 @@ export default {
   setup(props) {
     // Compute counts for each category
     const greenCount = computed(() => {
-      return props.samples.filter(sample => Number(sample.mpn) < 35).length;
+      return props.samples.filter(sample => Number(sample.properties.mpn) < 35).length;
     });
 
     const yellowCount = computed(() => {
       return props.samples.filter(sample => {
-        const mpn = Number(sample.mpn);
+        const mpn = Number(sample.properties.mpn);
         return mpn >= 35 && mpn <= 104;
       }).length;
     });
 
     const redCount = computed(() => {
-      return props.samples.filter(sample => Number(sample.mpn) > 104).length;
+      return props.samples.filter(sample => Number(sample.properties.mpn) > 104).length;
     });
 
     const totalCount = computed(() => {

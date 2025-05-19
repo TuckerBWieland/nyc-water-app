@@ -1,37 +1,24 @@
 {
-  "name": "nyc-water-app",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "name": "nyc-water-app-v2",
+  "version": "1.0.0",
   "scripts": {
     "dev": "vite",
-    "transform-csv": "node scripts/csv-processing/csvToGeoJSON.js",
-    "enrich-data": "node scripts/data-enrichment/enrichAllGeojson.js",
-    "consolidate-data": "node scripts/enrichAndMergeAll.js",
-    "prebuild": "npm run transform-csv && npm run enrich-data && npm run consolidate-data",
     "build": "vite build",
     "preview": "vite preview",
-    "deploy": "gh-pages -d dist",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
-    "format": "prettier --write src/ scripts/"
+    "enrich": "node scripts/enrich-data.js"
   },
   "dependencies": {
     "leaflet": "^1.9.4",
     "node-fetch": "^3.3.2",
-    "posthog-js": "^1.242.0",
-    "vue": "^3.3.4"
+    "papaparse": "^5.5.2",
+    "vue": "^3.4.0",
+    "vue-router": "^4.2.5"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^4.2.3",
-    "@vue/eslint-config-prettier": "^7.1.0",
-    "autoprefixer": "^10.4.14",
-    "csv-parse": "^5.6.0",
-    "eslint": "^8.57.1",
-    "eslint-plugin-vue": "^9.33.0",
-    "gh-pages": "^6.3.0",
-    "postcss": "^8.4.24",
-    "prettier": "^2.8.8",
-    "tailwindcss": "^3.3.2",
-    "vite": "^4.4.0"
+    "@vitejs/plugin-vue": "^5.0.0",
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.4.0",
+    "tailwindcss": "^3.3.0",
+    "vite": "^5.0.0"
   }
 }
