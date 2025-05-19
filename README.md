@@ -8,7 +8,7 @@ An interactive web application to visualize water quality data across various sa
 - Historical data navigation with a date scroller
 - Detailed information for each sampling site
 - Mobile-friendly responsive design
-- Light and dark theme support
+- Light and dark theme support (defaults to dark)
 
 ## Technology Stack
 
