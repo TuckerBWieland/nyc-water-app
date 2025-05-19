@@ -213,7 +213,7 @@ export default {
           }
 
           // Extract properties
-          const siteName = feature.properties.site || '';
+          const siteName = feature.properties.siteName || '';
           const mpnValue = feature.properties.mpn;
           const sampleTimeValue = feature.properties.sampleTime || '';
 
@@ -283,13 +283,13 @@ export default {
           }
 
           // Add tide and rainfall info section header if either is available
-          if (feature.properties.tideSummary || feature.properties.rainfall_mm_7day !== undefined) {
+          if (feature.properties.tide || feature.properties.rainfall_mm_7day !== undefined) {
             popupContent += `<div class="text-xs font-medium mt-3 pt-2 border-t border-gray-200">Environmental Conditions:</div>`;
           }
 
           // Add tide info if available
-          if (feature.properties.tideSummary) {
-            const sanitizedTideSummary = sanitize(feature.properties.tideSummary);
+          if (feature.properties.tide) {
+            const sanitizedTideSummary = sanitize(feature.properties.tide);
             popupContent += `<div class="text-xs opacity-75 mt-1">
               <span title="Tidal data is taken from nearest NOAA station and is only approximate">${sanitizedTideSummary}</span>
             </div>`;
