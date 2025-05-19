@@ -11,13 +11,13 @@
       <div
         v-for="(value, index) in activeRainData"
         :key="index"
-        class="flex flex-col items-center group h-full"
+        class="flex flex-col items-center group h-full justify-end"
       >
         <div v-if="value > 0" class="text-xs opacity-70 mb-1 font-medium">
           {{ value.toFixed(1) }}
         </div>
         <div
-          class="w-4 md:w-5 rounded-t transition-all duration-300 shadow-md border border-black/10"
+          class="w-4 md:w-5 rounded-t transition-all duration-300 shadow-md border border-black/10 min-h-[1px]"
           :class="getBarColorClass(value)"
           :style="{ height: `${getBarHeight(value)}%` }"
           :title="`${
@@ -135,9 +135,4 @@ export default {
   min-width: 160px;
 }
 
-/* Ensure minimum height for bars with very small values */
-.w-4,
-.md\:w-5 {
-  min-height: 2px;
-}
 </style>
