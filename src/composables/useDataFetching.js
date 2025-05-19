@@ -1,5 +1,8 @@
 /**
  * Composable for data fetching operations with error handling and state management
+ * 
+ * @deprecated This composable is deprecated in favor of useStaticData.js
+ * The app now uses a pre-compiled data file instead of runtime fetching for better performance.
  */
 import { ref } from 'vue';
 import { handleError, handleAsyncOperation, ErrorSeverity } from '../utils/errorHandler.js';
@@ -30,6 +33,8 @@ function isGeoJSONCollection(obj) {
 
 /**
  * Hook for fetching data with built-in error handling and state management
+ * 
+ * @deprecated Use useStaticData.js instead, which provides all data from a pre-compiled JSON file
  *
  * @param {Object} options - Configuration options for data fetching
  * @param {string} [options.baseUrl] - Base URL for data fetching
@@ -41,6 +46,12 @@ function isGeoJSONCollection(obj) {
  * @returns {Object} Object with data, status, error, and control functions
  */
 export function useDataFetching(options = {}) {
+  // Log a deprecation warning
+  console.warn(
+    'useDataFetching is deprecated and will be removed in a future version. ' +
+    'Use useStaticData instead for better performance and reliability.'
+  );
+  
   const {
     baseUrl = import.meta.env.BASE_URL,
     autoFetch = false,

@@ -33,20 +33,33 @@ npm run build
 npm run preview
 ```
 
-## Data
+## Data Architecture
 
-The application uses GeoJSON data stored in the `public/data` directory:
-- `index.json` contains metadata including available dates
-- Date-specific GeoJSON files (e.g., `2025-05-09.geojson`) contain the water quality measurements for each site
-- Enriched GeoJSON files (e.g., `2025-05-09.enriched.geojson`) include additional tide data
+The application uses a static data approach for improved performance and reliability:
+
+1. **Data Processing Pipeline**:
+   - Raw CSV data is converted to GeoJSON during build time
+   - GeoJSON files are enriched with tide information
+   - All enriched data is consolidated into a single static JSON file
+
+2. **Data Files**:
+   - **Source Data**: Original CSV files in `data/csv/`
+   - **Processed Data**: GeoJSON files in `public/data/geojson/` and `public/data/enriched/`
+   - **Consolidated Data**: A single `src/data/all-data.json` file containing all data
+
+3. **Runtime Data Flow**:
+   - The app loads all data from the pre-compiled JSON file at startup
+   - No network requests are made for map data during runtime
+   - Improves performance and works seamlessly on GitHub Pages
 
 ## Scripts
 
 The project includes several utility scripts for data processing:
 
-- `scripts/csvToGeoJSON.js` - Converts CSV water quality data to GeoJSON format
-- `scripts/enrichAllGeojson.js` - Enriches all GeoJSON files with tide information
-- `scripts/enrichWithTideData.js` - Adds tide data to a specific GeoJSON file
+- `scripts/csv-processing/csvToGeoJSON.js` - Converts CSV water quality data to GeoJSON format
+- `scripts/data-enrichment/enrichAllGeojson.js` - Enriches all GeoJSON files with tide information
+- `scripts/data-enrichment/enrichWithTideData.js` - Adds tide data to a specific GeoJSON file
+- `scripts/enrichAndMergeAll.js` - Consolidates all enriched data into a single static JSON file
 
 ## Deployment
 

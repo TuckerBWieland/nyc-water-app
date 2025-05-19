@@ -48,14 +48,14 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, watch } from 'vue';
 import MapViewer from './components/MapViewer.vue';
 import HeaderOverlay from './components/HeaderOverlay.vue';
 import DateScroller from './components/DateScroller.vue';
 import InfoPopup from './components/InfoPopup.vue';
 import SampleBarLegend from './components/SampleBarLegend.vue';
 import RainDropLegend from './components/RainDropLegend.vue';
-import { handleAsyncOperation } from './utils/errorHandler';
+import { useStaticData } from './composables/useStaticData.js';
 
 export default {
   name: 'App',
@@ -69,14 +69,9 @@ export default {
   },
   setup() {
     /**
-     * Available data dates from the API
+     * Use the static data composable to access pre-compiled data
      */
-    const dates = ref([]);
-
-    /**
-     * Currently selected date for data display
-     */
-    const selectedDate = ref('');
+    const { selectedDate, availableDates, currentData, isLoading } = useStaticData();
 
     /**
      * Count of water sampling sites for current date
@@ -149,41 +144,45 @@ export default {
       isDarkMode.value = darkMode;
     };
 
-    /**
-     * Initialize the component on mount
-     * Fetches available dates and sets the default date
-     */
-    onMounted(async () => {
-      await handleAsyncOperation(
-        async () => {
-          const url = `${import.meta.env.BASE_URL}data/index.json`;
-          const res = await fetch(url);
+    // Watch currentData and update derived values when it changes
+    watch(currentData, (newData) => {
+      if (newData && newData.features) {
+        // Update site count
+        siteCount.value = newData.features.length;
+        
+        // Extract the sample data for the legend
+        const samples = newData.features.map(feature => ({
+          site: feature.properties.site || feature.properties['Site Name'] || '',
+          mpn: feature.properties.mpn || feature.properties['MPN'] || '',
+        }));
+        sampleData.value = samples;
+        
+        // Extract rainfall data if available
+        if (newData.features.some(f => f.properties.rainfall_mm_7day !== undefined)) {
+          // Create a synthetic 7-day distribution from the average rainfall_mm_7day
+          // Calculate average 7-day rainfall across all points and convert from mm to inches
+          const totalRainfall = newData.features.reduce((sum, feature) => {
+            return sum + (feature.properties.rainfall_mm_7day || 0);
+          }, 0);
+          const averageRainfall = totalRainfall / newData.features.length;
 
-          if (!res.ok) {
-            throw new Error(`Failed to load dates index: ${res.status} ${res.statusText}`);
-          }
+          // Convert mm to inches (1 mm = 0.0393701 inches)
+          const totalRainfallInches = averageRainfall * 0.0393701;
 
-          const index = await res.json();
+          // Create a distribution over 7 days - this is synthetic data
+          const distribution = [0.1, 0.15, 0.2, 0.25, 0.15, 0.1, 0.05];
+          const rainfallByDay = distribution.map(factor =>
+            Number((totalRainfallInches * factor).toFixed(2))
+          );
 
-          if (!index || !Array.isArray(index.dates) || typeof index.latest !== 'string') {
-            throw new Error('Invalid index data format');
-          }
-
-          dates.value = index.dates;
-          selectedDate.value = index.latest;
-        },
-        { component: 'App', operation: 'loadDates' },
-        {
-          logToConsole: true,
-          reportToAnalytics: true,
-          showToUser: true,
-          fallbackValue: undefined,
+          // Update rainfall data
+          rainData.value = rainfallByDay;
         }
-      );
-    });
+      }
+    }, { immediate: true });
 
     return {
-      dates,
+      dates: availableDates,
       selectedDate,
       siteCount,
       isDarkMode,

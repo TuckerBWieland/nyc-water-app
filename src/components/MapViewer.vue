@@ -10,8 +10,9 @@ import { ref, onMounted, watch, onUnmounted } from 'vue';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { analytics } from '../services/analytics';
-import { handleError, handleAsyncOperation, ErrorSeverity } from '../utils/errorHandler';
+import { handleError, ErrorSeverity } from '../utils/errorHandler';
 import config from '../config';
+import { useStaticData } from '../composables/useStaticData.js';
 
 // Import constants from configuration
 const { waterQuality, map: mapConfig } = config;
@@ -169,16 +170,30 @@ export default {
       }
     );
 
+    // Get static data for the current date
+    const { currentData: staticData, isLoading: isDataLoading } = useStaticData();
+
     // Watch for changes in selected date
     watch(
       () => props.selectedDate,
-      async newDate => {
-        if (newDate) {
-          await loadMapData(newDate);
+      newDate => {
+        if (newDate && staticData.value) {
+          // Track date selection
+          analytics.track('selected_date', { date: newDate });
+          
+          // Update map with the data
+          mapData.value = staticData.value;
         }
       },
       { immediate: true }
     );
+
+    // Watch for changes in static data
+    watch(staticData, newData => {
+      if (newData) {
+        mapData.value = newData;
+      }
+    });
 
     // Watch for changes in map data and update map
     watch(mapData, newData => {
@@ -186,172 +201,6 @@ export default {
         updateMap(newData);
       }
     });
-
-    // Load map data for the selected date
-    const loadMapData = async date => {
-      return handleAsyncOperation(
-        async () => {
-          // Track date selection
-          analytics.track('selected_date', { date });
-
-          // Always use the non-enriched version first to ensure we get data
-          const dataPath = config.paths.data;
-          const response = await fetch(`${import.meta.env.BASE_URL}${dataPath}/${date}.geojson`);
-          if (!response.ok) {
-            analytics.track('failed_loading_data', {
-              date,
-              error: `${response.status} ${response.statusText}`,
-            });
-            throw new Error(
-              `Failed to load data for ${date}: ${response.status} ${response.statusText}`
-            );
-          }
-
-          try {
-            mapData.value = await response.json();
-
-            // Update parent component with the site count and sample data
-            if (mapData.value && mapData.value.features) {
-              emit('update:siteCount', mapData.value.features.length);
-
-              // Extract the sample data for the legend
-              const samples = mapData.value.features.map(feature => ({
-                site: feature.properties.site || feature.properties['Site Name'] || '',
-                mpn: feature.properties.mpn || feature.properties['MPN'] || '',
-              }));
-              emit('update:sampleData', samples);
-
-              // Extract rainfall data if available
-              // First check if we have the rainfall_by_day_in array in the GeoJSON
-              if (
-                mapData.value.features.some(
-                  f =>
-                    f.properties.rainfall_by_day_in &&
-                    Array.isArray(f.properties.rainfall_by_day_in)
-                )
-              ) {
-                // Get the first feature that has rainfall_by_day_in data
-                const featureWithRainfall = mapData.value.features.find(
-                  f =>
-                    f.properties.rainfall_by_day_in &&
-                    Array.isArray(f.properties.rainfall_by_day_in)
-                );
-
-                if (featureWithRainfall) {
-                  const rawMm = featureWithRainfall.properties.rainfall_by_day_in.map(val =>
-                    typeof val === 'number' ? val : parseFloat(val)
-                  );
-
-                  // Convert from mm to inches (1 mm = 0.0393701 inches)
-                  const inches = rawMm.map(mm => Number((mm * 0.0393701).toFixed(2)));
-
-                  // Calculate total rain from the array in inches
-                  const totalInches = inches.reduce((sum, val) => sum + (val || 0), 0);
-
-                  // Emit the new data format
-                  emit('update:rainData', inches);
-                  emit('update:totalRain', Number(totalInches.toFixed(2)));
-
-                  // Log total 7-day rainfall in inches
-                  console.log(`Total 7-day rainfall: ${Number(totalInches.toFixed(2))} inches`);
-
-                  // Also emit using the legacy format for backward compatibility
-                  emit('update:rainfallByDayIn', inches);
-                }
-              }
-              // Fallback to synthetic data if no rainfall_by_day_in is available
-              else if (
-                mapData.value.features.some(f => f.properties.rainfall_mm_7day !== undefined)
-              ) {
-                // Create a synthetic 7-day distribution from the average rainfall_mm_7day
-                // Calculate average 7-day rainfall across all points and convert from mm to inches
-                const totalRainfall = mapData.value.features.reduce((sum, feature) => {
-                  return sum + (feature.properties.rainfall_mm_7day || 0);
-                }, 0);
-                const averageRainfall = totalRainfall / mapData.value.features.length;
-
-                // Convert mm to inches (1 mm = 0.0393701 inches)
-                const totalRainfallInches = averageRainfall * 0.0393701;
-
-                // Create a distribution over 7 days - this is synthetic data for the demo
-                // In a real app, we would have daily data from the API
-                const distribution = [0.1, 0.15, 0.2, 0.25, 0.15, 0.1, 0.05];
-                const rainfallByDay = distribution.map(factor =>
-                  Number((totalRainfallInches * factor).toFixed(2))
-                );
-
-                // Add this information to all features in the GeoJSON for consistent data access
-                // This simulates having daily rainfall data in the data source
-                for (const feature of mapData.value.features) {
-                  if (!feature.properties.rainfall_by_day_in) {
-                    // Calculate individual daily values from the feature's total rainfall
-                    const featureRainfall = feature.properties.rainfall_mm_7day || 0;
-                    const featureRainfallInches = featureRainfall * 0.0393701;
-                    feature.properties.rainfall_by_day_in = distribution.map(factor =>
-                      Number((featureRainfallInches * factor).toFixed(2))
-                    );
-                  }
-                }
-
-                // Emit both the new and legacy data formats
-                emit('update:rainData', rainfallByDay);
-                emit('update:totalRain', Number(totalRainfallInches.toFixed(2)));
-
-                // Log synthetic 7-day rainfall in inches
-                console.log(
-                  `Total 7-day rainfall (synthetic): ${Number(
-                    totalRainfallInches.toFixed(2)
-                  )} inches`
-                );
-
-                emit('update:rainfallByDayIn', rainfallByDay);
-              }
-            } else {
-              // No features found
-              handleError(
-                new Error(`No features found in data for ${date}`),
-                { component: 'MapViewer', operation: 'loadMapData' },
-                ErrorSeverity.WARNING,
-                { showToUser: false }
-              );
-            }
-
-            // Try to load the enriched version if available
-            await handleAsyncOperation(
-              async () => {
-                const enrichedResponse = await fetch(
-                  `${import.meta.env.BASE_URL}${dataPath}/${date}.enriched.geojson`
-                );
-                if (enrichedResponse.ok) {
-                  const enrichedData = await enrichedResponse.json();
-                  mapData.value = enrichedData;
-                  updateMap(mapData.value);
-                }
-              },
-              { component: 'MapViewer', operation: 'loadEnrichedData' },
-              { reportToAnalytics: true, showToUser: false }
-            );
-          } catch (jsonError) {
-            // Handle JSON parsing errors
-            handleError(
-              jsonError,
-              { component: 'MapViewer', operation: 'parseMapData', data: { date } },
-              ErrorSeverity.ERROR,
-              {
-                reportToAnalytics: true,
-                showToUser: false,
-                rethrow: true,
-              }
-            );
-          }
-        },
-        { component: 'MapViewer', operation: 'loadMapData', data: { date } },
-        {
-          reportToAnalytics: true,
-          showToUser: false,
-        }
-      );
-    };
 
     /**
      * Updates the map with new GeoJSON data
