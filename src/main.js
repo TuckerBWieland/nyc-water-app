@@ -7,9 +7,10 @@ import './index.css';
 import IndexPage from './pages/index.vue';
 import DatePage from './pages/[date].vue';
 
-// Create router
+// Create router with correct base path for GitHub Pages
+const base = import.meta.env.MODE === 'production' ? '/nyc-water-app/' : '/';
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(base),
   routes: [
     { path: '/', component: IndexPage },
     { path: '/:date', component: DatePage },

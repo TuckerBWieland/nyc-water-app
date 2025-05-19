@@ -9,7 +9,9 @@ const error = ref(null);
 onMounted(async () => {
   try {
     console.log('Fetching latest date...');
-    const response = await fetch('/data/latest.txt');
+    // Get the base URL for GitHub Pages
+    const base = import.meta.env.MODE === 'production' ? '/nyc-water-app' : '';
+    const response = await fetch(`${base}/data/latest.txt`);
     
     if (!response.ok) {
       throw new Error(`Failed to fetch latest date: ${response.status}`);

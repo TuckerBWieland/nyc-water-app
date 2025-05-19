@@ -19,9 +19,12 @@ export function useStaticData(date) {
     loading.value = true;
     
     try {
-      // Build URLs
-      const geojsonUrl = `/data/${date}/enriched.geojson`;
-      const metadataUrl = `/data/${date}/metadata.json`;
+      // Get the base URL for GitHub Pages
+      const base = import.meta.env.MODE === 'production' ? '/nyc-water-app' : '';
+      
+      // Build URLs with correct base path
+      const geojsonUrl = `${base}/data/${date}/enriched.geojson`;
+      const metadataUrl = `${base}/data/${date}/metadata.json`;
       
       console.log(`Fetching from: ${geojsonUrl} and ${metadataUrl}`);
       
