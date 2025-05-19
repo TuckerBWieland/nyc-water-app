@@ -43,6 +43,7 @@ The application uses a static data approach for improved performance and reliabi
 1. **Data Processing Pipeline**:
    - Place sample and rainfall CSV files in `scripts/input/`
    - Run `npm run enrich` to convert the CSV files to GeoJSON and generate metadata
+     with rainfall and tide information pulled from NOAA
    - Each dataset is stored in `public/data/<date>/` and the newest date is written to `latest.txt`
 
 2. **Data Files**:
@@ -59,7 +60,8 @@ The application uses a static data approach for improved performance and reliabi
 
 Data processing is handled by a single script:
 
-- `scripts/enrich-data.js` - Reads CSV files from `scripts/input/` and writes GeoJSON and metadata to `public/data/<date>/`
+- `scripts/enrich-data.js` - Reads CSV files from `scripts/input/` and writes GeoJSON
+  with rainfall totals and tide summaries to `public/data/<date>/`
 
 ## Deployment
 
