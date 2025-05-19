@@ -402,7 +402,7 @@ export default {
 }
 
 /* Style the popup to match the app design */
-/* Dark mode popup styles will be applied via JS in updatePopupStyle */
+/* Dark mode popup styles will be applied via JS in updatePopupStyles */
 .leaflet-popup-content-wrapper {
   border-radius: 8px;
   box-shadow: 0 3px 14px rgba(0, 0, 0, 0.2);
