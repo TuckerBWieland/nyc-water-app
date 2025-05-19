@@ -1,0 +1,1517 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.89769,
+          40.956632
+        ]
+      },
+      "properties": {
+        "siteName": "Hudson River, JFK Marina (Yonkers)",
+        "mpn": 10,
+        "sampleTime": "2025-05-08T13:02:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.903492,
+          40.937939
+        ]
+      },
+      "properties": {
+        "siteName": "Hudson River, Yonkers Paddling and Rowing Club",
+        "mpn": 97,
+        "sampleTime": "2025-05-08T17:14:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.901795,
+          40.935655
+        ]
+      },
+      "properties": {
+        "siteName": "Saw Mill River, daylighted section (Yonkers)",
+        "mpn": 368,
+        "sampleTime": "2025-05-08T15:20:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.9319,
+          40.8689
+        ]
+      },
+      "properties": {
+        "siteName": "Hudson River, Dyckman Marina",
+        "mpn": 10,
+        "sampleTime": "2025-05-08T12:40:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.924084,
+          40.801921
+        ]
+      },
+      "properties": {
+        "siteName": "Bronx Kill, west end",
+        "mpn": 20,
+        "sampleTime": "2025-05-08T13:02:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.916026,
+          40.797291
+        ]
+      },
+      "properties": {
+        "siteName": "Bronx Kill, east end",
+        "mpn": 10,
+        "sampleTime": "2025-05-08T12:53:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.927415,
+          40.791013
+        ]
+      },
+      "properties": {
+        "siteName": "Harlem River, Little Hell Gate",
+        "mpn": 41,
+        "sampleTime": "2025-05-08T13:20:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.93277,
+          40.78917
+        ]
+      },
+      "properties": {
+        "siteName": "Harlem River, Water's Edge Garden Beach",
+        "mpn": 30,
+        "sampleTime": "2025-05-08T13:26:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.93039,
+          40.806394
+        ]
+      },
+      "properties": {
+        "siteName": "Harlem River, Lincoln Avenue 2",
+        "mpn": 10,
+        "sampleTime": "2025-05-08T13:47:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.993778,
+          40.773522
+        ]
+      },
+      "properties": {
+        "siteName": "Hudson River, Pier 99 Boat Launch",
+        "mpn": 41,
+        "sampleTime": "2025-05-08T18:10:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.995991,
+          40.771322
+        ]
+      },
+      "properties": {
+        "siteName": "Hudson River, Pier 96",
+        "mpn": 31,
+        "sampleTime": "2025-05-08T13:43:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.002129,
+          40.764275
+        ]
+      },
+      "properties": {
+        "siteName": "Hudson River, Pier 84",
+        "mpn": 30,
+        "sampleTime": "2025-05-08T13:33:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.00898,
+          40.752502
+        ]
+      },
+      "properties": {
+        "siteName": "Hudson River, Pier 66",
+        "mpn": 20,
+        "sampleTime": "2025-05-08T14:16:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.009682,
+          40.740726
+        ]
+      },
+      "properties": {
+        "siteName": "Hudson River, Gansevoort Peninsula, North",
+        "mpn": 20,
+        "sampleTime": "2025-05-08T14:46:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.010559,
+          40.739122
+        ]
+      },
+      "properties": {
+        "siteName": "Hudson River, Gansevoort Peninsula, South",
+        "mpn": 10,
+        "sampleTime": "2025-05-08T14:51:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.013786,
+          40.728249
+        ]
+      },
+      "properties": {
+        "siteName": "Hudson River, Pier 40",
+        "mpn": 20,
+        "sampleTime": "2025-05-08T14:21:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.013557,
+          40.721575
+        ]
+      },
+      "properties": {
+        "siteName": "Hudson River, Pier 26",
+        "mpn": 10,
+        "sampleTime": "2025-05-08T14:31:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.022864,
+          40.751744
+        ]
+      },
+      "properties": {
+        "siteName": "Hudson River, Pier 13, Hoboken, NJ",
+        "mpn": 31,
+        "sampleTime": "2025-05-08T13:27:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.023647,
+          40.748265
+        ]
+      },
+      "properties": {
+        "siteName": "Hudson River, Hoboken Cove Beach, Hoboken NJ",
+        "mpn": 146,
+        "sampleTime": "2025-05-08T13:35:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.025702,
+          40.741348
+        ]
+      },
+      "properties": {
+        "siteName": "Hudson River, Frank Sinatra Park, Hoboken NJ",
+        "mpn": 10,
+        "sampleTime": "2025-05-08T13:45:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.85035,
+          40.771964
+        ]
+      },
+      "properties": {
+        "siteName": "Flushing Bay, 28th Avenue (Big Rock Beach)",
+        "mpn": 28,
+        "sampleTime": "2025-05-08T15:05:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.843532,
+          40.763424
+        ]
+      },
+      "properties": {
+        "siteName": "Flushing Bay, World's Fair Marina Boat Ramp",
+        "mpn": 2809,
+        "sampleTime": "2025-05-08T13:20:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.836458,
+          40.760543
+        ]
+      },
+      "properties": {
+        "siteName": "Flushing Creek",
+        "mpn": 1510,
+        "sampleTime": "2025-05-08T12:55:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.83879,
+          40.737559
+        ]
+      },
+      "properties": {
+        "siteName": "Meadow Lake (Flushing Meadows-Corona Park)",
+        "mpn": 4786,
+        "sampleTime": "2025-05-08T15:24:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.768804,
+          40.780171
+        ]
+      },
+      "properties": {
+        "siteName": "Little Neck Bay",
+        "mpn": 41,
+        "sampleTime": "2025-05-08T12:45:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.94211,
+          40.77719
+        ]
+      },
+      "properties": {
+        "siteName": "East River, E 90th St Ferry",
+        "mpn": 41,
+        "sampleTime": "2025-05-08T13:04:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.935593,
+          40.769516
+        ]
+      },
+      "properties": {
+        "siteName": "East River, Hallets Cove",
+        "mpn": 51,
+        "sampleTime": "2025-05-08T12:58:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.960111,
+          40.743849
+        ]
+      },
+      "properties": {
+        "siteName": "East River, Gantry State Park",
+        "mpn": 98,
+        "sampleTime": "2025-05-08T15:17:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.959961,
+          40.738511
+        ]
+      },
+      "properties": {
+        "siteName": "Newtown Creek, Second Street Kayak Launch",
+        "mpn": 9139,
+        "sampleTime": "2025-05-08T14:57:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.952244,
+          40.739534
+        ]
+      },
+      "properties": {
+        "siteName": "Newtown Creek, Pulaski Bridge, Queens",
+        "mpn": 20,
+        "sampleTime": "2025-05-08T11:08:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.939319,
+          40.742933
+        ]
+      },
+      "properties": {
+        "siteName": "Newtown Creek, Dutch Kills (head)",
+        "mpn": 344.8,
+        "sampleTime": "2025-05-08T10:57:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.93728,
+          40.729291
+        ]
+      },
+      "properties": {
+        "siteName": "Newtown Creek, Apollo Street",
+        "mpn": 20,
+        "sampleTime": "2025-05-08T13:47:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.922925,
+          40.716753
+        ]
+      },
+      "properties": {
+        "siteName": "Newtown Creek, East Branch",
+        "mpn": 259,
+        "sampleTime": "2025-05-08T13:18:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.931294,
+          40.712069
+        ]
+      },
+      "properties": {
+        "siteName": "Newtown Creek, English Kills",
+        "mpn": 214,
+        "sampleTime": "2025-05-08T10:54:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.96176,
+          40.73157
+        ]
+      },
+      "properties": {
+        "siteName": "East River, India Street",
+        "mpn": 20,
+        "sampleTime": "2025-05-08T12:08:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.961404,
+          40.730086
+        ]
+      },
+      "properties": {
+        "siteName": "East River, WNYC Transmitter Park",
+        "mpn": 41,
+        "sampleTime": "2025-05-08T10:52:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.96301,
+          40.72191
+        ]
+      },
+      "properties": {
+        "siteName": "East River, Marsha P Johnson State Park",
+        "mpn": 52,
+        "sampleTime": "2025-05-08T13:50:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.959234,
+          40.725206
+        ]
+      },
+      "properties": {
+        "siteName": "Bushwick Inlet",
+        "mpn": 74,
+        "sampleTime": "2025-05-08T12:45:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.962509,
+          40.723181
+        ]
+      },
+      "properties": {
+        "siteName": "East River, Bushwick Inlet Park Beach",
+        "mpn": 97,
+        "sampleTime": "2025-05-08T12:31:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.965741,
+          40.718943
+        ]
+      },
+      "properties": {
+        "siteName": "East River, North 3rd Street",
+        "mpn": 119,
+        "sampleTime": "2025-05-08T14:01:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.967177,
+          40.716857
+        ]
+      },
+      "properties": {
+        "siteName": "East River, Grand Ferry Park",
+        "mpn": 20,
+        "sampleTime": "2025-05-08T14:15:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.968714,
+          40.713024
+        ]
+      },
+      "properties": {
+        "siteName": "East River, South 5th Street/Domino Park",
+        "mpn": 31,
+        "sampleTime": "2025-05-08T12:19:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.96965,
+          40.710069
+        ]
+      },
+      "properties": {
+        "siteName": "East River, South 8th St",
+        "mpn": 74,
+        "sampleTime": "2025-05-08T11:33:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.970263,
+          40.705525
+        ]
+      },
+      "properties": {
+        "siteName": "Wallabout Channel (Brooklyn Navy Yard)",
+        "mpn": 130,
+        "sampleTime": "2025-05-08T13:37:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.001142,
+          40.706887
+        ]
+      },
+      "properties": {
+        "siteName": "East River, Brooklyn Bridge Beach (Manhattan)",
+        "mpn": 84,
+        "sampleTime": "2025-05-08T14:50:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.990526,
+          40.704406
+        ]
+      },
+      "properties": {
+        "siteName": "East River, Dumbo Cove",
+        "mpn": 74,
+        "sampleTime": "2025-05-08T12:15:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.99807,
+          40.699967
+        ]
+      },
+      "properties": {
+        "siteName": "East River, Pier 2 Kayak Dock (Brooklyn Bridge Park)",
+        "mpn": 85,
+        "sampleTime": "2025-05-08T13:50:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.99888,
+          40.696803
+        ]
+      },
+      "properties": {
+        "siteName": "East River, Pier 4 Beach (Brooklyn Bridge Park)",
+        "mpn": 21,
+        "sampleTime": "2025-05-08T12:12:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.012532,
+          40.691375
+        ]
+      },
+      "properties": {
+        "siteName": "Buttermilk Channel, Pier 101 (Governors Island)",
+        "mpn": 41,
+        "sampleTime": "2025-05-08T12:33:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.989916,
+          40.676814
+        ]
+      },
+      "properties": {
+        "siteName": "Gowanus Canal, Second Street Sponge Park",
+        "mpn": 171,
+        "sampleTime": "2025-05-08T11:37:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.018347,
+          40.654662
+        ]
+      },
+      "properties": {
+        "siteName": "Upper Harbor, Bush Terminal Park (Inner Lagoon)",
+        "mpn": 63,
+        "sampleTime": "2025-05-08T11:00:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.96421,
+          40.655305
+        ]
+      },
+      "properties": {
+        "siteName": "Prospect Park Lake",
+        "mpn": 275,
+        "sampleTime": "2025-05-08T11:05:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.997941,
+          40.581025
+        ]
+      },
+      "properties": {
+        "siteName": "Coney Island Creek, Kaiser Park",
+        "mpn": 41,
+        "sampleTime": "2025-05-08T11:20:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.998379,
+          40.585343
+        ]
+      },
+      "properties": {
+        "siteName": "Gravesend Bay, Calvert Vaux Cove",
+        "mpn": 10,
+        "sampleTime": "2025-05-08T15:25:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.0125,
+          40.60138
+        ]
+      },
+      "properties": {
+        "siteName": "Gravesend Bay, OH-015",
+        "mpn": 74,
+        "sampleTime": "2025-05-08T15:55:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.25416,
+          40.50138
+        ]
+      },
+      "properties": {
+        "siteName": "Arthur Kill, Conference House Park",
+        "mpn": 10,
+        "sampleTime": "2025-05-08T19:00:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0,
+          0
+        ],
+        "totalRain": 2.08,
+        "tide": "Low Tide (Battery)"
+      }
+    }
+  ]
+}

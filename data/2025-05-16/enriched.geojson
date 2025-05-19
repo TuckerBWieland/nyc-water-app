@@ -1,0 +1,80 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "site": "East River at Newtown Creek",
+        "mpn": 20,
+        "sampleTime": "8:30 AM",
+        "tideSummary": "Low Tide (Battery)",
+        "rainfall_mm_7day": 52.83,
+        "rainByDay": [0.69, 0.01, 0.0, 0.0, 0.16, 1.22, 0.0]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.9560, 40.7361]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "site": "Hudson River at Pier 84",
+        "mpn": 10,
+        "sampleTime": "9:15 AM",
+        "tideSummary": "Low Tide (Battery)",
+        "rainfall_mm_7day": 52.83,
+        "rainByDay": [0.69, 0.01, 0.0, 0.0, 0.16, 1.22, 0.0]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.0046, 40.7613]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "site": "Gowanus Canal",
+        "mpn": 158,
+        "sampleTime": "10:00 AM",
+        "tideSummary": "Low Tide (Battery)",
+        "rainfall_mm_7day": 52.83,
+        "rainByDay": [0.69, 0.01, 0.0, 0.0, 0.16, 1.22, 0.0]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.9976, 40.6794]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "site": "Flushing Bay",
+        "mpn": 62,
+        "sampleTime": "8:45 AM",
+        "tideSummary": "Low Tide (Battery)",
+        "rainfall_mm_7day": 52.83,
+        "rainByDay": [0.69, 0.01, 0.0, 0.0, 0.16, 1.22, 0.0]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.8487, 40.7680]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "site": "Jamaica Bay at Canarsie Pier",
+        "mpn": 30,
+        "sampleTime": "11:15 AM",
+        "tideSummary": "Low Tide (Jamaica Bay)",
+        "rainfall_mm_7day": 52.83,
+        "rainByDay": [0.69, 0.01, 0.0, 0.0, 0.16, 1.22, 0.0]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.8897, 40.6323]
+      }
+    }
+  ]
+}
