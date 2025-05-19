@@ -17,7 +17,10 @@ if (typeof document !== 'undefined') {
   document.documentElement.classList.toggle('dark', isDarkMode.value);
   document.body.classList.toggle('dark', isDarkMode.value);
 }
-const availableDates = ref(['2025-05-14', '2025-05-08']);
+// List available data dates in ascending order so the "previous" button
+// moves back in time. The most recent date must be included as the last
+// item so it can be selected by default via latest.txt.
+const availableDates = ref(['2025-05-08', '2025-05-15']);
 
 // Use the static data composable
 // Pass the date ref so the composable can react to updates
