@@ -1,6 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 const Papa = require('papaparse');
+const {
+  findNearestTideStation,
+  getTideData,
+  analyzeTideData,
+} = require('./tide-services');
 
 // Constants
 const INPUT_DIR = './scripts/input/';
@@ -169,13 +174,27 @@ async function processDateFiles(date, sampleFile, rainFile) {
       const lng = parseFloat(sample['Longitude'] || sample['longitude'] || sample['LNG']);
       const mpnValue = parseFloat(sample['MPN'] || sample['mpn']);
       const sampleTime = sample['Sample Time'] || sample['Time'] || sample['time'] || '';
-      
+
       // Skip samples with missing critical data
       if (isNaN(lat) || isNaN(lng) || isNaN(mpnValue)) {
         skipped++;
         continue;
       }
-      
+
+      const isoTime = formatSampleTime(date, sampleTime);
+      let tideSummary = 'N/A';
+
+      try {
+        const station = await findNearestTideStation(lat, lng);
+        if (station) {
+          const tideData = await getTideData(station.id, isoTime);
+          const summary = analyzeTideData(tideData, station.name, isoTime);
+          if (summary) tideSummary = summary;
+        }
+      } catch (err) {
+        console.warn('Tide enrichment failed:', err);
+      }
+
       // Create GeoJSON feature
       features.push({
         type: 'Feature',
@@ -186,10 +205,10 @@ async function processDateFiles(date, sampleFile, rainFile) {
         properties: {
           siteName,
           mpn: mpnValue,
-          sampleTime: formatSampleTime(date, sampleTime),
+          sampleTime: isoTime,
           rainByDay,
           totalRain,
-          tide: 'N/A' // Placeholder for future tide data
+          tide: tideSummary
         }
       });
     }
@@ -220,7 +239,7 @@ async function processDateFiles(date, sampleFile, rainFile) {
       JSON.stringify(metadata, null, 2)
     );
     
-    console.log(`✅ Processed ${date}: ${features.length} samples enriched with rainfall data`);
+    console.log(`✅ Processed ${date}: ${features.length} samples enriched with rainfall and tide data`);
     if (skipped > 0) {
       console.log(`⚠️ Skipped ${skipped} samples due to missing required data`);
     }
