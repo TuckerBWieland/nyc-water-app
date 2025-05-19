@@ -14,7 +14,8 @@ const isDarkMode = ref(false);
 const availableDates = ref(['2025-05-14', '2025-05-08']);
 
 // Use the static data composable
-const { data, metadata, loading, error, load } = useStaticData(date.value);
+// Pass the date ref so the composable can react to updates
+const { data, metadata, loading, error, load } = useStaticData(date);
 
 onMounted(async () => {
   // Load data for the current date
@@ -27,7 +28,7 @@ watch(() => route.params.date, (newDate) => {
   if (newDate && newDate !== date.value) {
     console.log('Route date changed:', newDate);
     date.value = newDate;
-    load();
+    load(newDate);
   }
 });
 
@@ -35,7 +36,7 @@ watch(() => route.params.date, (newDate) => {
 watch(date, (newDate) => {
   console.log('Date changed:', newDate);
   if (newDate) {
-    load();
+    load(newDate);
   }
 });
 
