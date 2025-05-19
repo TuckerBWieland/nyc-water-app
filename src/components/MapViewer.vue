@@ -278,7 +278,21 @@ export default {
 
           // Add sample time if available
           if (sampleTimeValue) {
-            const sanitizedSampleTime = sanitize(sampleTimeValue);
+            // Convert ISO string to simple time like "8:46 AM" using UTC to avoid timezone shifts
+            let simpleTime = sampleTimeValue;
+            try {
+              const date = new Date(sampleTimeValue);
+              simpleTime = date.toLocaleTimeString('en-US', {
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true,
+                timeZone: 'UTC',
+              });
+            } catch (e) {
+              // Fallback to original value if parsing fails
+            }
+
+            const sanitizedSampleTime = sanitize(simpleTime);
             popupContent += `<div class="text-xs opacity-75 mt-1">Sampled at ${sanitizedSampleTime}</div>`;
           }
 
