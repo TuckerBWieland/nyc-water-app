@@ -10,7 +10,13 @@ import { useStaticData } from '../composables/useStaticData';
 
 const route = useRoute();
 const date = ref(route.params.date);
-const isDarkMode = ref(false);
+const isDarkMode = ref(true);
+
+// Apply initial theme class to document
+if (typeof document !== 'undefined') {
+  document.documentElement.classList.toggle('dark', isDarkMode.value);
+  document.body.classList.toggle('dark', isDarkMode.value);
+}
 const availableDates = ref(['2025-05-14', '2025-05-08']);
 
 // Use the static data composable
@@ -37,6 +43,14 @@ watch(date, (newDate) => {
   console.log('Date changed:', newDate);
   if (newDate) {
     load(newDate);
+  }
+});
+
+// Watch for dark mode changes to update body class
+watch(isDarkMode, (val) => {
+  if (typeof document !== 'undefined') {
+    document.documentElement.classList.toggle('dark', val);
+    document.body.classList.toggle('dark', val);
   }
 });
 
