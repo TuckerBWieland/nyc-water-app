@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import MapViewer from '../components/MapViewer.vue';
 import RainDropLegend from '../components/RainDropLegend.vue';
 import SampleBarLegend from '../components/SampleBarLegend.vue';
@@ -9,6 +9,7 @@ import InfoPopup from '../components/InfoPopup.vue';
 import { useStaticData } from '../composables/useStaticData';
 
 const route = useRoute();
+const router = useRouter();
 const date = ref(route.params.date);
 const isDarkMode = ref(true);
 
@@ -46,6 +47,7 @@ watch(date, (newDate) => {
   console.log('Date changed:', newDate);
   if (newDate) {
     load(newDate);
+    router.push({ path: `/${newDate}` });
   }
 });
 
