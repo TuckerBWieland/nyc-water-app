@@ -9,12 +9,29 @@ const NOAA_BASE = 'https://api.tidesandcurrents.noaa.gov/api/prod/datagetter';
 const INPUT_SAMPLE_CSV = './scripts/input/samples.csv';
 const INPUT_RAINFALL_CSV = './scripts/input/rain.csv';
 const OUTPUT_DIR = './public/data';
-const SAMPLE_DATE = '2025-05-16'; // update weekly
+const SAMPLE_DATE = '2025-05-08'; // update weekly to match your CSV file
 
 async function fetchTideStatus(lat, lng, time) {
   const station = '8518750'; // Battery, NY — general fallback
-  const begin = new Date(new Date(time).getTime() - 3 * 60 * 60 * 1000).toISOString().split('T')[0];
-  const end = new Date(new Date(time).getTime() + 3 * 60 * 60 * 1000).toISOString().split('T')[0];
+  
+  // Make sure we have a valid date
+  let sampleDate;
+  if (time && time.includes(':')) {
+    // If time is just a time (like "9:30 AM"), add the sample date
+    sampleDate = new Date(`${SAMPLE_DATE}T${time}`);
+  } else {
+    // Otherwise use the sample date
+    sampleDate = new Date(SAMPLE_DATE);
+  }
+  
+  // Make sure we have a valid date before proceeding
+  if (isNaN(sampleDate.getTime())) {
+    console.warn(`Invalid time value: ${time}, using default date`);
+    sampleDate = new Date(SAMPLE_DATE);
+  }
+  
+  const begin = new Date(sampleDate.getTime() - 3 * 60 * 60 * 1000).toISOString().split('T')[0];
+  const end = new Date(sampleDate.getTime() + 3 * 60 * 60 * 1000).toISOString().split('T')[0];
 
   const url = `${NOAA_BASE}?product=predictions&application=water-app&begin_date=${begin}&end_date=${end}&datum=MLLW&station=${station}&time_zone=gmt&units=english&interval=hilo&format=json`;
 
@@ -49,22 +66,23 @@ async function fetchTideStatus(lat, lng, time) {
   const features = [];
 
   for (const s of samples) {
-    if (!s.Lat || !s.Lng || !s.MPN || isNaN(parseFloat(s.MPN))) continue;
+    // Use the actual CSV column names from your file
+    if (!s.Latitude || !s.Longitude || !s.MPN || isNaN(parseFloat(s.MPN))) continue;
 
-    const coords = [parseFloat(s.Lng), parseFloat(s.Lat)];
-    const sampleTime = s.Date || SAMPLE_DATE;
-    const tide = await fetchTideStatus(s.Lat, s.Lng, sampleTime);
+    const coords = [parseFloat(s.Longitude), parseFloat(s.Latitude)];
+    const sampleTime = s['Sample Time'] || SAMPLE_DATE;
+    const tide = await fetchTideStatus(s.Latitude, s.Longitude, sampleTime);
 
     features.push({
       type: 'Feature',
       geometry: { type: 'Point', coordinates: coords },
       properties: {
-        siteName: s.Site,
-        sampleTime,
+        site: s['Site Name'], // Match the property name your components expect
         mpn: parseFloat(s.MPN),
+        sampleTime,
         rainByDay,
         totalRain,
-        tide
+        tideSummary: tide + " Tide (Battery)"
       }
     });
   }

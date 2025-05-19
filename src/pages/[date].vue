@@ -11,7 +11,7 @@ import { useStaticData } from '../composables/useStaticData';
 const route = useRoute();
 const date = ref(route.params.date);
 const isDarkMode = ref(false);
-const availableDates = ref(['2025-05-16']);
+const availableDates = ref(['2025-05-14', '2025-05-08']);
 
 // Use the static data composable
 const { data, metadata, loading, error, load } = useStaticData(date.value);
