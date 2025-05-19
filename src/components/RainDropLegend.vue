@@ -105,7 +105,17 @@ export default {
 
     // Calculate bar height percentage based on rainfall amount
     const getBarHeight = value => {
-      const max = Math.max(...activeRainData.value, 0.1);
+      // filter out non-numeric values so they don't affect the max
+      const numericValues = activeRainData.value.filter(
+        v => typeof v === 'number' && !Number.isNaN(v)
+      );
+
+      // Determine the maximum rainfall for scaling
+      const max = numericValues.length ? Math.max(...numericValues) : 0;
+
+      // Avoid division by zero when all values are 0 or missing
+      if (max === 0) return 0;
+
       return (value / max) * 100;
     };
 
