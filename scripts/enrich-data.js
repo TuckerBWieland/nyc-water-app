@@ -1,140 +1,250 @@
 const fs = require('fs');
 const path = require('path');
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const Papa = require('papaparse');
 
-// NOAA API base
-const NOAA_BASE = 'https://api.tidesandcurrents.noaa.gov/api/prod/datagetter';
-
-const INPUT_SAMPLE_CSV = './scripts/input/samples.csv';
-const INPUT_RAINFALL_CSV = './scripts/input/rain.csv';
+// Constants
+const INPUT_DIR = './scripts/input/';
 const OUTPUT_DIR = './public/data';
-const SAMPLE_DATE = '2025-05-08'; // update weekly to match your CSV file
 
-async function fetchTideStatus(lat, lng, time) {
-  const station = '8518750'; // Battery, NY — general fallback
-  
-  // Make sure we have a valid date
-  let sampleDate;
-  if (time && time.includes(':')) {
-    // If time is just a time (like "9:30 AM"), add the sample date
-    sampleDate = new Date(`${SAMPLE_DATE}T${time}`);
-  } else {
-    // Otherwise use the sample date
-    sampleDate = new Date(SAMPLE_DATE);
-  }
-  
-  // Make sure we have a valid date before proceeding
-  if (isNaN(sampleDate.getTime())) {
-    console.warn(`Invalid time value: ${time}, using default date`);
-    sampleDate = new Date(SAMPLE_DATE);
-  }
-  
-  const begin = new Date(sampleDate.getTime() - 3 * 60 * 60 * 1000).toISOString().split('T')[0];
-  const end = new Date(sampleDate.getTime() + 3 * 60 * 60 * 1000).toISOString().split('T')[0];
+/**
+ * Extract date from filename (e.g., "samples - 2025-05-08.csv" -> "2025-05-08")
+ * @param {string} filename 
+ * @returns {string|null} The extracted date or null if no match
+ */
+function extractDateFromFilename(filename) {
+  const dateMatch = filename.match(/\d{4}-\d{2}-\d{2}/);
+  return dateMatch ? dateMatch[0] : null;
+}
 
-  const url = `${NOAA_BASE}?product=predictions&application=water-app&begin_date=${begin}&end_date=${end}&datum=MLLW&station=${station}&time_zone=gmt&units=english&interval=hilo&format=json`;
-
+/**
+ * Format sample time to ISO string
+ * @param {string} date - Date in YYYY-MM-DD format
+ * @param {string} timeStr - Time string (could be "9:02", "9:02 AM", "13:45", etc.)
+ * @returns {string} ISO formatted date-time string or null if parsing fails
+ */
+function formatSampleTime(date, timeStr) {
+  if (!timeStr) return `${date}T12:00:00Z`; // Default to noon
+  
   try {
-    const res = await fetch(url);
-    const json = await res.json();
-    const predictions = json.predictions || [];
-    const sampleTs = new Date(time).getTime();
-
-    let closest = predictions.reduce((prev, curr) => {
-      const prevDiff = Math.abs(new Date(prev.t).getTime() - sampleTs);
-      const currDiff = Math.abs(new Date(curr.t).getTime() - sampleTs);
-      return currDiff < prevDiff ? curr : prev;
-    }, predictions[0]);
-
-    return closest.type === 'H' ? 'High' : 'Low';
+    let formattedTime = timeStr.trim();
+    let hour, minute;
+    
+    // Handle different time formats
+    if (formattedTime.includes(':')) {
+      const parts = formattedTime.split(':');
+      hour = parseInt(parts[0], 10);
+      
+      // Handle minute part which might have AM/PM
+      if (parts[1].includes('AM') || parts[1].includes('PM')) {
+        const minMatch = parts[1].match(/(\d+)/);
+        minute = minMatch ? parseInt(minMatch[1], 10) : 0;
+        
+        // Handle AM/PM
+        if (parts[1].includes('PM') && hour < 12) {
+          hour += 12;
+        } else if (parts[1].includes('AM') && hour === 12) {
+          hour = 0;
+        }
+      } else {
+        minute = parseInt(parts[1], 10);
+      }
+    } else {
+      // Just a number, assume it's the hour
+      hour = parseInt(formattedTime, 10);
+      minute = 0;
+    }
+    
+    // Validate parsed values
+    if (isNaN(hour) || isNaN(minute) || hour < 0 || hour > 23 || minute < 0 || minute > 59) {
+      throw new Error(`Invalid time components: hour=${hour}, minute=${minute}`);
+    }
+    
+    // Format as ISO
+    const isoDate = new Date(Date.UTC(
+      parseInt(date.substring(0, 4)), // year
+      parseInt(date.substring(5, 7)) - 1, // month (0-based)
+      parseInt(date.substring(8, 10)), // day
+      hour,
+      minute
+    ));
+    
+    return isoDate.toISOString();
   } catch (e) {
-    console.error('Tide error:', e);
-    return 'N/A';
+    console.warn(`Could not parse time: ${timeStr} for date ${date}. Using default.`);
+    return `${date}T12:00:00Z`; // Default to noon
   }
 }
 
-(async () => {
-  const sampleCsv = fs.readFileSync(INPUT_SAMPLE_CSV, 'utf-8');
-  const rainCsv = fs.readFileSync(INPUT_RAINFALL_CSV, 'utf-8');
-  const samples = Papa.parse(sampleCsv, { header: true }).data;
-  const rainfall = Papa.parse(rainCsv, { header: true }).data;
-
-  const rainByDay = rainfall.map(row => parseFloat(row['Precipitation']) || 0);
-  const totalRain = rainByDay.reduce((sum, val) => sum + val, 0);
-
-  const features = [];
-
-  for (const s of samples) {
-    // Use the actual CSV column names from your file
-    if (!s.Latitude || !s.Longitude || !s.MPN || isNaN(parseFloat(s.MPN))) continue;
-
-    const coords = [parseFloat(s.Longitude), parseFloat(s.Latitude)];
-    // Process sample time to create a proper ISO datetime
-    let formattedSampleTime;
-    if (s['Sample Time']) {
-      // Try to parse the time from the CSV
-      try {
-        // Standardize time format (handle both "8:30 AM" and "8:30")
-        let timeStr = s['Sample Time'];
-        
-        // Ensure we have AM/PM if it's not there
-        if (!timeStr.includes('AM') && !timeStr.includes('PM')) {
-          // Default to AM if time is before 12, PM if 12 or after
-          const hourPart = parseInt(timeStr.split(':')[0]);
-          timeStr = hourPart >= 12 ? `${timeStr} PM` : `${timeStr} AM`;
-        }
-        
-        // Create a date object from the date and time
-        const dateTimeStr = `${SAMPLE_DATE} ${timeStr}`;
-        const dateObj = new Date(dateTimeStr);
-        
-        // If valid, convert to ISO format
-        if (!isNaN(dateObj.getTime())) {
-          formattedSampleTime = dateObj.toISOString();
-        } else {
-          formattedSampleTime = `${SAMPLE_DATE}T12:00:00Z`; // Default to noon
-          console.warn(`Could not parse time: ${s['Sample Time']}, using default noon time`);
-        }
-      } catch (e) {
-        formattedSampleTime = `${SAMPLE_DATE}T12:00:00Z`; // Default to noon
-        console.warn(`Error parsing time: ${s['Sample Time']}, using default noon time`, e);
-      }
-    } else {
-      // No time provided, default to noon
-      formattedSampleTime = `${SAMPLE_DATE}T12:00:00Z`;
+/**
+ * Find and process sample-rain file pairs
+ */
+async function processDatasets() {
+  // Get all files in input directory
+  const files = fs.readdirSync(INPUT_DIR);
+  
+  // Group files by date
+  const dateMap = new Map();
+  let latestDate = null;
+  
+  files.forEach(file => {
+    const date = extractDateFromFilename(file);
+    if (!date) return; // Skip files without a date
+    
+    // Track latest date
+    if (!latestDate || date > latestDate) {
+      latestDate = date;
     }
     
-    const tide = await fetchTideStatus(s.Latitude, s.Longitude, s['Sample Time']);
-    const tideFormatted = tide + " Tide (Battery)";
-
-    const feature = {
-      type: 'Feature',
-      geometry: { type: 'Point', coordinates: coords },
-      properties: {
-        siteName: s['Site Name'], // Renamed from site to siteName
-        mpn: parseFloat(s.MPN),
-        sampleTime: formattedSampleTime, // Now in ISO format
-        rainByDay,
-        totalRain, // Rainfall value in the expected property
-        tide: tideFormatted // Renamed from tideSummary to tide
-      }
-    };
+    // Group by date
+    if (!dateMap.has(date)) {
+      dateMap.set(date, { samples: null, rain: null });
+    }
     
-    features.push(feature);
-  }
-
-  const outputPath = path.join(OUTPUT_DIR, SAMPLE_DATE);
-  fs.mkdirSync(outputPath, { recursive: true });
-  fs.writeFileSync(path.join(outputPath, 'enriched.geojson'), JSON.stringify({ type: 'FeatureCollection', features }, null, 2));
-  fs.writeFileSync(path.join(outputPath, 'metadata.json'), JSON.stringify({ date: SAMPLE_DATE, totalRain }, null, 2));
-  fs.writeFileSync(path.join(OUTPUT_DIR, 'latest.txt'), SAMPLE_DATE);
-
-  console.log(`✅ Enriched ${features.length} samples with tide + rain for ${SAMPLE_DATE}`);
+    // Categorize as sample or rain file
+    if (file.toLowerCase().includes('sample')) {
+      dateMap.get(date).samples = file;
+    } else if (file.toLowerCase().includes('rain')) {
+      dateMap.get(date).rain = file;
+    }
+  });
   
-  // Log the first feature's properties for schema validation
-  if (features.length > 0) {
-    console.log('\n🧪 Sample feature properties (first item):');
-    console.log(JSON.stringify(features[0].properties, null, 2));
+  // Process each date that has both sample and rain files
+  let processedDates = 0;
+  
+  for (const [date, files] of dateMap.entries()) {
+    if (files.samples && files.rain) {
+      await processDateFiles(date, files.samples, files.rain);
+      processedDates++;
+    } else {
+      console.warn(`Incomplete data for ${date}: samples=${files.samples ? 'Yes' : 'No'}, rain=${files.rain ? 'Yes' : 'No'}`);
+    }
+  }
+  
+  // Update latest.txt if we processed any dates
+  if (latestDate && processedDates > 0) {
+    fs.writeFileSync(path.join(OUTPUT_DIR, 'latest.txt'), latestDate);
+    console.log(`✅ Updated latest.txt to ${latestDate}`);
+  } else {
+    console.warn('⚠️ No complete data sets found. No files processed.');
+  }
+}
+
+/**
+ * Process a single date's sample and rain files
+ * @param {string} date - Date in YYYY-MM-DD format
+ * @param {string} sampleFile - Sample file name
+ * @param {string} rainFile - Rain file name
+ */
+async function processDateFiles(date, sampleFile, rainFile) {
+  console.log(`\n📅 Processing data for ${date}...`);
+  
+  try {
+    // Read and parse files
+    const sampleData = fs.readFileSync(path.join(INPUT_DIR, sampleFile), 'utf-8');
+    const rainData = fs.readFileSync(path.join(INPUT_DIR, rainFile), 'utf-8');
+    
+    const samples = Papa.parse(sampleData, { header: true }).data;
+    const rainfall = Papa.parse(rainData, { header: true }).data;
+    
+    // Extract rainfall data - look for column named Precipitation, rainfall, or similar
+    const rainColumn = Object.keys(rainfall[0]).find(key => 
+      key.toLowerCase().includes('precip') || key.toLowerCase().includes('rain')
+    ) || Object.keys(rainfall[0])[0]; // Fallback to first column
+    
+    const rainByDay = rainfall.map(row => {
+      const value = parseFloat(row[rainColumn]);
+      return isNaN(value) ? 0 : value;
+    });
+    
+    const totalRain = rainByDay.reduce((sum, val) => sum + val, 0);
+    
+    // Process sample points
+    const features = [];
+    let skipped = 0;
+    
+    for (const sample of samples) {
+      // Extract and validate required fields
+      const siteName = sample['Site Name'] || sample['site'] || sample['Site'] || '';
+      const lat = parseFloat(sample['Latitude'] || sample['latitude'] || sample['LAT']);
+      const lng = parseFloat(sample['Longitude'] || sample['longitude'] || sample['LNG']);
+      const mpnValue = parseFloat(sample['MPN'] || sample['mpn']);
+      const sampleTime = sample['Sample Time'] || sample['Time'] || sample['time'] || '';
+      
+      // Skip samples with missing critical data
+      if (isNaN(lat) || isNaN(lng) || isNaN(mpnValue)) {
+        skipped++;
+        continue;
+      }
+      
+      // Create GeoJSON feature
+      features.push({
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: [lng, lat]
+        },
+        properties: {
+          siteName,
+          mpn: mpnValue,
+          sampleTime: formatSampleTime(date, sampleTime),
+          rainByDay,
+          totalRain,
+          tide: 'N/A' // Placeholder for future tide data
+        }
+      });
+    }
+    
+    // Create output directory if it doesn't exist
+    const outputPath = path.join(OUTPUT_DIR, date);
+    fs.mkdirSync(outputPath, { recursive: true });
+    
+    // Write enriched GeoJSON
+    const geojson = {
+      type: 'FeatureCollection',
+      features
+    };
+    fs.writeFileSync(
+      path.join(outputPath, 'enriched.geojson'),
+      JSON.stringify(geojson, null, 2)
+    );
+    
+    // Write metadata
+    const metadata = {
+      date,
+      totalRain,
+      sampleCount: features.length,
+      description: `Water quality samples from ${date}`
+    };
+    fs.writeFileSync(
+      path.join(outputPath, 'metadata.json'),
+      JSON.stringify(metadata, null, 2)
+    );
+    
+    console.log(`✅ Processed ${date}: ${features.length} samples enriched with rainfall data`);
+    if (skipped > 0) {
+      console.log(`⚠️ Skipped ${skipped} samples due to missing required data`);
+    }
+    
+    // Log first feature as sample
+    if (features.length > 0) {
+      console.log('\n🧪 Sample feature (first item):');
+      console.log(JSON.stringify(features[0].properties, null, 2));
+    }
+    
+    return true;
+  } catch (err) {
+    console.error(`❌ Error processing ${date}:`, err);
+    return false;
+  }
+}
+
+// Main execution
+(async () => {
+  try {
+    await processDatasets();
+    console.log('\n✨ Enrichment process complete!');
+  } catch (err) {
+    console.error('❌ Error in enrichment process:', err);
+    process.exit(1);
   }
 })();
