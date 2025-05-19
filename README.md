@@ -44,7 +44,8 @@ The application uses a static data approach for improved performance and reliabi
    - Place sample and rainfall CSV files in `scripts/input/`
    - Run `npm run enrich` to convert the CSV files to GeoJSON and generate metadata
      with rainfall and tide information pulled from NOAA
-   - Each dataset is stored in `public/data/<date>/` and the newest date is written to `latest.txt`
+    - Each dataset is stored in `public/data/<date>/` and the newest date is written to `latest.txt`
+    - Processed CSV files are removed from `scripts/input/` once enrichment succeeds
 
 2. **Data Files**:
    - **Source Data**: Raw CSV files in `scripts/input/`
