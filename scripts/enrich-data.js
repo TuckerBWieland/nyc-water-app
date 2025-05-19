@@ -166,6 +166,9 @@ async function processDateFiles(date, sampleFile, rainFile) {
     // Process sample points
     const features = [];
     let skipped = 0;
+    let skippedLatLng = 0;
+    let skippedMpn = 0;
+    const totalSites = samples.length;
     
     for (const sample of samples) {
       // Extract and validate required fields
@@ -176,8 +179,12 @@ async function processDateFiles(date, sampleFile, rainFile) {
       const sampleTime = sample['Sample Time'] || sample['Time'] || sample['time'] || '';
 
       // Skip samples with missing critical data
-      if (isNaN(lat) || isNaN(lng) || isNaN(mpnValue)) {
+      const missingLatLng = isNaN(lat) || isNaN(lng);
+      const missingMpn = isNaN(mpnValue);
+      if (missingLatLng || missingMpn) {
         skipped++;
+        if (missingLatLng) skippedLatLng++;
+        if (missingMpn) skippedMpn++;
         continue;
       }
 
@@ -240,8 +247,13 @@ async function processDateFiles(date, sampleFile, rainFile) {
     );
     
     console.log(`✅ Processed ${date}: ${features.length} samples enriched with rainfall and tide data`);
+    console.log(`📊 Sheet summary for ${date}: ${totalSites} rows total`);
     if (skipped > 0) {
-      console.log(`⚠️ Skipped ${skipped} samples due to missing required data`);
+      console.log(
+        `⚠️ Skipped ${skipped} rows due to missing data (lat/lng: ${skippedLatLng}, MPN: ${skippedMpn})`
+      );
+    } else {
+      console.log('No rows skipped due to missing data');
     }
     
     // Log first feature as sample
