@@ -118,8 +118,17 @@ async function processDatasets() {
   
   for (const [date, files] of dateMap.entries()) {
     if (files.samples && files.rain) {
-      await processDateFiles(date, files.samples, files.rain);
-      processedDates++;
+      const success = await processDateFiles(date, files.samples, files.rain);
+      if (success) {
+        processedDates++;
+        try {
+          fs.unlinkSync(path.join(INPUT_DIR, files.samples));
+          fs.unlinkSync(path.join(INPUT_DIR, files.rain));
+          console.log(`🗑️  Removed input files for ${date}`);
+        } catch (err) {
+          console.warn(`⚠️  Could not delete input files for ${date}:`, err);
+        }
+      }
     } else {
       console.warn(`Incomplete data for ${date}: samples=${files.samples ? 'Yes' : 'No'}, rain=${files.rain ? 'Yes' : 'No'}`);
     }
