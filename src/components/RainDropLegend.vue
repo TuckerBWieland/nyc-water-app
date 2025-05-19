@@ -6,7 +6,7 @@
   >
     <h3 class="text-xs font-medium mb-2">7-Day Rainfall</h3>
 
-    <div class="flex items-end justify-between h-28 mb-1">
+    <div class="flex items-end justify-between h-20 mb-1">
       <!-- 7 vertical bars representing daily rainfall -->
       <div
         v-for="(value, index) in activeRainData"
