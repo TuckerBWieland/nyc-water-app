@@ -1,7 +1,7 @@
 <template>
   <div class="w-full h-full">
     <!-- Map container -->
-    <div id="map" class="absolute inset-0 z-0"></div>
+    <div id="map" class="absolute inset-0"></div>
   </div>
 </template>
 
@@ -403,12 +403,16 @@ export default {
 #map {
   height: 100%;
   width: 100%;
-  z-index: 0;
+  /* allow map layers to inherit global stacking */
 }
 
 /* Ensure Leaflet tiles display correctly */
 .leaflet-tile-pane {
   z-index: 0;
+}
+
+.leaflet-marker-pane {
+  z-index: 5; /* keep markers below overlay legends */
 }
 
 .leaflet-control-container {
