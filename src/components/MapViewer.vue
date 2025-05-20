@@ -422,21 +422,18 @@ export default {
   z-index: 0;
 }
 
+/* Keep markers below overlay components like legends */
 .leaflet-marker-pane {
-  z-index: 5; /* keep markers below overlay legends */
+  z-index: 200; /* low value so markers stay under overlays */
 }
 
 .leaflet-control-container {
   z-index: 10;
 }
 
-/* Keep markers behind UI elements but let popups appear above */
-.leaflet-marker-pane {
-  z-index: 5;
-}
-
+/* Display popups above overlay components */
 .leaflet-popup-pane {
-  z-index: 20;
+  z-index: 1000; /* high value so popups show over legends */
 }
 
 /* Style for the water bottle icons */
