@@ -10,7 +10,7 @@ export function initAnalytics() {
 
   posthog.init(key, {
     api_host: import.meta.env.VITE_POSTHOG_HOST || 'https://app.posthog.com',
-    autocapture: false,
+    autocapture: true,
   });
 
   isInitialized = true;
