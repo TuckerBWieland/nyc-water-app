@@ -7,6 +7,7 @@ An interactive web application to visualize water quality data across various sa
 - Interactive map showing water quality sampling sites
 - Historical data navigation with a date scroller
 - Detailed information for each sampling site
+- Seasonal history showing counts in each quality bucket
 - Mobile-friendly responsive design
 - Light and dark theme support (defaults to dark)
 
