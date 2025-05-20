@@ -49,4 +49,34 @@ describe('useStaticData', () => {
     expect(metadata.value).toBe(null);
     expect(loading.value).toBe(false);
   });
+
+  test('handles metadata fetch failure', async () => {
+    const geojson = { features: [] };
+
+    global.fetch = jest.fn()
+      .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve(geojson) })
+      .mockResolvedValueOnce({ ok: false, status: 500 });
+
+    const date = ref('2023-03-01');
+    const { data, metadata, error, loading, load } = useStaticData(date);
+
+    await load();
+
+    expect(error.value).toMatch('Failed to fetch metadata');
+    expect(data.value).toBe(null);
+    expect(metadata.value).toBe(null);
+    expect(loading.value).toBe(false);
+  });
+
+  test('handles missing date input', async () => {
+    const date = ref('');
+    const { data, metadata, error, loading, load } = useStaticData(date);
+
+    await load('');
+
+    expect(error.value).toBe('No date provided');
+    expect(data.value).toBe(null);
+    expect(metadata.value).toBe(null);
+    expect(loading.value).toBe(false);
+  });
 });
