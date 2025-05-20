@@ -1,5 +1,7 @@
 import posthog from 'posthog-js';
 
+export const EVENT_CLICK_SITE_MARKER = 'click_site_marker';
+
 let isInitialized = false;
 
 export function initAnalytics() {

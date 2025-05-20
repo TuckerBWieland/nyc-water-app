@@ -9,6 +9,7 @@
 import { ref, onMounted, watch, onUnmounted } from 'vue';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { track, EVENT_CLICK_SITE_MARKER } from '../services/analytics';
 
 // Constants for MPN threshold values
 const MPN_THRESHOLD_LOW = 35;
@@ -334,6 +335,10 @@ export default {
               className: props.isDarkMode ? 'dark-mode-popup' : '',
             })
             .addTo(map.value);
+
+          marker.on('click', () => {
+            track(EVENT_CLICK_SITE_MARKER, { site_name: siteName });
+          });
 
           markers.value.push(marker);
         } catch (error) {
