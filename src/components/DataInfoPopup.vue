@@ -16,9 +16,24 @@
       </button>
     </div>
     <div class="prose text-sm" :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'">
+      <p class="font-semibold">Why heavy rain leads to poor water quality samples:</p>
       <p>
-        Weekly water samples are collected by community scientists at sites across NYC. Enterococcus
-        bacteria levels are measured alongside local conditions like rainfall and tides.
+        When it rains heavily, New York City's sewer system—which combines sewage and stormwater in the same
+        pipes—can become overwhelmed. To prevent backups into homes and streets, this excess mixture is
+        discharged directly into waterways like Newtown Creek and the East River through Combined Sewer
+        Overflows (CSOs). These overflows carry untreated sewage, bacteria, and other pollutants into the water,
+        significantly reducing water quality. That's why samples collected after major rain events often show
+        poor results.
+      </p>
+      <p class="mt-2 font-semibold">Where our rainfall and tide data come from:</p>
+      <p>
+        Rainfall data is sourced from NOAA’s National Weather Service, specifically from the Central Park
+        weather station. This provides a consistent benchmark for citywide precipitation.
+      </p>
+      <p>
+        Tide data comes from NOAA’s tide predictions, using the Battery (NY) tidal station as a reference.
+        Tidal stage helps us understand how water is moving through the estuary, which affects how pollutants
+        disperse.
       </p>
       <p class="mt-2">
         View the detailed dataset
