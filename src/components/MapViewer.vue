@@ -1,7 +1,7 @@
 <template>
   <div class="w-full h-full">
     <!-- Map container -->
-    <div id="map" class="absolute inset-0 z-0"></div>
+    <div id="map" class="absolute inset-0"></div>
   </div>
 </template>
 
@@ -403,7 +403,7 @@ export default {
 #map {
   height: 100%;
   width: 100%;
-  z-index: 0;
+  /* no explicit z-index so markers can escape stacking context */
 }
 
 /* Ensure Leaflet tiles display correctly */
@@ -413,6 +413,15 @@ export default {
 
 .leaflet-control-container {
   z-index: 10;
+}
+
+/* Keep markers behind UI elements but let popups appear above */
+.leaflet-marker-pane {
+  z-index: 5;
+}
+
+.leaflet-popup-pane {
+  z-index: 20;
 }
 
 /* Style for the water bottle icons */
