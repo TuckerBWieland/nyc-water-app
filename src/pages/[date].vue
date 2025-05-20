@@ -6,6 +6,8 @@ import RainDropLegend from '../components/RainDropLegend.vue';
 import SampleBarLegend from '../components/SampleBarLegend.vue';
 import DateScroller from '../components/DateScroller.vue';
 import InfoPopup from '../components/InfoPopup.vue';
+import DataInfoPopup from '../components/DataInfoPopup.vue';
+import DonatePopup from '../components/DonatePopup.vue';
 import { useStaticData } from '../composables/useStaticData';
 
 const route = useRoute();
@@ -103,9 +105,11 @@ const toggleDarkMode = () => {
         :geojson="data"
       />
       
-      <!-- Info popup -->
-      <InfoPopup :isDarkMode="isDarkMode" />
-    </div>
+        <!-- Info and action popups -->
+        <InfoPopup :isDarkMode="isDarkMode" />
+        <DataInfoPopup :isDarkMode="isDarkMode" />
+        <DonatePopup :isDarkMode="isDarkMode" />
+      </div>
     
     <div v-else class="text-center h-screen flex items-center justify-center flex-col">
       <div v-if="loading" class="text-lg">
