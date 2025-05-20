@@ -415,7 +415,6 @@ export default {
 #map {
   height: 100%;
   width: 100%;
-  /* allow map layers to inherit global stacking */
 }
 
 /* Ensure Leaflet tiles display correctly */
@@ -429,6 +428,15 @@ export default {
 
 .leaflet-control-container {
   z-index: 10;
+}
+
+/* Keep markers behind UI elements but let popups appear above */
+.leaflet-marker-pane {
+  z-index: 5;
+}
+
+.leaflet-popup-pane {
+  z-index: 20;
 }
 
 /* Style for the water bottle icons */
