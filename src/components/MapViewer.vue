@@ -297,6 +297,18 @@ export default {
             popupContent += `<div class="text-xs opacity-75 mt-1">Sampled at ${sanitizedSampleTime}</div>`;
           }
 
+          // Add seasonal history if available
+          if (
+            feature.properties.goodCount !== undefined &&
+            feature.properties.cautionCount !== undefined &&
+            feature.properties.poorCount !== undefined
+          ) {
+            const good = sanitize(feature.properties.goodCount);
+            const caution = sanitize(feature.properties.cautionCount);
+            const poor = sanitize(feature.properties.poorCount);
+            popupContent += `<div class="text-xs opacity-75 mt-1">This season: ${good} good, ${caution} caution, ${poor} poor</div>`;
+          }
+
           // Add tide and rainfall info section header if either is available
           if (feature.properties.tide || feature.properties.rainfall_mm_7day !== undefined) {
             popupContent += `<div class="text-xs font-medium mt-3 pt-2 border-t border-gray-200">Environmental Conditions:</div>`;
