@@ -7,6 +7,7 @@ An interactive web application to visualize water quality data across various sa
 - Interactive map showing water quality sampling sites
 - Historical data navigation with a date scroller
 - Detailed information for each sampling site
+- Seasonal history showing counts in each quality bucket
 - Mobile-friendly responsive design
 - Light and dark theme support (defaults to dark)
 
@@ -72,6 +73,9 @@ The application is configured for deployment to GitHub Pages:
 # Deploy to GitHub Pages
 npm run deploy
 ```
+
+The deploy script automatically copies `index.html` to `404.html` after building so that
+dynamic routes like `/2025-05-08` work when hosted on GitHub Pages.
 
 ## Analytics
 

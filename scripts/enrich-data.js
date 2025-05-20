@@ -7,6 +7,59 @@ const {
   analyzeTideData,
 } = require('./tide-services');
 
+// Thresholds for water quality buckets
+const MPN_THRESHOLD_LOW = 35;
+const MPN_THRESHOLD_MEDIUM = 104;
+
+/**
+ * Determine quality bucket for a given MPN value.
+ * @param {number} mpn
+ * @returns {'good'|'caution'|'poor'}
+ */
+function getQualityBucket(mpn) {
+  if (mpn < MPN_THRESHOLD_LOW) return 'good';
+  if (mpn <= MPN_THRESHOLD_MEDIUM) return 'caution';
+  return 'poor';
+}
+
+/**
+ * Load historical quality counts from existing GeoJSON files.
+ * @returns {Map<string,{good:number,caution:number,poor:number}>}
+ */
+function loadHistoricalCounts() {
+  const counts = new Map();
+  if (!fs.existsSync(OUTPUT_DIR)) return counts;
+
+  const dirs = fs
+    .readdirSync(OUTPUT_DIR, { withFileTypes: true })
+    .filter(d => d.isDirectory() && /\d{4}-\d{2}-\d{2}/.test(d.name))
+    .map(d => d.name);
+
+  for (const dir of dirs) {
+    const file = path.join(OUTPUT_DIR, dir, 'enriched.geojson');
+    if (!fs.existsSync(file)) continue;
+    try {
+      const data = JSON.parse(fs.readFileSync(file, 'utf-8'));
+      if (!data.features) continue;
+      for (const feature of data.features) {
+        const props = feature.properties || {};
+        const site = props.siteName;
+        const mpn = props.mpn;
+        if (!site || mpn === undefined || mpn === null) continue;
+        const bucket = getQualityBucket(Number(mpn));
+        if (!counts.has(site)) {
+          counts.set(site, { good: 0, caution: 0, poor: 0 });
+        }
+        counts.get(site)[bucket]++;
+      }
+    } catch (err) {
+      console.warn(`Failed to load history from ${file}:`, err);
+    }
+  }
+
+  return counts;
+}
+
 // Constants
 const INPUT_DIR = './scripts/input/';
 const OUTPUT_DIR = './public/data';
@@ -115,10 +168,13 @@ async function processDatasets() {
   
   // Process each date that has both sample and rain files
   let processedDates = 0;
-  
+
+  // Load existing history counts so new data can include seasonal context
+  const historyCounts = loadHistoricalCounts();
+
   for (const [date, files] of dateMap.entries()) {
     if (files.samples && files.rain) {
-      const success = await processDateFiles(date, files.samples, files.rain);
+      const success = await processDateFiles(date, files.samples, files.rain, historyCounts);
       if (success) {
         processedDates++;
         try {
@@ -149,7 +205,7 @@ async function processDatasets() {
  * @param {string} sampleFile - Sample file name
  * @param {string} rainFile - Rain file name
  */
-async function processDateFiles(date, sampleFile, rainFile) {
+async function processDateFiles(date, sampleFile, rainFile, historyCounts) {
   console.log(`\n📅 Processing data for ${date}...`);
   
   try {
@@ -214,6 +270,14 @@ async function processDateFiles(date, sampleFile, rainFile) {
         console.warn('Tide enrichment failed:', err);
       }
 
+      // Update historical quality counts
+      if (!historyCounts.has(siteName)) {
+        historyCounts.set(siteName, { good: 0, caution: 0, poor: 0 });
+      }
+      const bucket = getQualityBucket(mpnValue);
+      historyCounts.get(siteName)[bucket]++;
+      const { good, caution, poor } = historyCounts.get(siteName);
+
       // Create GeoJSON feature
       features.push({
         type: 'Feature',
@@ -228,7 +292,10 @@ async function processDateFiles(date, sampleFile, rainFile) {
           rainByDay,
           totalRain,
           rainfall_mm_7day,
-          tide: tideSummary
+          tide: tideSummary,
+          goodCount: good,
+          cautionCount: caution,
+          poorCount: poor
         }
       });
     }
