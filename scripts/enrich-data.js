@@ -171,6 +171,9 @@ async function processDateFiles(date, sampleFile, rainFile) {
     });
     
     const totalRain = rainByDay.reduce((sum, val) => sum + val, 0);
+    // Convert the 7-day rainfall total from inches to millimeters for easier
+    // use in the UI. 1 inch equals 25.4 millimeters.
+    const rainfall_mm_7day = totalRain * 25.4;
     
     // Process sample points
     const features = [];
@@ -224,6 +227,7 @@ async function processDateFiles(date, sampleFile, rainFile) {
           sampleTime: isoTime,
           rainByDay,
           totalRain,
+          rainfall_mm_7day,
           tide: tideSummary
         }
       });
