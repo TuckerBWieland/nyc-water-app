@@ -73,6 +73,9 @@ The application is configured for deployment to GitHub Pages:
 npm run deploy
 ```
 
+The deploy script automatically copies `index.html` to `404.html` after building so that
+dynamic routes like `/2025-05-08` work when hosted on GitHub Pages.
+
 ## Analytics
 
 The application supports optional PostHog tracking. To enable analytics:
