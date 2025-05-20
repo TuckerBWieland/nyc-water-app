@@ -53,6 +53,7 @@
 </template>
 
 <script>
+import { onMounted } from 'vue';
 import { usePopupManager } from '../composables/usePopupManager';
 
 export default {
@@ -65,6 +66,18 @@ export default {
   },
   setup() {
     const { isOpen, togglePopup } = usePopupManager('info');
+
+    onMounted(() => {
+      try {
+        if (!localStorage.getItem('hasSeenInfoPopup')) {
+          togglePopup();
+          localStorage.setItem('hasSeenInfoPopup', 'true');
+        }
+      } catch (e) {
+        // localStorage might not be available
+        console.error('Failed to access localStorage', e);
+      }
+    });
 
     return {
       isOpen,
