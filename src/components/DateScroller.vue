@@ -20,10 +20,10 @@
         &larr;
       </button>
 
-      <div class="px-2 text-center">
+      <div class="px-2 text-center whitespace-nowrap">
         <span
           :class="[
-            'text-sm font-medium transition-colors duration-300',
+            'font-medium transition-colors duration-300 text-xs sm:text-sm',
             isDarkMode ? 'text-gray-200' : 'text-gray-800',
           ]"
         >
