@@ -70,6 +70,7 @@ import {
   track,
   EVENT_CLICK_DATA_INFO_BUTTON,
   EVENT_CLICK_OUTBOUND_LINK,
+  EVENT_OPEN_POPUP,
 } from '../services/analytics';
 
 export default {
@@ -87,6 +88,7 @@ export default {
       const wasClosed = !isOpen.value;
       baseToggle();
       if (wasClosed) {
+        track(EVENT_OPEN_POPUP, { component: 'DataInfoPopup' });
         track(EVENT_CLICK_DATA_INFO_BUTTON);
       }
     };

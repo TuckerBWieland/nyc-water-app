@@ -55,6 +55,7 @@
 <script>
 import { onMounted } from 'vue';
 import { usePopupManager } from '../composables/usePopupManager';
+import { track, EVENT_OPEN_POPUP } from '../services/analytics';
 
 export default {
   name: 'InfoPopup',
@@ -65,12 +66,20 @@ export default {
     },
   },
   setup() {
-    const { isOpen, togglePopup } = usePopupManager('info');
+    const { isOpen, togglePopup: baseToggle } = usePopupManager('info');
+
+    const togglePopup = (trackEvent = true) => {
+      const wasClosed = !isOpen.value;
+      baseToggle();
+      if (wasClosed && trackEvent) {
+        track(EVENT_OPEN_POPUP, { component: 'InfoPopup' });
+      }
+    };
 
     onMounted(() => {
       try {
         if (!localStorage.getItem('hasSeenInfoPopup')) {
-          togglePopup();
+          togglePopup(false);
           localStorage.setItem('hasSeenInfoPopup', 'true');
         }
       } catch (e) {

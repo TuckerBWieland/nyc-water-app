@@ -54,7 +54,12 @@
 
 <script>
 import { usePopupManager } from '../composables/usePopupManager';
-import { track, EVENT_CLICK_DONATE_BUTTON, EVENT_CLICK_OUTBOUND_LINK } from '../services/analytics';
+import {
+  track,
+  EVENT_CLICK_DONATE_BUTTON,
+  EVENT_CLICK_OUTBOUND_LINK,
+  EVENT_OPEN_POPUP,
+} from '../services/analytics';
 
 export default {
   name: 'DonatePopup',
@@ -71,6 +76,7 @@ export default {
       const wasClosed = !isOpen.value;
       baseToggle();
       if (wasClosed) {
+        track(EVENT_OPEN_POPUP, { component: 'DonatePopup' });
         track(EVENT_CLICK_DONATE_BUTTON);
       }
     };
