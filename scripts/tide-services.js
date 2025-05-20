@@ -18,7 +18,8 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos((lat1 * Math.PI) / 180) *
       Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
 }
@@ -47,7 +48,9 @@ function formatDate(date) {
  */
 async function findNearestTideStation(lat, lon) {
   try {
-    const res = await fetch('https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations.json');
+    const res = await fetch(
+      'https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations.json'
+    );
     const data = await res.json();
     if (!data.stations || data.stations.length === 0) {
       return null;

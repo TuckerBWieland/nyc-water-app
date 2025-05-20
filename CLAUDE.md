@@ -3,6 +3,7 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Build Commands
+
 - Development server: `npm run dev`
 - Production build: `npm run build`
 - Preview build: `npm run preview`
@@ -14,17 +15,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Architecture
 
 ### Data Flow
+
 1. The app reads `public/data/latest.txt` to determine the most recent dataset
 2. GeoJSON and metadata are loaded from `public/data/<date>/enriched.geojson` and `public/data/<date>/metadata.json`
 3. The MapViewer component displays water quality samples as markers on a Leaflet map
 4. Interactive components allow filtering and displaying details about sample points
 
 ### Data Enrichment
+
 - CSV sample and rainfall files are combined into GeoJSON using `scripts/enrich-data.js`
 - The enrichment process adds rainfall totals and basic metadata
 - Run `npm run enrich` whenever new CSV files are added
 
 ### Analytics
+
 - Analytics are implemented using PostHog (`posthog-js`)
 - The `src/services/analytics/index.js` provides tracking utilities:
   - Common events are defined as constants
@@ -33,17 +37,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   - Configuration is managed through environment variables
 
 ### Error Handling
+
 - Centralized error handling through `src/utils/errorHandler.js`
 - Error severity levels: INFO, WARNING, ERROR, FATAL
 - Context-aware error handling with optional reporting and user notification
 - All async operations should use try/catch with the error handler
 
 ### Runtime Data Validation
+
 - Utility functions for validating GeoJSON and other external data
 - JSDoc comments document function parameters and return values
 - Data validation happens at runtime to ensure data integrity
 
 ### Component Architecture
+
 - Vue 3 Composition API with `<script>` and setup function
 - Composable functions for reusable logic in `src/composables/`:
   - `useMap.js`: Leaflet map setup and management
@@ -53,6 +60,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Environment configuration via `src/config/index.js`
 
 ## Code Style Guidelines
+
 - Vue 3 Composition API with standard JavaScript
 - Use ES modules with named imports
 - Component names: PascalCase (e.g., MapViewer)
@@ -67,6 +75,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - JSDoc comments for all functions and components
 
 ## Key Components
+
 - `MapViewer`: Main Leaflet map implementation with water quality indicators
 - `DateScroller`: UI for selecting different sampling dates
 - `HeaderOverlay`: Top information panel with site statistics
@@ -74,7 +83,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `InfoPopup`: Information modal for explaining the application
 
 ## Theme Support
+
 - The application supports both light and dark themes
 - Theme state is managed via the `useTheme` composable
 - Map tiles and UI elements adapt to the current theme
-

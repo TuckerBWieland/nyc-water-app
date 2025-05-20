@@ -17,7 +17,8 @@
     </div>
     <div class="prose text-sm" :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'">
       <p>
-        Weekly water samples are collected by community scientists at sites across NYC. Enterococcus bacteria levels are measured alongside local conditions like rainfall and tides.
+        Weekly water samples are collected by community scientists at sites across NYC. Enterococcus
+        bacteria levels are measured alongside local conditions like rainfall and tides.
       </p>
       <p class="mt-2">
         View the detailed dataset
@@ -25,8 +26,13 @@
           href="https://docs.google.com/spreadsheets/d/12wNiul0QSymg3gO9OdwKkvAms-iHkz2i0hyxl6AP8eQ/edit?gid=0#gid=0"
           target="_blank"
           rel="noopener"
-          @click="trackOutbound('https://docs.google.com/spreadsheets/d/12wNiul0QSymg3gO9OdwKkvAms-iHkz2i0hyxl6AP8eQ/edit?gid=0#gid=0')"
-        >here</a>.
+          @click="
+            trackOutbound(
+              'https://docs.google.com/spreadsheets/d/12wNiul0QSymg3gO9OdwKkvAms-iHkz2i0hyxl6AP8eQ/edit?gid=0#gid=0'
+            )
+          "
+          >here</a
+        >.
       </p>
     </div>
   </div>
@@ -45,7 +51,11 @@
 
 <script>
 import { ref } from 'vue';
-import { track, EVENT_CLICK_DATA_INFO_BUTTON, EVENT_CLICK_OUTBOUND_LINK } from '../services/analytics';
+import {
+  track,
+  EVENT_CLICK_DATA_INFO_BUTTON,
+  EVENT_CLICK_OUTBOUND_LINK,
+} from '../services/analytics';
 
 export default {
   name: 'DataInfoPopup',
@@ -65,7 +75,7 @@ export default {
       }
     };
 
-    const trackOutbound = (url) => {
+    const trackOutbound = url => {
       track(EVENT_CLICK_OUTBOUND_LINK, { url });
     };
 

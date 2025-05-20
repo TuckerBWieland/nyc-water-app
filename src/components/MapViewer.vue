@@ -37,8 +37,8 @@ export default {
     },
     geojson: {
       type: Object,
-      default: null
-    }
+      default: null,
+    },
   },
   setup(props) {
     // Reactive references
@@ -159,7 +159,7 @@ export default {
     // Watch for changes in GeoJSON data
     watch(
       () => props.geojson,
-      (newData) => {
+      newData => {
         if (newData && map.value) {
           updateMap(newData);
         }
@@ -374,7 +374,7 @@ export default {
 
     onMounted(() => {
       // Initialize map with default coordinates
-      map.value = L.map('map').setView([40.7128, -74.0060], 12);
+      map.value = L.map('map').setView([40.7128, -74.006], 12);
 
       // Initialize tile layer using our updateTileLayer function
       updateTileLayer();

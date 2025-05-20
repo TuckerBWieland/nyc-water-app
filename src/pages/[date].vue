@@ -36,16 +36,19 @@ onMounted(async () => {
 });
 
 // Watch for route parameter changes
-watch(() => route.params.date, (newDate) => {
-  if (newDate && newDate !== date.value) {
-    console.log('Route date changed:', newDate);
-    date.value = newDate;
-    load(newDate);
+watch(
+  () => route.params.date,
+  newDate => {
+    if (newDate && newDate !== date.value) {
+      console.log('Route date changed:', newDate);
+      date.value = newDate;
+      load(newDate);
+    }
   }
-});
+);
 
 // Watch for date changes to reload data
-watch(date, (newDate) => {
+watch(date, newDate => {
   console.log('Date changed:', newDate);
   if (newDate) {
     load(newDate);
@@ -54,7 +57,7 @@ watch(date, (newDate) => {
 });
 
 // Watch for dark mode changes to update body class
-watch(isDarkMode, (val) => {
+watch(isDarkMode, val => {
   if (typeof document !== 'undefined') {
     document.documentElement.classList.toggle('dark', val);
     document.body.classList.toggle('dark', val);
@@ -70,7 +73,7 @@ const toggleDarkMode = () => {
 <template>
   <div>
     <!-- Theme toggle button -->
-    <button 
+    <button
       @click="toggleDarkMode"
       class="fixed top-4 right-4 z-50 w-10 h-10 rounded-full shadow-md flex items-center justify-center transition-colors duration-300"
       :class="isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'"
@@ -79,49 +82,34 @@ const toggleDarkMode = () => {
     </button>
 
     <div v-if="data && metadata">
-      <DateScroller 
-        :dates="availableDates" 
-        v-model="date"
-        :isDarkMode="isDarkMode"
-      />
-      
+      <DateScroller :dates="availableDates" v-model="date" :isDarkMode="isDarkMode" />
+
       <!-- Legends -->
       <div class="absolute top-2 left-2 z-10 space-y-2">
-        <SampleBarLegend 
-          :samples="data.features" 
-          :isDarkMode="isDarkMode" 
-        />
-        <RainDropLegend 
+        <SampleBarLegend :samples="data.features" :isDarkMode="isDarkMode" />
+        <RainDropLegend
           :selectedDate="date"
           :isDarkMode="isDarkMode"
           :rainfallData="data.features[0]?.properties.rainByDay || []"
         />
       </div>
-      
+
       <!-- Main map -->
-      <MapViewer 
-        :selectedDate="date" 
-        :isDarkMode="isDarkMode"
-        :geojson="data"
-      />
-      
-        <!-- Info and action popups -->
-        <InfoPopup :isDarkMode="isDarkMode" />
-        <DataInfoPopup :isDarkMode="isDarkMode" />
-        <DonatePopup :isDarkMode="isDarkMode" />
-      </div>
-    
+      <MapViewer :selectedDate="date" :isDarkMode="isDarkMode" :geojson="data" />
+
+      <!-- Info and action popups -->
+      <InfoPopup :isDarkMode="isDarkMode" />
+      <DataInfoPopup :isDarkMode="isDarkMode" />
+      <DonatePopup :isDarkMode="isDarkMode" />
+    </div>
+
     <div v-else class="text-center h-screen flex items-center justify-center flex-col">
-      <div v-if="loading" class="text-lg">
-        Loading water quality data...
-      </div>
+      <div v-if="loading" class="text-lg">Loading water quality data...</div>
       <div v-else-if="error" class="text-red-500">
         <p class="text-lg">Error: {{ error }}</p>
         <p class="mt-2">Could not load data for {{ date }}</p>
       </div>
-      <div v-else class="text-lg">
-        No data available
-      </div>
+      <div v-else class="text-lg">No data available</div>
     </div>
   </div>
 </template>

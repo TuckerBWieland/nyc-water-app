@@ -66,9 +66,7 @@ export default {
   setup(props) {
     // Compute the rainfall array for the selected date
     const activeRainData = computed(() => {
-      return props.rainfallData && props.rainfallData.length > 0
-        ? props.rainfallData
-        : [];
+      return props.rainfallData && props.rainfallData.length > 0 ? props.rainfallData : [];
     });
 
     // Compute the total rainfall from that array
@@ -135,5 +133,4 @@ export default {
 .rain-drop-legend {
   min-width: 160px;
 }
-
 </style>
