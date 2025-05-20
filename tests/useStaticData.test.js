@@ -17,7 +17,8 @@ describe('useStaticData', () => {
     const geojson = { features: [1, 2, 3] };
     const meta = { updated: '2023-01-01' };
 
-    global.fetch = jest.fn()
+    global.fetch = jest
+      .fn()
       .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve(geojson) })
       .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve(meta) });
 
@@ -35,7 +36,8 @@ describe('useStaticData', () => {
   });
 
   test('handles fetch errors', async () => {
-    global.fetch = jest.fn()
+    global.fetch = jest
+      .fn()
       .mockResolvedValueOnce({ ok: false, status: 404 })
       .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve({}) });
 
@@ -53,7 +55,8 @@ describe('useStaticData', () => {
   test('handles metadata fetch failure', async () => {
     const geojson = { features: [] };
 
-    global.fetch = jest.fn()
+    global.fetch = jest
+      .fn()
       .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve(geojson) })
       .mockResolvedValueOnce({ ok: false, status: 500 });
 

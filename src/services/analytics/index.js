@@ -25,4 +25,3 @@ export function track(event, properties = {}) {
   if (!isInitialized) return;
   posthog.capture(event, properties);
 }
-

@@ -12,15 +12,15 @@ onMounted(async () => {
     // Get the base URL for GitHub Pages
     const base = import.meta.env.MODE === 'production' ? '/nyc-water-app' : '';
     const response = await fetch(`${base}/data/latest.txt`);
-    
+
     if (!response.ok) {
       throw new Error(`Failed to fetch latest date: ${response.status}`);
     }
-    
+
     const latest = await response.text();
     const trimmedDate = latest.trim();
     console.log('Latest date:', trimmedDate);
-    
+
     if (trimmedDate) {
       router.push(`/${trimmedDate}`);
     } else {

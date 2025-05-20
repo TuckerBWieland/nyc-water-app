@@ -24,7 +24,8 @@
             target="_blank"
             rel="noopener"
             @click="trackOutbound('https://www.billionoysterproject.org/donate')"
-          >Billion Oyster Project</a>
+            >Billion Oyster Project</a
+          >
         </li>
         <li>
           <a
@@ -32,7 +33,8 @@
             target="_blank"
             rel="noopener"
             @click="trackOutbound('https://www.newtowncreekalliance.org/donate/')"
-          >Newtown Creek Alliance</a>
+            >Newtown Creek Alliance</a
+          >
         </li>
       </ul>
     </div>
@@ -72,7 +74,7 @@ export default {
       }
     };
 
-    const trackOutbound = (url) => {
+    const trackOutbound = url => {
       track(EVENT_CLICK_OUTBOUND_LINK, { url });
     };
 
