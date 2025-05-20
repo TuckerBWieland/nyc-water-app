@@ -415,6 +415,7 @@ export default {
 #map {
   height: 100%;
   width: 100%;
+  z-index: 0;
 }
 
 /* Ensure Leaflet tiles display correctly */
@@ -424,7 +425,7 @@ export default {
 
 /* Keep markers below overlay components like legends */
 .leaflet-marker-pane {
-  z-index: 200; /* low value so markers stay under overlays */
+  z-index: 5; /* keep markers behind overlay elements */
 }
 
 .leaflet-control-container {
