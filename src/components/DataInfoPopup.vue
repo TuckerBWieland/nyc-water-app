@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { usePopupManager } from '../composables/usePopupManager';
 import {
   track,
   EVENT_CLICK_DATA_INFO_BUTTON,
@@ -66,11 +66,12 @@ export default {
     },
   },
   setup() {
-    const isOpen = ref(false);
+    const { isOpen, togglePopup: baseToggle } = usePopupManager('data-info');
 
     const togglePopup = () => {
-      isOpen.value = !isOpen.value;
-      if (isOpen.value) {
+      const wasClosed = !isOpen.value;
+      baseToggle();
+      if (wasClosed) {
         track(EVENT_CLICK_DATA_INFO_BUTTON);
       }
     };
