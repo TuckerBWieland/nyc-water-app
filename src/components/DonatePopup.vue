@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { usePopupManager } from '../composables/usePopupManager';
 import { track, EVENT_CLICK_DONATE_BUTTON, EVENT_CLICK_OUTBOUND_LINK } from '../services/analytics';
 
 export default {
@@ -65,11 +65,12 @@ export default {
     },
   },
   setup() {
-    const isOpen = ref(false);
+    const { isOpen, togglePopup: baseToggle } = usePopupManager('donate');
 
     const togglePopup = () => {
-      isOpen.value = !isOpen.value;
-      if (isOpen.value) {
+      const wasClosed = !isOpen.value;
+      baseToggle();
+      if (wasClosed) {
         track(EVENT_CLICK_DONATE_BUTTON);
       }
     };

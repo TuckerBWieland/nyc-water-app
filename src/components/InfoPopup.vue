@@ -46,14 +46,14 @@
       isDarkMode ? 'bg-gray-800 text-gray-200' : 'bg-white text-gray-800',
     ]"
     title="Information"
-    @click="isOpen = !isOpen"
+    @click="togglePopup"
   >
     <span class="font-semibold text-lg">i</span>
   </button>
 </template>
 
 <script>
-import { ref } from 'vue';
+import { usePopupManager } from '../composables/usePopupManager';
 
 export default {
   name: 'InfoPopup',
@@ -64,11 +64,11 @@ export default {
     },
   },
   setup() {
-    // State
-    const isOpen = ref(false);
+    const { isOpen, togglePopup } = usePopupManager('info');
 
     return {
       isOpen,
+      togglePopup,
     };
   },
 };
