@@ -73,3 +73,17 @@ The application is configured for deployment to GitHub Pages:
 npm run deploy
 ```
 
+## Analytics
+
+The application supports optional PostHog tracking. To enable analytics:
+
+1. Copy `.env.example` to `.env` and provide your PostHog project key.
+
+```bash
+cp .env.example .env
+echo "VITE_POSTHOG_KEY=YOUR_KEY" >> .env
+# Optionally set VITE_POSTHOG_HOST if using a self-hosted instance
+```
+
+With `VITE_POSTHOG_KEY` set, basic page views will be recorded automatically.
+
