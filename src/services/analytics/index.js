@@ -1,6 +1,9 @@
 import posthog from 'posthog-js';
 
 export const EVENT_CLICK_SITE_MARKER = 'click_site_marker';
+export const EVENT_CLICK_DATA_INFO_BUTTON = 'click_data_info_button';
+export const EVENT_CLICK_DONATE_BUTTON = 'click_donate_button';
+export const EVENT_CLICK_OUTBOUND_LINK = 'click_outbound_link';
 
 let isInitialized = false;
 
