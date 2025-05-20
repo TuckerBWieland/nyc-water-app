@@ -566,7 +566,7 @@
         "totalRain": 2.08,
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
-        "goodCount": 0,
+        "goodCount": 1,
         "cautionCount": 0,
         "poorCount": 1
       }
@@ -596,7 +596,7 @@
         "totalRain": 2.08,
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
-        "goodCount": 0,
+        "goodCount": 1,
         "cautionCount": 0,
         "poorCount": 1
       }
@@ -734,6 +734,36 @@
         "siteName": "Flushing Bay, World's Fair Marina Boat Ramp",
         "mpn": 8164,
         "sampleTime": "2025-05-15T11:03:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0
+        ],
+        "totalRain": 2.08,
+        "rainfall_mm_7day": 52.832,
+        "tide": "N/A",
+        "goodCount": 0,
+        "cautionCount": 0,
+        "poorCount": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.836458,
+          40.760543
+        ]
+      },
+      "properties": {
+        "siteName": "Flushing Creek",
+        "mpn": 24196,
+        "sampleTime": "2025-05-15T07:11:00.000Z",
         "rainByDay": [
           0.69,
           0.01,
@@ -966,6 +996,36 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -73.939319,
+          40.742933
+        ]
+      },
+      "properties": {
+        "siteName": "Newtown Creek, Dutch Kills (head)",
+        "mpn": 24196,
+        "sampleTime": "2025-05-15T10:20:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0
+        ],
+        "totalRain": 2.08,
+        "rainfall_mm_7day": 52.832,
+        "tide": "N/A",
+        "goodCount": 0,
+        "cautionCount": 0,
+        "poorCount": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -73.93728,
           40.729291
         ]
@@ -996,6 +1056,66 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -73.922925,
+          40.716753
+        ]
+      },
+      "properties": {
+        "siteName": "Newtown Creek, East Branch",
+        "mpn": 24196,
+        "sampleTime": "2025-05-15T09:19:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0
+        ],
+        "totalRain": 2.08,
+        "rainfall_mm_7day": 52.832,
+        "tide": "N/A",
+        "goodCount": 0,
+        "cautionCount": 0,
+        "poorCount": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.931294,
+          40.712069
+        ]
+      },
+      "properties": {
+        "siteName": "Newtown Creek, English Kills",
+        "mpn": 24196,
+        "sampleTime": "2025-05-15T08:00:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0
+        ],
+        "totalRain": 2.08,
+        "rainfall_mm_7day": 52.832,
+        "tide": "N/A",
+        "goodCount": 0,
+        "cautionCount": 0,
+        "poorCount": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -73.973576,
           40.731785
         ]
@@ -1016,7 +1136,7 @@
         "totalRain": 2.08,
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
-        "goodCount": 0,
+        "goodCount": 1,
         "cautionCount": 0,
         "poorCount": 1
       }
@@ -1526,9 +1646,39 @@
         "totalRain": 2.08,
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
-        "goodCount": 0,
+        "goodCount": 1,
         "cautionCount": 0,
         "poorCount": 1
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.989916,
+          40.676814
+        ]
+      },
+      "properties": {
+        "siteName": "Gowanus Canal, Second Street Sponge Park",
+        "mpn": 24196,
+        "sampleTime": "2025-05-15T08:00:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0
+        ],
+        "totalRain": 2.08,
+        "rainfall_mm_7day": 52.832,
+        "tide": "N/A",
+        "goodCount": 0,
+        "cautionCount": 0,
+        "poorCount": 2
       }
     },
     {
@@ -1618,6 +1768,66 @@
         "tide": "N/A",
         "goodCount": 0,
         "cautionCount": 0,
+        "poorCount": 1
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.96421,
+          40.655305
+        ]
+      },
+      "properties": {
+        "siteName": "Prospect Park Lake",
+        "mpn": 24196,
+        "sampleTime": "2025-05-15T07:30:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0
+        ],
+        "totalRain": 2.08,
+        "rainfall_mm_7day": 52.832,
+        "tide": "N/A",
+        "goodCount": 0,
+        "cautionCount": 0,
+        "poorCount": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.997941,
+          40.581025
+        ]
+      },
+      "properties": {
+        "siteName": "Coney Island Creek, Kaiser Park",
+        "mpn": 24196,
+        "sampleTime": "2025-05-15T07:00:00.000Z",
+        "rainByDay": [
+          0.69,
+          0.01,
+          0,
+          0,
+          0.16,
+          1.22,
+          0
+        ],
+        "totalRain": 2.08,
+        "rainfall_mm_7day": 52.832,
+        "tide": "N/A",
+        "goodCount": 0,
+        "cautionCount": 1,
         "poorCount": 1
       }
     },

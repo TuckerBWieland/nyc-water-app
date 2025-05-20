@@ -516,6 +516,66 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -74.016678,
+          40.703564
+        ]
+      },
+      "properties": {
+        "siteName": "Hudson River, Battery Park City, Rockefeller Park",
+        "mpn": 10,
+        "sampleTime": "2025-05-08T09:33:00.000Z",
+        "rainByDay": [
+          0,
+          0.95,
+          0.15,
+          0.74,
+          0.24,
+          0.02,
+          0.01
+        ],
+        "totalRain": 2.11,
+        "rainfall_mm_7day": 53.593999999999994,
+        "tide": "N/A",
+        "goodCount": 1,
+        "cautionCount": 0,
+        "poorCount": 0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.026094,
+          40.75532
+        ]
+      },
+      "properties": {
+        "siteName": "Hudson River, Weehawken Cove, Hoboken NJ",
+        "mpn": 10,
+        "sampleTime": "2025-05-08T09:33:00.000Z",
+        "rainByDay": [
+          0,
+          0.95,
+          0.15,
+          0.74,
+          0.24,
+          0.02,
+          0.01
+        ],
+        "totalRain": 2.11,
+        "rainfall_mm_7day": 53.593999999999994,
+        "tide": "N/A",
+        "goodCount": 1,
+        "cautionCount": 0,
+        "poorCount": 0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -74.022864,
           40.751744
         ]
@@ -1026,6 +1086,36 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -73.973576,
+          40.731785
+        ]
+      },
+      "properties": {
+        "siteName": "East River, Stuy Cove Park",
+        "mpn": 10,
+        "sampleTime": "2025-05-08T09:45:00.000Z",
+        "rainByDay": [
+          0,
+          0.95,
+          0.15,
+          0.74,
+          0.24,
+          0.02,
+          0.01
+        ],
+        "totalRain": 2.11,
+        "rainfall_mm_7day": 53.593999999999994,
+        "tide": "N/A",
+        "goodCount": 1,
+        "cautionCount": 0,
+        "poorCount": 0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -73.96176,
           40.73157
         ]
@@ -1468,6 +1558,36 @@
         "tide": "N/A",
         "goodCount": 0,
         "cautionCount": 1,
+        "poorCount": 0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.018372,
+          40.678574
+        ]
+      },
+      "properties": {
+        "siteName": "Buttermilk Channel, Valentino Pier",
+        "mpn": 10,
+        "sampleTime": "2025-05-08T09:23:00.000Z",
+        "rainByDay": [
+          0,
+          0.95,
+          0.15,
+          0.74,
+          0.24,
+          0.02,
+          0.01
+        ],
+        "totalRain": 2.11,
+        "rainfall_mm_7day": 53.593999999999994,
+        "tide": "N/A",
+        "goodCount": 1,
+        "cautionCount": 0,
         "poorCount": 0
       }
     },
