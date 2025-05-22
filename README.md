@@ -45,6 +45,7 @@ The application uses a static data approach for improved performance and reliabi
 1. **Data Processing Pipeline**:
 
    - Place sample and rainfall CSV files in `scripts/input/`
+     (this folder is included empty in the repository)
    - Run `npm run enrich` to convert the CSV files to GeoJSON and generate metadata
      with rainfall and tide information pulled from NOAA
    - Each dataset is stored in `public/data/<date>/` and the newest date is written to `latest.txt`
