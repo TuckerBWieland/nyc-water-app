@@ -41,7 +41,7 @@ function formatDate(date) {
 
 /**
  * Find the nearest NOAA tide station to the given location.
- * Searches within 10km and falls back to 25km.
+ * Searches within 5km and falls back to 10km.
  * @param {number} lat
  * @param {number} lon
  * @returns {Promise<{id:string,name:string}|null>}
@@ -61,7 +61,7 @@ async function findNearestTideStation(lat, lon) {
     for (const station of data.stations) {
       if (!station.lat || !station.lng) continue;
       const dist = calculateDistance(lat, lon, station.lat, station.lng);
-      if (dist <= 10 && dist < minDist) {
+      if (dist <= 5 && dist < minDist) {
         minDist = dist;
         nearest = { id: station.id, name: station.name };
       }
@@ -71,7 +71,7 @@ async function findNearestTideStation(lat, lon) {
       for (const station of data.stations) {
         if (!station.lat || !station.lng) continue;
         const dist = calculateDistance(lat, lon, station.lat, station.lng);
-        if (dist < minDist && dist <= 25) {
+        if (dist <= 10 && dist < minDist) {
           minDist = dist;
           nearest = { id: station.id, name: station.name };
         }
@@ -89,23 +89,38 @@ async function findNearestTideStation(lat, lon) {
  * Fetch tide readings around the sample time for the given station.
  * @param {string} stationId
  * @param {string} sampleTime ISO date string
- * @returns {Promise<Array<{t:string,v:string}>>}
+ * @returns {Promise<string>} Tide height in feet or "N/A"
  */
 async function getTideData(stationId, sampleTime) {
   try {
     const sampleDate = new Date(sampleTime);
-    const beginDate = new Date(sampleDate.getTime() - 90 * 60000);
-    const endDate = new Date(sampleDate.getTime() + 90 * 60000);
+    const beginDate = new Date(sampleDate.getTime() - 60 * 60000);
+    const endDate = new Date(sampleDate.getTime() + 60 * 60000);
     const begin = formatDate(beginDate);
     const end = formatDate(endDate);
-    const url = `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?station=${stationId}&product=water_level&datum=MLLW&time_zone=GMT&units=english&format=json&date_time=true&begin_date=${encodeURIComponent(begin)}&end_date=${encodeURIComponent(end)}`;
+    const url = `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?station=${stationId}&product=predictions&datum=MLLW&time_zone=GMT&units=english&format=json&begin_date=${encodeURIComponent(begin)}&end_date=${encodeURIComponent(end)}`;
     const res = await fetch(url);
     const data = await res.json();
-    if (data.error) return [];
-    return data.data || [];
+    if (!data.predictions || data.predictions.length === 0) return 'N/A';
+
+    const predictions = data.predictions.map(p => ({
+      time: new Date(p.t),
+      height: parseFloat(p.v),
+    }));
+    let closest = predictions[0];
+    let minDiff = Math.abs(predictions[0].time - sampleDate);
+    for (const p of predictions) {
+      const diff = Math.abs(p.time - sampleDate);
+      if (diff < minDiff) {
+        minDiff = diff;
+        closest = p;
+      }
+    }
+    if (!closest || isNaN(closest.height)) return 'N/A';
+    return closest.height.toFixed(2);
   } catch (err) {
     console.error('Error fetching tide data:', err);
-    return [];
+    return 'N/A';
   }
 }
 
