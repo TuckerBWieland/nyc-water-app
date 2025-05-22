@@ -28,7 +28,7 @@
         "tide": "N/A",
         "goodCount": 0,
         "cautionCount": 0,
-        "poorCount": 1
+        "poorCount": 2
       }
     },
     {
@@ -58,7 +58,7 @@
         "tide": "N/A",
         "goodCount": 0,
         "cautionCount": 0,
-        "poorCount": 1
+        "poorCount": 2
       }
     },
     {
@@ -88,7 +88,7 @@
         "tide": "N/A",
         "goodCount": 0,
         "cautionCount": 0,
-        "poorCount": 1
+        "poorCount": 2
       }
     },
     {
@@ -118,7 +118,7 @@
         "tide": "N/A",
         "goodCount": 0,
         "cautionCount": 0,
-        "poorCount": 1
+        "poorCount": 2
       }
     },
     {
@@ -148,7 +148,7 @@
         "tide": "N/A",
         "goodCount": 0,
         "cautionCount": 0,
-        "poorCount": 1
+        "poorCount": 2
       }
     },
     {
@@ -176,9 +176,9 @@
         "totalRain": 2.08,
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
-        "goodCount": 1,
+        "goodCount": 2,
         "cautionCount": 0,
-        "poorCount": 1
+        "poorCount": 2
       }
     },
     {
@@ -206,9 +206,9 @@
         "totalRain": 2.08,
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
-        "goodCount": 1,
+        "goodCount": 2,
         "cautionCount": 0,
-        "poorCount": 1
+        "poorCount": 2
       }
     },
     {
@@ -237,8 +237,8 @@
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
         "goodCount": 0,
-        "cautionCount": 1,
-        "poorCount": 1
+        "cautionCount": 2,
+        "poorCount": 2
       }
     },
     {
@@ -266,9 +266,9 @@
         "totalRain": 2.08,
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
-        "goodCount": 1,
+        "goodCount": 2,
         "cautionCount": 0,
-        "poorCount": 1
+        "poorCount": 2
       }
     },
     {
@@ -296,9 +296,9 @@
         "totalRain": 2.08,
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
-        "goodCount": 1,
+        "goodCount": 2,
         "cautionCount": 0,
-        "poorCount": 1
+        "poorCount": 2
       }
     },
     {
@@ -326,8 +326,8 @@
         "totalRain": 2.08,
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
-        "goodCount": 1,
-        "cautionCount": 1,
+        "goodCount": 2,
+        "cautionCount": 2,
         "poorCount": 0
       }
     },
@@ -356,7 +356,7 @@
         "totalRain": 2.08,
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
-        "goodCount": 2,
+        "goodCount": 4,
         "cautionCount": 0,
         "poorCount": 0
       }
@@ -386,7 +386,7 @@
         "totalRain": 2.08,
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
-        "goodCount": 2,
+        "goodCount": 4,
         "cautionCount": 0,
         "poorCount": 0
       }
@@ -416,8 +416,8 @@
         "totalRain": 2.08,
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
-        "goodCount": 1,
-        "cautionCount": 1,
+        "goodCount": 2,
+        "cautionCount": 2,
         "poorCount": 0
       }
     },
@@ -446,8 +446,8 @@
         "totalRain": 2.08,
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
-        "goodCount": 1,
-        "cautionCount": 1,
+        "goodCount": 2,
+        "cautionCount": 2,
         "poorCount": 0
       }
     },
@@ -476,9 +476,9 @@
         "totalRain": 2.08,
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
-        "goodCount": 1,
+        "goodCount": 2,
         "cautionCount": 0,
-        "poorCount": 1
+        "poorCount": 2
       }
     },
     {
@@ -506,9 +506,9 @@
         "totalRain": 2.08,
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
-        "goodCount": 1,
+        "goodCount": 2,
         "cautionCount": 0,
-        "poorCount": 1
+        "poorCount": 2
       }
     },
     {
@@ -536,8 +536,8 @@
         "totalRain": 2.08,
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
-        "goodCount": 1,
-        "cautionCount": 1,
+        "goodCount": 2,
+        "cautionCount": 2,
         "poorCount": 0
       }
     },
@@ -566,9 +566,9 @@
         "totalRain": 2.08,
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
-        "goodCount": 1,
+        "goodCount": 2,
         "cautionCount": 0,
-        "poorCount": 1
+        "poorCount": 2
       }
     },
     {
@@ -596,9 +596,9 @@
         "totalRain": 2.08,
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
-        "goodCount": 1,
+        "goodCount": 2,
         "cautionCount": 0,
-        "poorCount": 1
+        "poorCount": 2
       }
     },
     {
@@ -626,9 +626,9 @@
         "totalRain": 2.08,
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
-        "goodCount": 1,
+        "goodCount": 2,
         "cautionCount": 0,
-        "poorCount": 1
+        "poorCount": 2
       }
     },
     {
@@ -657,8 +657,8 @@
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
         "goodCount": 0,
-        "cautionCount": 1,
-        "poorCount": 1
+        "cautionCount": 2,
+        "poorCount": 2
       }
     },
     {
@@ -686,9 +686,9 @@
         "totalRain": 2.08,
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
-        "goodCount": 1,
+        "goodCount": 2,
         "cautionCount": 0,
-        "poorCount": 1
+        "poorCount": 2
       }
     },
     {
@@ -716,9 +716,9 @@
         "totalRain": 2.08,
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
-        "goodCount": 1,
+        "goodCount": 2,
         "cautionCount": 0,
-        "poorCount": 1
+        "poorCount": 2
       }
     },
     {
@@ -748,7 +748,7 @@
         "tide": "N/A",
         "goodCount": 0,
         "cautionCount": 0,
-        "poorCount": 2
+        "poorCount": 4
       }
     },
     {
@@ -778,7 +778,7 @@
         "tide": "N/A",
         "goodCount": 0,
         "cautionCount": 0,
-        "poorCount": 2
+        "poorCount": 4
       }
     },
     {
@@ -807,7 +807,7 @@
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
         "goodCount": 0,
-        "cautionCount": 1,
+        "cautionCount": 2,
         "poorCount": 0
       }
     },
@@ -838,7 +838,7 @@
         "tide": "N/A",
         "goodCount": 0,
         "cautionCount": 0,
-        "poorCount": 2
+        "poorCount": 4
       }
     },
     {
@@ -867,8 +867,8 @@
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
         "goodCount": 0,
-        "cautionCount": 1,
-        "poorCount": 1
+        "cautionCount": 2,
+        "poorCount": 2
       }
     },
     {
@@ -897,8 +897,8 @@
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
         "goodCount": 0,
-        "cautionCount": 1,
-        "poorCount": 1
+        "cautionCount": 2,
+        "poorCount": 2
       }
     },
     {
@@ -927,8 +927,8 @@
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
         "goodCount": 0,
-        "cautionCount": 1,
-        "poorCount": 1
+        "cautionCount": 2,
+        "poorCount": 2
       }
     },
     {
@@ -958,7 +958,7 @@
         "tide": "N/A",
         "goodCount": 0,
         "cautionCount": 0,
-        "poorCount": 2
+        "poorCount": 4
       }
     },
     {
@@ -986,9 +986,9 @@
         "totalRain": 2.08,
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
-        "goodCount": 1,
+        "goodCount": 2,
         "cautionCount": 0,
-        "poorCount": 1
+        "poorCount": 2
       }
     },
     {
@@ -1018,7 +1018,7 @@
         "tide": "N/A",
         "goodCount": 0,
         "cautionCount": 0,
-        "poorCount": 2
+        "poorCount": 4
       }
     },
     {
@@ -1046,9 +1046,9 @@
         "totalRain": 2.08,
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
-        "goodCount": 1,
+        "goodCount": 2,
         "cautionCount": 0,
-        "poorCount": 1
+        "poorCount": 2
       }
     },
     {
@@ -1078,7 +1078,7 @@
         "tide": "N/A",
         "goodCount": 0,
         "cautionCount": 0,
-        "poorCount": 2
+        "poorCount": 4
       }
     },
     {
@@ -1108,7 +1108,7 @@
         "tide": "N/A",
         "goodCount": 0,
         "cautionCount": 0,
-        "poorCount": 2
+        "poorCount": 4
       }
     },
     {
@@ -1136,9 +1136,9 @@
         "totalRain": 2.08,
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
-        "goodCount": 1,
+        "goodCount": 2,
         "cautionCount": 0,
-        "poorCount": 1
+        "poorCount": 2
       }
     },
     {
@@ -1166,9 +1166,9 @@
         "totalRain": 2.08,
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
-        "goodCount": 1,
+        "goodCount": 2,
         "cautionCount": 0,
-        "poorCount": 1
+        "poorCount": 2
       }
     },
     {
@@ -1197,8 +1197,8 @@
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
         "goodCount": 0,
-        "cautionCount": 1,
-        "poorCount": 1
+        "cautionCount": 2,
+        "poorCount": 2
       }
     },
     {
@@ -1227,8 +1227,8 @@
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
         "goodCount": 0,
-        "cautionCount": 1,
-        "poorCount": 1
+        "cautionCount": 2,
+        "poorCount": 2
       }
     },
     {
@@ -1257,8 +1257,8 @@
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
         "goodCount": 0,
-        "cautionCount": 1,
-        "poorCount": 1
+        "cautionCount": 2,
+        "poorCount": 2
       }
     },
     {
@@ -1287,8 +1287,8 @@
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
         "goodCount": 0,
-        "cautionCount": 1,
-        "poorCount": 1
+        "cautionCount": 2,
+        "poorCount": 2
       }
     },
     {
@@ -1318,7 +1318,7 @@
         "tide": "N/A",
         "goodCount": 0,
         "cautionCount": 0,
-        "poorCount": 2
+        "poorCount": 4
       }
     },
     {
@@ -1346,9 +1346,9 @@
         "totalRain": 2.08,
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
-        "goodCount": 1,
+        "goodCount": 2,
         "cautionCount": 0,
-        "poorCount": 1
+        "poorCount": 2
       }
     },
     {
@@ -1376,9 +1376,9 @@
         "totalRain": 2.08,
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
-        "goodCount": 1,
+        "goodCount": 2,
         "cautionCount": 0,
-        "poorCount": 1
+        "poorCount": 2
       }
     },
     {
@@ -1407,8 +1407,8 @@
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
         "goodCount": 0,
-        "cautionCount": 1,
-        "poorCount": 1
+        "cautionCount": 2,
+        "poorCount": 2
       }
     },
     {
@@ -1438,7 +1438,7 @@
         "tide": "N/A",
         "goodCount": 0,
         "cautionCount": 0,
-        "poorCount": 2
+        "poorCount": 4
       }
     },
     {
@@ -1468,7 +1468,7 @@
         "tide": "N/A",
         "goodCount": 0,
         "cautionCount": 0,
-        "poorCount": 1
+        "poorCount": 2
       }
     },
     {
@@ -1497,8 +1497,8 @@
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
         "goodCount": 0,
-        "cautionCount": 1,
-        "poorCount": 1
+        "cautionCount": 2,
+        "poorCount": 2
       }
     },
     {
@@ -1527,8 +1527,8 @@
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
         "goodCount": 0,
-        "cautionCount": 1,
-        "poorCount": 1
+        "cautionCount": 2,
+        "poorCount": 2
       }
     },
     {
@@ -1557,8 +1557,8 @@
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
         "goodCount": 0,
-        "cautionCount": 1,
-        "poorCount": 1
+        "cautionCount": 2,
+        "poorCount": 2
       }
     },
     {
@@ -1586,9 +1586,9 @@
         "totalRain": 2.08,
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
-        "goodCount": 1,
+        "goodCount": 2,
         "cautionCount": 0,
-        "poorCount": 1
+        "poorCount": 2
       }
     },
     {
@@ -1617,8 +1617,8 @@
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
         "goodCount": 0,
-        "cautionCount": 1,
-        "poorCount": 1
+        "cautionCount": 2,
+        "poorCount": 2
       }
     },
     {
@@ -1646,9 +1646,9 @@
         "totalRain": 2.08,
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
-        "goodCount": 1,
+        "goodCount": 2,
         "cautionCount": 0,
-        "poorCount": 1
+        "poorCount": 2
       }
     },
     {
@@ -1678,7 +1678,7 @@
         "tide": "N/A",
         "goodCount": 0,
         "cautionCount": 0,
-        "poorCount": 2
+        "poorCount": 4
       }
     },
     {
@@ -1707,7 +1707,7 @@
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
         "goodCount": 0,
-        "cautionCount": 2,
+        "cautionCount": 4,
         "poorCount": 0
       }
     },
@@ -1737,7 +1737,7 @@
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
         "goodCount": 0,
-        "cautionCount": 1,
+        "cautionCount": 2,
         "poorCount": 0
       }
     },
@@ -1768,7 +1768,7 @@
         "tide": "N/A",
         "goodCount": 0,
         "cautionCount": 0,
-        "poorCount": 1
+        "poorCount": 2
       }
     },
     {
@@ -1798,7 +1798,7 @@
         "tide": "N/A",
         "goodCount": 0,
         "cautionCount": 0,
-        "poorCount": 2
+        "poorCount": 4
       }
     },
     {
@@ -1827,8 +1827,8 @@
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
         "goodCount": 0,
-        "cautionCount": 1,
-        "poorCount": 1
+        "cautionCount": 2,
+        "poorCount": 2
       }
     },
     {
@@ -1858,7 +1858,7 @@
         "tide": "N/A",
         "goodCount": 0,
         "cautionCount": 0,
-        "poorCount": 1
+        "poorCount": 2
       }
     },
     {
@@ -1886,9 +1886,9 @@
         "totalRain": 2.08,
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
-        "goodCount": 1,
+        "goodCount": 2,
         "cautionCount": 0,
-        "poorCount": 1
+        "poorCount": 2
       }
     },
     {
@@ -1917,8 +1917,8 @@
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
         "goodCount": 0,
-        "cautionCount": 1,
-        "poorCount": 1
+        "cautionCount": 2,
+        "poorCount": 2
       }
     },
     {
@@ -1946,9 +1946,9 @@
         "totalRain": 2.08,
         "rainfall_mm_7day": 52.832,
         "tide": "N/A",
-        "goodCount": 1,
+        "goodCount": 2,
         "cautionCount": 0,
-        "poorCount": 1
+        "poorCount": 2
       }
     }
   ]
