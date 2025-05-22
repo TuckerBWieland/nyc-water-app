@@ -14,6 +14,8 @@ import { track, EVENT_CLICK_SITE_MARKER } from '../services/analytics';
 // Constants for MPN threshold values
 const MPN_THRESHOLD_LOW = 35;
 const MPN_THRESHOLD_MEDIUM = 104;
+// Maximum value that can be detected by the instrument
+const MPN_DETECTION_LIMIT = 24196;
 
 // Color constants
 const COLOR_GREEN = '#22c55e';
@@ -264,18 +266,26 @@ export default {
               .replace(/'/g, '&#039;');
 
           const sanitizedSite = sanitize(siteName);
-          const sanitizedMpn = sanitize(mpnValue === null ? 'N/A' : mpnValue.toString());
+          const sanitizedMpn = sanitize(
+            mpnValue === null ? 'N/A' : mpnValue.toString()
+          );
+          const isDetectionLimit = Number(mpnValue) === MPN_DETECTION_LIMIT;
+          const sanitizedMpnDisplay = `${sanitizedMpn}${isDetectionLimit ? '*' : ''}`;
 
           let popupContent = `
             <div class="site-popup">
               <div class="font-semibold text-lg site-name">${sanitizedSite}</div>
               <div class="mt-2 ${qualityColor} font-medium text-base">
-                ${sanitizedMpn} MPN/100mL
+                ${sanitizedMpnDisplay} MPN/100mL
               </div>
               <div class="mt-1 text-sm opacity-75">
                 ${qualityMessage}
               </div>
           `;
+
+          if (isDetectionLimit) {
+            popupContent += `<div class="text-xs opacity-75 mt-1">*Sample reached the instrument detection limit.</div>`;
+          }
 
           // Add sample time if available
           if (sampleTimeValue) {
