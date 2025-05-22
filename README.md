@@ -10,6 +10,7 @@ An interactive web application to visualize water quality data across various sa
 - Seasonal history showing counts in each quality bucket
 - Mobile-friendly responsive design
 - Light and dark theme support (defaults to dark)
+- Evenly spaced info, data, and donate buttons for quick access
 
 ## Technology Stack
 
