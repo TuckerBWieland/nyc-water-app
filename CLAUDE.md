@@ -7,10 +7,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Development server: `npm run dev`
 - Production build: `npm run build`
 - Preview build: `npm run preview`
-- Lint code: `npm run lint`
-- Format code: `npm run format`
+- Run tests: `npm run test`
 - Data enrichment: `npm run enrich` (converts CSV samples to enriched GeoJSON)
-- Deployment: `npm run deploy` (deploys to GitHub Pages)
+- Deployment: `npm run predeploy && npm run deploy` (deploys to GitHub Pages)
 
 ## Architecture
 
@@ -27,6 +26,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - The enrichment process adds rainfall totals and basic metadata
 - Run `npm run enrich` whenever new CSV files are added
 
+### Tide Services
+
+- NOAA tide data integration via `scripts/tide-services.js`
+- Finds nearest tide stations to sampling locations
+- Fetches and analyzes tide predictions around sampling times
+- Provides tide state information (rising/falling, high/low/mid)
+
 ### Analytics
 
 - Analytics are implemented using PostHog (`posthog-js`)
@@ -36,28 +42,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   - Events follow verb_object[_context] naming in snake_case
   - Configuration is managed through environment variables
 
-### Error Handling
-
-- Centralized error handling through `src/utils/errorHandler.js`
-- Error severity levels: INFO, WARNING, ERROR, FATAL
-- Context-aware error handling with optional reporting and user notification
-- All async operations should use try/catch with the error handler
-
-### Runtime Data Validation
-
-- Utility functions for validating GeoJSON and other external data
-- JSDoc comments document function parameters and return values
-- Data validation happens at runtime to ensure data integrity
-
 ### Component Architecture
 
-- Vue 3 Composition API with `<script>` and setup function
+- Vue 3 Composition API with `<script setup>` syntax
 - Composable functions for reusable logic in `src/composables/`:
-  - `useMap.js`: Leaflet map setup and management
-  - `useDataFetching.js`: Data fetching with error handling
-  - `useMarkers.js`: Map marker creation and management
-  - `useTheme.js`: Theme state management (dark/light)
-- Environment configuration via `src/config/index.js`
+  - `usePopupManager.js`: Manages popup states and visibility
+  - `useStaticData.js`: Handles static data fetching and processing
 
 ## Code Style Guidelines
 
@@ -71,19 +61,25 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - CSS: Use Tailwind utility classes; custom CSS in scoped style blocks
 - Async: Use async/await for asynchronous operations
 - State management: Vue refs and reactive objects
-- Error handling: Try/catch blocks with errorHandler utility
+- Error handling: Try/catch blocks with proper error logging
 - JSDoc comments for all functions and components
 
 ## Key Components
 
 - `MapViewer`: Main Leaflet map implementation with water quality indicators
 - `DateScroller`: UI for selecting different sampling dates
-- `HeaderOverlay`: Top information panel with site statistics
-- `SampleBarLegend` & `RainDropLegend`: Visual indicators for water quality
+- `DataInfoPopup`: Information popup for sample point details
+- `DonatePopup`: Donation modal for supporting the project
 - `InfoPopup`: Information modal for explaining the application
+- `SampleBarLegend` & `RainDropLegend`: Visual indicators for water quality and rainfall
 
 ## Theme Support
 
 - The application supports both light and dark themes
-- Theme state is managed via the `useTheme` composable
 - Map tiles and UI elements adapt to the current theme
+
+## Testing
+
+- Jest testing framework for unit tests
+- Tests are located in the `tests` directory
+- Run tests with `npm run test`
