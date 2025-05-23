@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import MapViewer from '../components/MapViewer.vue';
 import RainDropLegend from '../components/RainDropLegend.vue';
@@ -28,6 +28,19 @@ const availableDates = ref(['2025-05-08', '2025-05-15']);
 // Use the static data composable
 // Pass the date ref so the composable can react to updates
 const { data, metadata, loading, error, load } = useStaticData(date);
+
+// Calculate the percentage of samples testing poor for the week
+const poorPercentage = computed(() => {
+  if (!data.value || !Array.isArray(data.value.features)) return 0;
+  const total = data.value.features.length;
+  if (total === 0) return 0;
+  const poorCount = data.value.features.filter(
+    feature => Number(feature.properties.mpn) > 104
+  ).length;
+  return (poorCount / total) * 100;
+});
+
+const showDataInfoNotification = computed(() => poorPercentage.value > 25);
 
 onMounted(async () => {
   // Load data for the current date
@@ -99,7 +112,10 @@ const toggleDarkMode = () => {
 
       <!-- Info and action popups -->
       <InfoPopup :isDarkMode="isDarkMode" />
-      <DataInfoPopup :isDarkMode="isDarkMode" />
+      <DataInfoPopup
+        :isDarkMode="isDarkMode"
+        :showNotification="showDataInfoNotification"
+      />
       <DonatePopup :isDarkMode="isDarkMode" />
     </div>
 
