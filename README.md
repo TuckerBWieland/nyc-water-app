@@ -50,6 +50,7 @@ The application uses a static data approach for improved performance and reliabi
      with rainfall and tide information pulled from NOAA
    - Each dataset is stored in `public/data/<date>/` and the newest date is written to `latest.txt`
    - Processed CSV files are removed from `scripts/input/` once enrichment succeeds
+   - If a dataset for a date already exists, running the enrich script will overwrite the previous data
 
 2. **Data Files**:
 
