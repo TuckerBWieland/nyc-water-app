@@ -57,6 +57,8 @@ The application uses a static data approach for improved performance and reliabi
    - **Source Data**: Raw CSV files in `scripts/input/`
    - **Processed Data**: `public/data/<date>/enriched.geojson` and `metadata.json`
    - **Latest Date**: `public/data/latest.txt` indicates the most recent dataset
+   - **Available Dates**: `public/data/dates.json` lists all datasets in
+     ascending order
 
 3. **Runtime Data Flow**:
    - The index page reads `latest.txt` and redirects to the newest date
@@ -68,7 +70,9 @@ The application uses a static data approach for improved performance and reliabi
 Data processing is handled by a single script:
 
 - `scripts/enrich-data.js` - Reads CSV files from `scripts/input/` and writes GeoJSON
-  with rainfall totals and tide summaries to `public/data/<date>/`
+  with rainfall totals and tide summaries to `public/data/<date>/`.
+  It also updates `latest.txt` and `dates.json` so the app automatically
+  recognizes new datasets.
 
 ## Deployment
 

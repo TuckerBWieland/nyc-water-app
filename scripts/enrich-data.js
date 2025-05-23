@@ -230,6 +230,22 @@ async function processDatasets() {
   } else {
     console.warn('⚠️ No complete data sets found. No files processed.');
   }
+
+  // Always update dates.json to reflect available datasets
+  try {
+    const dirs = fs
+      .readdirSync(OUTPUT_DIR, { withFileTypes: true })
+      .filter(d => d.isDirectory() && /\d{4}-\d{2}-\d{2}/.test(d.name))
+      .map(d => d.name)
+      .sort();
+    fs.writeFileSync(
+      path.join(OUTPUT_DIR, 'dates.json'),
+      JSON.stringify(dirs, null, 2)
+    );
+    console.log(`📅 Updated dates.json with ${dirs.length} entries`);
+  } catch (err) {
+    console.warn('⚠️ Failed to update dates.json:', err);
+  }
 }
 
 /**
