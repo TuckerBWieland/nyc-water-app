@@ -89,7 +89,7 @@ async function findNearestTideStation(lat, lon) {
  * Fetch tide readings around the sample time for the given station.
  * @param {string} stationId
  * @param {string} sampleTime ISO date string
- * @returns {Promise<string>} Tide height in feet or "N/A"
+ * @returns {Promise<{height:string,predictions:Array}|null>} Tide info
  */
 async function getTideData(stationId, sampleTimestamp) {
   const sampleDate = new Date(sampleTimestamp);
@@ -115,7 +115,7 @@ async function getTideData(stationId, sampleTimestamp) {
     const json = await res.json();
     if (!json.predictions || json.predictions.length === 0) {
       console.warn(`No tide predictions for ${stationId} on ${dateStr}`);
-      return 'N/A';
+      return { height: 'N/A', predictions: null };
     }
 
     let closest = json.predictions[0];
@@ -128,10 +128,13 @@ async function getTideData(stationId, sampleTimestamp) {
       }
     }
 
-    return parseFloat(closest.v).toFixed(2);
+    return {
+      height: parseFloat(closest.v).toFixed(2),
+      predictions: json.predictions,
+    };
   } catch (err) {
     console.error(`Failed to fetch tide data for ${stationId}:`, err);
-    return 'N/A';
+    return { height: 'N/A', predictions: null };
   }
 }
 

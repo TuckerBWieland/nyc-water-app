@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const Papa = require('papaparse');
-const { findNearestTideStation, getTideData } = require('./tide-services');
+const { findNearestTideStation, getTideData, analyzeTideData } = require('./tide-services');
 
 // Thresholds for water quality buckets
 const MPN_THRESHOLD_LOW = 35;
@@ -297,16 +297,23 @@ async function processDateFiles(date, sampleFile, rainFile, historyCounts) {
         if (!station) {
           feature.properties.tideHeight = 'No tide station nearby';
         } else {
-          const height = await getTideData(
+          const { height, predictions } = await getTideData(
             station.id,
             feature.properties.timestamp,
           );
           feature.properties.tideHeight =
             height === 'N/A' ? 'N/A' : `${height} ft`;
+          const tideSummary = analyzeTideData(
+            predictions,
+            station.name,
+            feature.properties.timestamp,
+          );
+          feature.properties.tideState = tideSummary || 'Tide info unavailable';
         }
       } catch (err) {
         console.warn('Tide enrichment failed:', err);
         feature.properties.tideHeight = 'N/A';
+        feature.properties.tideState = 'Tide info unavailable';
       }
 
       // Update historical quality counts
