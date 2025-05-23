@@ -313,6 +313,8 @@ async function processDateFiles(date, sampleFile, rainFile, historyCounts) {
         const station = await findNearestTideStation(lat, lng);
         if (!station) {
           feature.properties.tideHeight = 'No tide station nearby';
+          feature.properties.tideState = 'Tide info unavailable';
+          feature.properties.tide = feature.properties.tideState;
         } else {
           const { height, predictions } = await getTideData(
             station.id,
@@ -326,11 +328,13 @@ async function processDateFiles(date, sampleFile, rainFile, historyCounts) {
             feature.properties.timestamp,
           );
           feature.properties.tideState = tideSummary || 'Tide info unavailable';
+          feature.properties.tide = feature.properties.tideState;
         }
       } catch (err) {
         console.warn('Tide enrichment failed:', err);
         feature.properties.tideHeight = 'N/A';
         feature.properties.tideState = 'Tide info unavailable';
+        feature.properties.tide = feature.properties.tideState;
       }
 
       // Update historical quality counts
