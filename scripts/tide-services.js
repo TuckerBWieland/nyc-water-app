@@ -177,6 +177,13 @@ function analyzeTideData(tideData, stationName, sampleTime) {
   let state = 'Mid Tide';
   if (curr >= highThresh) state = 'High Tide';
   else if (curr <= lowThresh) state = 'Low Tide';
+  
+  // Handle illogical combinations
+  if ((state === 'Low Tide' && !isRising) || (state === 'High Tide' && isRising)) {
+    // Just show the tide state without direction for these cases
+    return `${state} (${stationName})`;
+  }
+  
   const icon = isRising ? '⬆️' : '⬇️';
   return `${state} – ${icon} ${isRising ? 'Rising' : 'Falling'} (${stationName})`;
 }

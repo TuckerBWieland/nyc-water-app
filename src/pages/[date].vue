@@ -40,7 +40,7 @@ const poorPercentage = computed(() => {
   return (poorCount / total) * 100;
 });
 
-const showDataInfoNotification = computed(() => poorPercentage.value > 25);
+const showDataInfoNotification = computed(() => poorPercentage.value > 50);
 
 onMounted(async () => {
   // Load data for the current date
