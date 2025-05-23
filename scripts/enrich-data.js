@@ -72,6 +72,20 @@ function isDateProcessed(date) {
 }
 
 /**
+ * Remove previously processed data for a given date.
+ * @param {string} date - Date in YYYY-MM-DD format
+ */
+function removeProcessedData(date) {
+  const dir = path.join(OUTPUT_DIR, date);
+  try {
+    fs.rmSync(dir, { recursive: true, force: true });
+    console.log(`🗑️  Removed existing processed data for ${date}`);
+  } catch (err) {
+    console.warn(`⚠️  Failed to remove existing data for ${date}:`, err);
+  }
+}
+
+/**
  * Extract date from filename (e.g., "samples - 2025-05-08.csv" -> "2025-05-08")
  * @param {string} filename
  * @returns {string|null} The extracted date or null if no match
@@ -175,19 +189,22 @@ async function processDatasets() {
     }
   });
 
+  // Remove any existing processed data so we can overwrite with new files
+  for (const date of dateMap.keys()) {
+    if (isDateProcessed(date)) {
+      console.warn(`⚠️  Data for ${date} already exists and will be overwritten.`);
+      removeProcessedData(date);
+    }
+  }
+
   // Process each date that has both sample and rain files
   let processedDates = 0;
 
-  // Load existing history counts so new data can include seasonal context
+  // Load existing history counts after cleaning any overwritten dates
   const historyCounts = loadHistoricalCounts();
 
   for (const [date, files] of dateMap.entries()) {
     if (files.samples && files.rain) {
-      if (isDateProcessed(date)) {
-        console.warn(`⚠️  Data for ${date} already exists. Skipping to avoid duplicates.`);
-        continue;
-      }
-
       const success = await processDateFiles(date, files.samples, files.rain, historyCounts);
       if (success) {
         processedDates++;
