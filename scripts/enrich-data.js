@@ -258,18 +258,39 @@ async function processDateFiles(date, sampleFile, rainFile, historyCounts) {
       }
 
       const isoTime = formatSampleTime(date, sampleTime);
-      let tideHeight = 'N/A';
+
+      const feature = {
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: [lng, lat],
+        },
+        properties: {
+          siteName,
+          mpn: mpnValue,
+          timestamp: isoTime,
+          sampleTime: isoTime,
+          rainByDay,
+          totalRain,
+          rainfall_mm_7day,
+        },
+      };
 
       try {
         const station = await findNearestTideStation(lat, lng);
         if (!station) {
-          tideHeight = 'No tide station nearby';
+          feature.properties.tideHeight = 'No tide station nearby';
         } else {
-          const height = await getTideData(station.id, isoTime);
-          tideHeight = height === 'N/A' ? 'N/A' : `${height} ft`;
+          const height = await getTideData(
+            station.id,
+            feature.properties.timestamp,
+          );
+          feature.properties.tideHeight =
+            height === 'N/A' ? 'N/A' : `${height} ft`;
         }
       } catch (err) {
         console.warn('Tide enrichment failed:', err);
+        feature.properties.tideHeight = 'N/A';
       }
 
       // Update historical quality counts
@@ -280,26 +301,11 @@ async function processDateFiles(date, sampleFile, rainFile, historyCounts) {
       historyCounts.get(siteName)[bucket]++;
       const { good, caution, poor } = historyCounts.get(siteName);
 
-      // Create GeoJSON feature
-      features.push({
-        type: 'Feature',
-        geometry: {
-          type: 'Point',
-          coordinates: [lng, lat],
-        },
-        properties: {
-          siteName,
-          mpn: mpnValue,
-          sampleTime: isoTime,
-          rainByDay,
-          totalRain,
-          rainfall_mm_7day,
-          tideHeight,
-          goodCount: good,
-          cautionCount: caution,
-          poorCount: poor,
-        },
-      });
+      feature.properties.goodCount = good;
+      feature.properties.cautionCount = caution;
+      feature.properties.poorCount = poor;
+
+      features.push(feature);
     }
 
     // Create output directory if it doesn't exist

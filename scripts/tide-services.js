@@ -91,35 +91,46 @@ async function findNearestTideStation(lat, lon) {
  * @param {string} sampleTime ISO date string
  * @returns {Promise<string>} Tide height in feet or "N/A"
  */
-async function getTideData(stationId, sampleTime) {
-  try {
-    const sampleDate = new Date(sampleTime);
-    const beginDate = new Date(sampleDate.getTime() - 60 * 60000);
-    const endDate = new Date(sampleDate.getTime() + 60 * 60000);
-    const begin = formatDate(beginDate);
-    const end = formatDate(endDate);
-    const url = `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?station=${stationId}&product=predictions&datum=MLLW&time_zone=GMT&units=english&format=json&begin_date=${encodeURIComponent(begin)}&end_date=${encodeURIComponent(end)}`;
-    const res = await fetch(url);
-    const data = await res.json();
-    if (!data.predictions || data.predictions.length === 0) return 'N/A';
+async function getTideData(stationId, sampleTimestamp) {
+  const sampleDate = new Date(sampleTimestamp);
+  const yyyy = sampleDate.getFullYear();
+  const mm = String(sampleDate.getMonth() + 1).padStart(2, '0');
+  const dd = String(sampleDate.getDate()).padStart(2, '0');
+  const dateStr = `${yyyy}${mm}${dd}`;
 
-    const predictions = data.predictions.map(p => ({
-      time: new Date(p.t),
-      height: parseFloat(p.v),
-    }));
-    let closest = predictions[0];
-    let minDiff = Math.abs(predictions[0].time - sampleDate);
-    for (const p of predictions) {
-      const diff = Math.abs(p.time - sampleDate);
+  const url =
+    `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter` +
+    `?product=predictions` +
+    `&datum=MLLW` +
+    `&station=${stationId}` +
+    `&time_zone=lst_ldt` +
+    `&units=english` +
+    `&interval=h` +
+    `&format=json` +
+    `&begin_date=${dateStr}` +
+    `&end_date=${dateStr}`;
+
+  try {
+    const res = await fetch(url);
+    const json = await res.json();
+    if (!json.predictions || json.predictions.length === 0) {
+      console.warn(`No tide predictions for ${stationId} on ${dateStr}`);
+      return 'N/A';
+    }
+
+    let closest = json.predictions[0];
+    let minDiff = Math.abs(new Date(closest.t) - sampleDate);
+    for (const pred of json.predictions) {
+      const diff = Math.abs(new Date(pred.t) - sampleDate);
       if (diff < minDiff) {
+        closest = pred;
         minDiff = diff;
-        closest = p;
       }
     }
-    if (!closest || isNaN(closest.height)) return 'N/A';
-    return closest.height.toFixed(2);
+
+    return parseFloat(closest.v).toFixed(2);
   } catch (err) {
-    console.error('Error fetching tide data:', err);
+    console.error(`Failed to fetch tide data for ${stationId}:`, err);
     return 'N/A';
   }
 }
