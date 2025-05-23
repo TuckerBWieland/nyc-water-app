@@ -61,6 +61,17 @@ const INPUT_DIR = './scripts/input/';
 const OUTPUT_DIR = './public/data';
 
 /**
+ * Check if a date has already been processed by looking for an existing
+ * enriched GeoJSON file.
+ * @param {string} date - Date in YYYY-MM-DD format
+ * @returns {boolean} True if data for the date already exists
+ */
+function isDateProcessed(date) {
+  const geojsonFile = path.join(OUTPUT_DIR, date, 'enriched.geojson');
+  return fs.existsSync(geojsonFile);
+}
+
+/**
  * Extract date from filename (e.g., "samples - 2025-05-08.csv" -> "2025-05-08")
  * @param {string} filename
  * @returns {string|null} The extracted date or null if no match
@@ -172,6 +183,11 @@ async function processDatasets() {
 
   for (const [date, files] of dateMap.entries()) {
     if (files.samples && files.rain) {
+      if (isDateProcessed(date)) {
+        console.warn(`⚠️  Data for ${date} already exists. Skipping to avoid duplicates.`);
+        continue;
+      }
+
       const success = await processDateFiles(date, files.samples, files.rain, historyCounts);
       if (success) {
         processedDates++;
