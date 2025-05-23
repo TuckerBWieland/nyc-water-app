@@ -2,7 +2,7 @@
   <div
     v-if="isOpen"
     :class="[
-      'fixed bottom-[calc(5rem+env(safe-area-inset-bottom,0px))] left-1/2 transform -translate-x-1/2 p-4 rounded-lg shadow-lg z-40 max-w-md w-[90%] mx-auto transition-colors duration-300',
+      'fixed bottom-20 left-1/2 transform -translate-x-1/2 p-4 rounded-lg shadow-lg z-40 max-w-md w-[90%] mx-auto transition-colors duration-300',
       isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black',
     ]"
   >
