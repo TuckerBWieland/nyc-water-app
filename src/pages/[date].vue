@@ -20,10 +20,8 @@ if (typeof document !== 'undefined') {
   document.documentElement.classList.toggle('dark', isDarkMode.value);
   document.body.classList.toggle('dark', isDarkMode.value);
 }
-// List available data dates in ascending order so the "previous" button
-// moves back in time. The most recent date must be included as the last
-// item so it can be selected by default via latest.txt.
-const availableDates = ref(['2025-05-08', '2025-05-15']);
+// List of available data dates will be loaded from dates.json
+const availableDates = ref([]);
 
 // Use the static data composable
 // Pass the date ref so the composable can react to updates
@@ -43,6 +41,20 @@ const poorPercentage = computed(() => {
 const showDataInfoNotification = computed(() => poorPercentage.value > 50);
 
 onMounted(async () => {
+  // Load list of available dates
+  try {
+    const base = import.meta.env.MODE === 'production' ? '/nyc-water-app' : '';
+    const res = await fetch(`${base}/data/dates.json`);
+    if (res.ok) {
+      const dates = await res.json();
+      availableDates.value = Array.isArray(dates) ? dates.sort() : [];
+    } else {
+      console.warn('Failed to fetch dates.json:', res.status);
+    }
+  } catch (err) {
+    console.warn('Error fetching dates.json:', err);
+  }
+
   // Load data for the current date
   await load();
   console.log('Data loaded:', data.value);
