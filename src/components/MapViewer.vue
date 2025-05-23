@@ -466,7 +466,8 @@ export default {
   margin: 18px 20px;
   font-family: inherit;
   line-height: 1.5;
-  min-width: 180px;
+  width: 220px;
+  max-width: 220px;
 }
 
 /* Fix close button position */
@@ -496,7 +497,7 @@ export default {
 
 .site-popup .site-name {
   word-wrap: break-word;
-  max-width: 250px;
+  max-width: 100%;
 }
 
 /* Quality indicators */
