@@ -48,6 +48,7 @@
 
 <script>
 import { computed } from 'vue';
+import { useRouter } from 'vue-router';
 
 export default {
   name: 'DateScroller',
@@ -67,6 +68,8 @@ export default {
   },
   emits: ['update:modelValue'],
   setup(props, { emit }) {
+    const router = useRouter();
+
     // Computed properties
     const currentIndex = computed(() => {
       return props.dates.indexOf(props.modelValue);
@@ -104,6 +107,7 @@ export default {
       if (hasPrevious.value) {
         const newDate = props.dates[currentIndex.value - 1];
         emit('update:modelValue', newDate);
+        router.push({ path: `/${newDate}` });
       }
     };
 
@@ -111,6 +115,7 @@ export default {
       if (hasNext.value) {
         const newDate = props.dates[currentIndex.value + 1];
         emit('update:modelValue', newDate);
+        router.push({ path: `/${newDate}` });
       }
     };
 
