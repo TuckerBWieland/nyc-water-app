@@ -64,7 +64,7 @@ onMounted(async () => {
 watch(
   () => route.params.date,
   newDate => {
-    if (newDate && newDate !== date.value) {
+    if (newDate) {
       console.log('Route date changed:', newDate);
       date.value = newDate;
       load(newDate);
@@ -72,14 +72,6 @@ watch(
   }
 );
 
-// Watch for date changes to reload data
-watch(date, newDate => {
-  console.log('Date changed:', newDate);
-  if (newDate) {
-    load(newDate);
-    router.push({ path: `/${newDate}` });
-  }
-});
 
 // Watch for dark mode changes to update body class
 watch(isDarkMode, val => {
