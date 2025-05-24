@@ -37,6 +37,13 @@
         <span class="text-red-500 font-medium">Red</span>: &gt; 104 MPN/100mL - Unacceptable for
         swimming
       </p>
+      <p class="mt-4 font-semibold">What does MPN mean?</p>
+      <p>
+        MPN stands for Most Probable Number — it's a way of estimating the number of
+        bacteria in a water sample. Higher MPN values suggest more contamination and a
+        higher risk for swimmers. Levels above 104 MPN/100mL are typically considered
+        unsafe for recreational water.
+      </p>
     </div>
   </div>
 
