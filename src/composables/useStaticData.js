@@ -20,6 +20,21 @@ export function useStaticData(dateRef) {
     error.value = null;
     loading.value = true;
 
+    const cacheKey = `staticData-${currentDate}`;
+    try {
+      const cached =
+        typeof sessionStorage !== 'undefined' && sessionStorage.getItem(cacheKey);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        data.value = parsed.geojson;
+        metadata.value = parsed.metadata;
+        loading.value = false;
+        return;
+      }
+    } catch (err) {
+      console.warn('Failed to read from sessionStorage', err);
+    }
+
     try {
       // Get the base URL for GitHub Pages
       const base = import.meta.env.MODE === 'production' ? '/nyc-water-app' : '';
@@ -48,6 +63,17 @@ export function useStaticData(dateRef) {
 
       data.value = geojsonData;
       metadata.value = metadataData;
+
+      try {
+        if (typeof sessionStorage !== 'undefined') {
+          sessionStorage.setItem(
+            cacheKey,
+            JSON.stringify({ geojson: geojsonData, metadata: metadataData })
+          );
+        }
+      } catch (err) {
+        console.warn('Failed to write to sessionStorage', err);
+      }
     } catch (err) {
       console.error('Error loading data:', err);
       error.value = err.message;
