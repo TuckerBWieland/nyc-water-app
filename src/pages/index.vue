@@ -1,5 +1,13 @@
 <script setup>
-// Redirect handled in index.html during production build
+import { onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import latestDate from '../generated/latest-date.js';
+
+const router = useRouter();
+
+onMounted(() => {
+  router.replace(`/${latestDate}`);
+});
 </script>
 
 <template>

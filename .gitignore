@@ -25,4 +25,6 @@ dist-ssr
 *.sw?
 .env
 .env.local
+# Build-time generated files
+src/generated/
 
