@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="!isMobile || !featurePopupOpen"
     class="sample-bar-legend p-2 rounded shadow-md"
     :class="isDarkMode ? 'bg-gray-800 text-gray-200' : 'bg-white text-gray-800'"
   >
@@ -61,6 +62,8 @@
 
 <script>
 import { computed } from 'vue';
+import { isMobile } from '../composables/useScreenSize';
+import { featurePopupOpen } from '../stores/featurePopupState';
 
 export default {
   name: 'SampleBarLegend',
@@ -116,6 +119,8 @@ export default {
       greenPercentage,
       yellowPercentage,
       redPercentage,
+      isMobile,
+      featurePopupOpen,
     };
   },
 };
