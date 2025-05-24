@@ -79,7 +79,6 @@ function removeProcessedData(date) {
   const dir = path.join(OUTPUT_DIR, date);
   try {
     fs.rmSync(dir, { recursive: true, force: true });
-    console.log(`🗑️  Removed existing processed data for ${date}`);
   } catch (err) {
     console.warn(`⚠️  Failed to remove existing data for ${date}:`, err);
   }
@@ -211,7 +210,6 @@ async function processDatasets() {
         try {
           fs.unlinkSync(path.join(INPUT_DIR, files.samples));
           fs.unlinkSync(path.join(INPUT_DIR, files.rain));
-          console.log(`🗑️  Removed input files for ${date}`);
         } catch (err) {
           console.warn(`⚠️  Could not delete input files for ${date}:`, err);
         }
@@ -226,7 +224,6 @@ async function processDatasets() {
   // Update latest.txt if we processed any dates
   if (latestDate && processedDates > 0) {
     fs.writeFileSync(path.join(OUTPUT_DIR, 'latest.txt'), latestDate);
-    console.log(`✅ Updated latest.txt to ${latestDate}`);
   } else {
     console.warn('⚠️ No complete data sets found. No files processed.');
   }
@@ -240,9 +237,8 @@ async function processDatasets() {
       .sort();
     fs.writeFileSync(
       path.join(OUTPUT_DIR, 'dates.json'),
-      JSON.stringify(dirs, null, 2)
-    );
-    console.log(`📅 Updated dates.json with ${dirs.length} entries`);
+    JSON.stringify(dirs, null, 2)
+  );
   } catch (err) {
     console.warn('⚠️ Failed to update dates.json:', err);
   }
@@ -255,7 +251,6 @@ async function processDatasets() {
  * @param {string} rainFile - Rain file name
  */
 async function processDateFiles(date, sampleFile, rainFile, historyCounts) {
-  console.log(`\n📅 Processing data for ${date}...`);
 
   try {
     // Read and parse files
@@ -388,22 +383,14 @@ async function processDateFiles(date, sampleFile, rainFile, historyCounts) {
     };
     fs.writeFileSync(path.join(outputPath, 'metadata.json'), JSON.stringify(metadata, null, 2));
 
-    console.log(
-      `✅ Processed ${date}: ${features.length} samples enriched with rainfall and tide data`
-    );
-    console.log(`📊 Sheet summary for ${date}: ${totalSites} rows total`);
-    if (skipped > 0) {
-      console.log(
-        `⚠️ Skipped ${skipped} rows due to missing data (lat/lng: ${skippedLatLng}, MPN: ${skippedMpn})`
-      );
-    } else {
-      console.log('No rows skipped due to missing data');
-    }
+
+    // skipped rows information previously logged
 
     // Log first feature as sample
     if (features.length > 0) {
-      console.log('\n🧪 Sample feature (first item):');
-      console.log(JSON.stringify(features[0].properties, null, 2));
+      /* eslint-disable no-console */
+      /* Sample feature for debugging; removed console log as per guidelines */
+      /* eslint-enable no-console */
     }
 
     return true;
@@ -417,7 +404,6 @@ async function processDateFiles(date, sampleFile, rainFile, historyCounts) {
 (async () => {
   try {
     await processDatasets();
-    console.log('\n✨ Enrichment process complete!');
   } catch (err) {
     console.error('❌ Error in enrichment process:', err);
     process.exit(1);

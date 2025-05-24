@@ -9,7 +9,6 @@ export function useStaticData(dateRef) {
   const error = ref(null);
 
   async function load(currentDate = unref(dateRef)) {
-    console.log(`Loading data for date: ${currentDate}`);
 
     if (!currentDate) {
       console.error('No date provided');
@@ -43,7 +42,6 @@ export function useStaticData(dateRef) {
       const geojsonUrl = `${base}/data/${currentDate}/enriched.geojson`;
       const metadataUrl = `${base}/data/${currentDate}/metadata.json`;
 
-      console.log(`Fetching from: ${geojsonUrl} and ${metadataUrl}`);
 
       const [geojsonRes, metadataRes] = await Promise.all([fetch(geojsonUrl), fetch(metadataUrl)]);
 
@@ -58,8 +56,6 @@ export function useStaticData(dateRef) {
       const geojsonData = await geojsonRes.json();
       const metadataData = await metadataRes.json();
 
-      console.log('GeoJSON loaded with features:', geojsonData.features?.length);
-      console.log('Metadata loaded:', metadataData);
 
       data.value = geojsonData;
       metadata.value = metadataData;

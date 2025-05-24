@@ -57,7 +57,6 @@ onMounted(async () => {
 
   // Load data for the current date
   await load();
-  console.log('Data loaded:', data.value);
 });
 
 // Watch for route parameter changes
@@ -65,7 +64,6 @@ watch(
   () => route.params.date,
   newDate => {
     if (newDate) {
-      console.log('Route date changed:', newDate);
       date.value = newDate;
       load(newDate);
     }
