@@ -1,6 +1,8 @@
 <template>
   <div
     v-if="isOpen"
+    ref="popupRef"
+    @click.stop
     :class="[
       'fixed bottom-20 left-1/2 transform -translate-x-1/2 p-4 rounded-lg shadow-lg z-40 max-w-md w-[90%] mx-auto transition-colors duration-300',
       isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black',
@@ -66,7 +68,7 @@
 </template>
 
 <script>
-import { toRef } from 'vue';
+import { toRef, ref, watch, onUnmounted } from 'vue';
 import { usePopupManager } from '../composables/usePopupManager';
 import {
   track,
@@ -88,7 +90,26 @@ export default {
     },
   },
   setup(props) {
-    const { isOpen, togglePopup: baseToggle } = usePopupManager('data-info');
+    const { isOpen, togglePopup: baseToggle, closePopup } = usePopupManager('data-info');
+    const popupRef = ref(null);
+
+    const handleOutsideClick = e => {
+      if (popupRef.value && !popupRef.value.contains(e.target)) {
+        closePopup();
+      }
+    };
+
+    watch(isOpen, open => {
+      if (open) {
+        document.addEventListener('click', handleOutsideClick);
+      } else {
+        document.removeEventListener('click', handleOutsideClick);
+      }
+    });
+
+    onUnmounted(() => {
+      document.removeEventListener('click', handleOutsideClick);
+    });
 
     const togglePopup = () => {
       const wasClosed = !isOpen.value;
@@ -108,6 +129,7 @@ export default {
       togglePopup,
       trackOutbound,
       showNotification: toRef(props, 'showNotification'),
+      popupRef,
     };
   },
 };
