@@ -61,7 +61,8 @@ The application uses a static data approach for improved performance and reliabi
      ascending order
 
 3. **Runtime Data Flow**:
-   - The index page reads `latest.txt` and redirects to the newest date
+   - The latest dataset date is compiled into the app during the build
+   - On load, the Vue router redirects to that newest date
    - Each date page fetches the corresponding `enriched.geojson` and `metadata.json`
    - All data is served as static files for fast loading
 
