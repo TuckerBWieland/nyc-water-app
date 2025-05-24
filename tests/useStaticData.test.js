@@ -1,15 +1,41 @@
 import { ref } from 'vue';
 import { useStaticData } from '../src/composables/useStaticData';
 
+class MockStorage {
+  constructor() {
+    this.store = {};
+  }
+
+  getItem(key) {
+    return this.store[key] || null;
+  }
+
+  setItem(key, value) {
+    this.store[key] = String(value);
+  }
+
+  removeItem(key) {
+    delete this.store[key];
+  }
+
+  clear() {
+    this.store = {};
+  }
+}
+
 describe('useStaticData', () => {
   let originalFetch;
+  let originalSessionStorage;
 
   beforeEach(() => {
     originalFetch = global.fetch;
+    originalSessionStorage = global.sessionStorage;
+    global.sessionStorage = new MockStorage();
   });
 
   afterEach(() => {
     global.fetch = originalFetch;
+    global.sessionStorage = originalSessionStorage;
     jest.clearAllMocks();
   });
 
@@ -81,5 +107,47 @@ describe('useStaticData', () => {
     expect(data.value).toBe(null);
     expect(metadata.value).toBe(null);
     expect(loading.value).toBe(false);
+  });
+
+  test('caches data in sessionStorage after load', async () => {
+    const geojson = { features: [1] };
+    const meta = { updated: '2023-04-01' };
+
+    global.fetch = jest
+      .fn()
+      .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve(geojson) })
+      .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve(meta) });
+
+    const date = ref('2023-04-01');
+    const { load } = useStaticData(date);
+
+    await load();
+
+    const cached = JSON.parse(
+      global.sessionStorage.getItem('staticData-2023-04-01')
+    );
+    expect(cached.geojson).toEqual(geojson);
+    expect(cached.metadata).toEqual(meta);
+  });
+
+  test('uses cached data when available', async () => {
+    const geojson = { features: [1] };
+    const meta = { updated: '2023-05-01' };
+
+    global.sessionStorage.setItem(
+      'staticData-2023-05-01',
+      JSON.stringify({ geojson, metadata: meta })
+    );
+
+    global.fetch = jest.fn();
+
+    const date = ref('2023-05-01');
+    const { data, metadata, load } = useStaticData(date);
+
+    await load();
+
+    expect(data.value).toEqual(geojson);
+    expect(metadata.value).toEqual(meta);
+    expect(global.fetch).not.toHaveBeenCalled();
   });
 });
