@@ -10,23 +10,34 @@ export const EVENT_OPEN_POPUP = 'open_popup';
 let isInitialized = false;
 
 export async function initAnalytics() {
-  const key = import.meta.env.VITE_POSTHOG_KEY;
-  if (!key || isInitialized) {
-    return;
+  try {
+    const key = import.meta.env.VITE_POSTHOG_KEY;
+    if (!key || isInitialized) {
+      console.warn('PostHog key not found or already initialized');
+      return;
+    }
+
+    const mod = await import('posthog-js');
+    posthog = mod.default || mod;
+
+    posthog.init(key, {
+      api_host: import.meta.env.VITE_POSTHOG_HOST || 'https://app.posthog.com',
+      autocapture: true,
+    });
+
+    isInitialized = true;
+  } catch (error) {
+    console.error('Failed to initialize analytics:', error);
+    // Don't throw - let the app work without analytics
   }
-
-  const mod = await import('posthog-js');
-  posthog = mod.default || mod;
-
-  posthog.init(key, {
-    api_host: import.meta.env.VITE_POSTHOG_HOST || 'https://app.posthog.com',
-    autocapture: true,
-  });
-
-  isInitialized = true;
 }
 
 export function track(event, properties = {}) {
-  if (!isInitialized) return;
-  posthog.capture(event, properties);
+  try {
+    if (!isInitialized || !posthog) return;
+    posthog.capture(event, properties);
+  } catch (error) {
+    console.error('Analytics tracking error:', error);
+    // Don't throw - let the app continue working
+  }
 }
