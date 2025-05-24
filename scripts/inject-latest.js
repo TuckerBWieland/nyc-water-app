@@ -25,5 +25,4 @@ const html = fs.readFileSync(indexPath, 'utf-8');
 const metaTag = `<meta http-equiv="refresh" content="0; url=${redirectUrl}">`;
 const newHtml = html.replace(/<head>/i, `<head>\n    ${metaTag}`);
 fs.writeFileSync(indexPath, newHtml);
-console.log(`Injected redirect to ${redirectUrl} into index.html`);
 

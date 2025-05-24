@@ -233,8 +233,7 @@ export default {
         return;
       }
 
-      // Log total number of features
-      console.log(`Total features on map: ${data.features.length}`);
+      // Total number of features available
 
       for (const feature of data.features) {
         try {
