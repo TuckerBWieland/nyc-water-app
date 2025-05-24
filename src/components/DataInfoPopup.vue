@@ -30,6 +30,7 @@
         Rainfall data is sourced from NOAA’s National Weather Service, specifically from the Central Park
         weather station. This provides a consistent benchmark for citywide precipitation.
       </p>
+      <br>
       <p>
         Tide data comes from NOAA’s tide predictions, using the Battery (NY) tidal station as a reference.
         Tidal stage helps us understand how water is moving through the estuary, which affects how pollutants
