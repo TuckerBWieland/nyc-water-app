@@ -1,6 +1,8 @@
 <template>
   <div
     v-if="isOpen"
+    ref="popupRef"
+    @click.stop
     :class="[
       'fixed bottom-20 left-1/2 transform -translate-x-1/2 p-4 rounded-lg shadow-lg z-40 max-w-md w-[90%] mx-auto transition-colors duration-300',
       isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black',
@@ -60,7 +62,7 @@
 </template>
 
 <script>
-import { onMounted } from 'vue';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
 import { usePopupManager } from '../composables/usePopupManager';
 import { track, EVENT_OPEN_POPUP } from '../services/analytics';
 
@@ -73,7 +75,26 @@ export default {
     },
   },
   setup() {
-    const { isOpen, togglePopup: baseToggle } = usePopupManager('info');
+    const { isOpen, togglePopup: baseToggle, closePopup } = usePopupManager('info');
+    const popupRef = ref(null);
+
+    const handleOutsideClick = e => {
+      if (popupRef.value && !popupRef.value.contains(e.target)) {
+        closePopup();
+      }
+    };
+
+    watch(isOpen, open => {
+      if (open) {
+        document.addEventListener('click', handleOutsideClick);
+      } else {
+        document.removeEventListener('click', handleOutsideClick);
+      }
+    });
+
+    onUnmounted(() => {
+      document.removeEventListener('click', handleOutsideClick);
+    });
 
     const togglePopup = (trackEvent = true) => {
       const wasClosed = !isOpen.value;
@@ -98,6 +119,7 @@ export default {
     return {
       isOpen,
       togglePopup,
+      popupRef,
     };
   },
 };
