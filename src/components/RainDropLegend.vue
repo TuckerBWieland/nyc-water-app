@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="hasValidRainfallData"
+    v-if="(!isMobile || !featurePopupOpen) && hasValidRainfallData"
     class="rain-drop-legend p-3 rounded shadow-md"
     :class="isDarkMode ? 'bg-gray-800 text-gray-200' : 'bg-white text-gray-800'"
   >
@@ -43,6 +43,8 @@
 
 <script>
 import { computed } from 'vue';
+import { isMobile } from '../composables/useScreenSize';
+import { featurePopupOpen } from '../stores/featurePopupState';
 
 // Days of the week labels (Friday to Thursday, ending with sample day)
 const dayLabels = ['F', 'S', 'S', 'M', 'T', 'W', 'Th'];
@@ -124,6 +126,8 @@ export default {
       getBarColorClass,
       getDayLabel,
       getBarHeight,
+      isMobile,
+      featurePopupOpen,
     };
   },
 };

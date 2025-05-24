@@ -7,6 +7,8 @@
 
 <script>
 import { ref, onMounted, watch, onUnmounted } from 'vue';
+import { isMobile } from '../composables/useScreenSize';
+import { featurePopupOpen } from '../stores/featurePopupState';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { track, EVENT_CLICK_SITE_MARKER } from '../services/analytics';
@@ -101,6 +103,41 @@ export default {
         iconAnchor: [8, 32],
         popupAnchor: [0, -34],
       });
+    };
+
+    // Generate HTML for the rainfall chart used inside mobile popups
+    const generateRainChart = data => {
+      const dayLabels = ['F', 'S', 'S', 'M', 'T', 'W', 'Th'];
+      const numericValues = (data || []).filter(
+        v => typeof v === 'number' && !Number.isNaN(v)
+      );
+      const max = numericValues.length ? Math.max(...numericValues) : 0;
+      const getColor = value => {
+        if (value === null || value === undefined)
+          return props.isDarkMode ? 'bg-gray-500' : 'bg-gray-300';
+        if (value < 0.5) return props.isDarkMode ? 'bg-green-600' : 'bg-green-500';
+        if (value < 3.0) return props.isDarkMode ? 'bg-yellow-500' : 'bg-yellow-400';
+        return props.isDarkMode ? 'bg-red-600' : 'bg-red-500';
+      };
+      return `
+        <div class="flex items-end justify-between h-16 mb-1">
+          ${data
+            .map((val, idx) => {
+              const height = max === 0 ? 0 : (val / max) * 100;
+              const valDisplay = val && val > 0 ? Number(val).toFixed(1) : '';
+              return `
+                <div class="flex flex-col items-center group h-full justify-end">
+                  <div class="text-xs opacity-70 mb-1 font-medium" style="${
+                    valDisplay ? '' : 'visibility:hidden'
+                  }">${valDisplay}</div>
+                  <div class="w-4 rounded-t transition-all duration-300 shadow-md border border-black/10 min-h-[1px] ${getColor(
+                    val
+                  )}" style="height:${height}%"></div>
+                  <span class="text-xs mt-1 font-medium">${dayLabels[idx % 7]}</span>
+                </div>`;
+            })
+            .join('')}
+        </div>`;
     };
 
     /**
@@ -327,14 +364,19 @@ export default {
             feature.properties.rainfall_mm_7day !== null
           ) {
             const mm = feature.properties.rainfall_mm_7day || 0;
-            // Convert mm to inches (1 mm = 0.0393701 inches)
             const inches = Number((mm * 0.0393701).toFixed(2));
-            const rainfallText = `${inches} in (7-day)`;
-            const sanitizedRainfall = sanitize(rainfallText);
+            const sanitizedInches = sanitize(inches.toFixed(2));
 
-            popupContent += `<div class="text-xs opacity-75 mt-1">
-              <span title="Rainfall data for the 7 days prior to sample date">Rainfall: ${sanitizedRainfall}</span>
-            </div>`;
+            if (isMobile.value) {
+              const rainData = feature.properties.rainByDay || [];
+              popupContent += `<div class="text-xs opacity-75 mt-1">Total rainfall (7-day): ${sanitizedInches} in</div>`;
+              popupContent += `<button class="rain-toggle text-xs underline mt-1">Rain details</button>`;
+              popupContent += `<div class="rain-details hidden mt-1">${generateRainChart(rainData)}</div>`;
+            } else {
+              popupContent += `<div class="text-xs opacity-75 mt-1">
+                <span title="Rainfall data for the 7 days prior to sample date">Rainfall: ${sanitizedInches} in (7-day)</span>
+              </div>`;
+            }
           }
 
           // Add seasonal history after environmental info
@@ -362,6 +404,24 @@ export default {
 
           marker.on('click', () => {
             track(EVENT_CLICK_SITE_MARKER, { site_name: siteName });
+          });
+
+          marker.on('popupopen', e => {
+            featurePopupOpen.value = true;
+            const container = e.popup.getElement();
+            const toggle = container.querySelector('.rain-toggle');
+            if (toggle) {
+              toggle.addEventListener('click', () => {
+                const details = container.querySelector('.rain-details');
+                if (details) {
+                  details.classList.toggle('hidden');
+                }
+              });
+            }
+          });
+
+          marker.on('popupclose', () => {
+            featurePopupOpen.value = false;
           });
 
           markers.value.push(marker);
