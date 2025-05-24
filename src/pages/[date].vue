@@ -57,7 +57,9 @@ onMounted(async () => {
 
   // Load data for the current date
   await load();
-  console.log('Data loaded:', data.value);
+  if (import.meta.env.MODE !== 'production') {
+    console.log('Data loaded:', data.value);
+  }
 });
 
 // Watch for route parameter changes
@@ -65,7 +67,9 @@ watch(
   () => route.params.date,
   newDate => {
     if (newDate && newDate !== date.value) {
-      console.log('Route date changed:', newDate);
+      if (import.meta.env.MODE !== 'production') {
+        console.log('Route date changed:', newDate);
+      }
       date.value = newDate;
       load(newDate);
     }
@@ -74,7 +78,9 @@ watch(
 
 // Watch for date changes to reload data
 watch(date, newDate => {
-  console.log('Date changed:', newDate);
+  if (import.meta.env.MODE !== 'production') {
+    console.log('Date changed:', newDate);
+  }
   if (newDate) {
     load(newDate);
     router.push({ path: `/${newDate}` });

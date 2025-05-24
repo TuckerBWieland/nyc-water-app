@@ -234,7 +234,9 @@ export default {
       }
 
       // Log total number of features
-      console.log(`Total features on map: ${data.features.length}`);
+      if (import.meta.env.MODE !== 'production') {
+        console.log(`Total features on map: ${data.features.length}`);
+      }
 
       for (const feature of data.features) {
         try {
