@@ -16,7 +16,7 @@
       </button>
     </div>
     <div class="prose text-sm" :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'">
-      <p class="font-semibold mb-2">Why heavy rain leads to poor water quality samples:</p>
+      <p class="font-semibold mb-2 bg-orange-700">Why heavy rain leads to poor water quality samples:</p>
       <p>
         When it rains heavily, New York City's sewer system—which combines sewage and stormwater in the same
         pipes—can become overwhelmed. To prevent backups into homes and streets, this excess mixture is
@@ -25,7 +25,7 @@
         significantly reducing water quality. That's why samples collected after major rain events often show
         poor results.
       </p>
-      <p class="mt-2 font-semibold mb-2">Where our rainfall and tide data come from:</p>
+      <p class="mt-2 font-semibold mb-2 bg-orange-700">Where our rainfall and tide data come from:</p>
       <p>
         Rainfall data is sourced from NOAA’s National Weather Service, specifically from the Central Park
         weather station. This provides a consistent benchmark for citywide precipitation.
