@@ -38,6 +38,14 @@ npm run enrich
 npm run preview
 ```
 
+## Testing
+
+Run the Jest unit tests with:
+
+```bash
+npm test
+```
+
 ## Data Architecture
 
 The application uses a static data approach for improved performance and reliability:
