@@ -74,10 +74,21 @@ export default {
       default: false,
     },
   },
+  /**
+   * Setup function for the DonatePopup component.
+   * Manages popup state and analytics tracking.
+   *
+   * @returns {Object} Reactive bindings for the template.
+   */
   setup() {
     const { isOpen, togglePopup: baseToggle, closePopup } = usePopupManager('donate');
     const popupRef = ref(null);
 
+    /**
+     * Close the popup when clicking outside of it.
+     *
+     * @param {MouseEvent} e - Click event object.
+     */
     const handleOutsideClick = e => {
       if (popupRef.value && !popupRef.value.contains(e.target)) {
         closePopup();
@@ -96,6 +107,9 @@ export default {
       document.removeEventListener('click', handleOutsideClick);
     });
 
+    /**
+     * Toggle popup visibility and log analytics events.
+     */
     const togglePopup = () => {
       try {
         const wasClosed = !isOpen.value;
@@ -111,6 +125,11 @@ export default {
       }
     };
 
+    /**
+     * Track clicks on outbound donation links.
+     *
+     * @param {string} url - The URL that was clicked.
+     */
     const trackOutbound = url => {
       try {
         track(EVENT_CLICK_OUTBOUND_LINK, { url });

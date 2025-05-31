@@ -65,6 +65,13 @@ export default {
       default: () => [],
     },
   },
+  /**
+   * Setup function for the RainDropLegend component.
+   * Calculates rainfall bar data and formatting helpers.
+   *
+   * @param {Object} props - Component properties.
+   * @returns {Object} Reactive bindings for the template.
+   */
   setup(props) {
     // Compute the rainfall array for the selected date
     const activeRainData = computed(() => {

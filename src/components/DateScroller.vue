@@ -67,6 +67,14 @@ export default {
     },
   },
   emits: ['update:modelValue'],
+  /**
+   * Setup function for the DateScroller component.
+   * Provides navigation between available dataset dates.
+   *
+   * @param {Object} props - Component properties.
+   * @param {Function} emit - Emit function for Vue events.
+   * @returns {Object} Reactive bindings for the template.
+   */
   setup(props, { emit }) {
     const router = useRouter();
 
