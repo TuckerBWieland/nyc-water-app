@@ -76,10 +76,21 @@ export default {
       default: false,
     },
   },
+  /**
+   * Setup function for the InfoPopup component.
+   * Handles popup visibility and first-run behavior.
+   *
+   * @returns {Object} Reactive bindings for the template.
+   */
   setup() {
     const { isOpen, togglePopup: baseToggle, closePopup } = usePopupManager('info');
     const popupRef = ref(null);
 
+    /**
+     * Close the popup when clicking outside of it.
+     *
+     * @param {MouseEvent} e - Click event object.
+     */
     const handleOutsideClick = e => {
       if (popupRef.value && !popupRef.value.contains(e.target)) {
         closePopup();
@@ -98,6 +109,11 @@ export default {
       document.removeEventListener('click', handleOutsideClick);
     });
 
+    /**
+     * Toggle popup visibility and optionally track an analytics event.
+     *
+     * @param {boolean} [trackEvent=true] - Whether to log the open event.
+     */
     const togglePopup = (trackEvent = true) => {
       try {
         const wasClosed = !isOpen.value;

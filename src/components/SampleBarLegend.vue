@@ -77,6 +77,13 @@ export default {
       default: false,
     },
   },
+  /**
+   * Setup function for the SampleBarLegend component.
+   * Calculates counts and percentages for sample quality categories.
+   *
+   * @param {Object} props - Component properties.
+   * @returns {Object} Reactive bindings for the template.
+   */
   setup(props) {
     // Compute counts for each category
     const greenCount = computed(() => {
