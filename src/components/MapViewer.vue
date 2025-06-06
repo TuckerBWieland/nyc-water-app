@@ -44,6 +44,13 @@ export default {
       default: null,
     },
   },
+  /**
+   * Setup function for the MapViewer component.
+   * Initializes the Leaflet map and watches for prop changes.
+   *
+   * @param {Object} props - Component properties.
+   * @returns {Object} Reactive bindings for the template.
+   */
   setup(props) {
     // Reactive references
     const map = ref(null);

@@ -2,12 +2,25 @@ import { ref, unref } from 'vue';
 
 // Accepts a ref to a date string so the composable can
 // load new data when the date value changes.
+/**
+ * Load static GeoJSON data and related metadata for a specific date.
+ *
+ * @param {import('vue').Ref<string>|string} dateRef - Reactive date value.
+ * @returns {{ data: import('vue').Ref<any>, metadata: import('vue').Ref<any>, loading: import('vue').Ref<boolean>, error: import('vue').Ref<string|null>, load: Function }}
+ *   Reactive data references and a load function.
+ */
 export function useStaticData(dateRef) {
   const data = ref(null);
   const metadata = ref(null);
   const loading = ref(false);
   const error = ref(null);
 
+  /**
+   * Fetch and cache GeoJSON and metadata for the provided date.
+   *
+   * @param {string} [currentDate=unref(dateRef)] - Date string to load data for.
+   * @returns {Promise<void>} Resolves when loading is complete.
+   */
   async function load(currentDate = unref(dateRef)) {
 
     if (!currentDate) {

@@ -20,10 +20,16 @@ export function usePopupManager(name) {
     },
   });
 
+  /**
+   * Toggle the open state of this popup.
+   */
   const togglePopup = () => {
     isOpen.value = !isOpen.value;
   };
 
+  /**
+   * Force the popup to close if it is currently active.
+   */
   const closePopup = () => {
     if (activePopup.value === name) {
       activePopup.value = null;
