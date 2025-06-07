@@ -83,6 +83,10 @@ Data processing is handled by a single script:
   It also updates `latest.txt` and `dates.json` so the app automatically
   recognizes new datasets.
 
+Additional utilities:
+
+- `scripts/cleanup-branches.js` - Interactive utility to delete merged remote branches safely.
+
 ## Deployment
 
 The application is configured for deployment to GitHub Pages:
