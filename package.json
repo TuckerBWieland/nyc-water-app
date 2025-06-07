@@ -7,6 +7,7 @@
     "preview": "vite preview",
     "test": "jest",
     "enrich": "node scripts/enrich-data.js",
+    "cleanup": "node scripts/cleanup-branches.js",
     "predeploy": "npm run build && node scripts/copy-404.js",
     "deploy": "gh-pages -d dist"
   },
