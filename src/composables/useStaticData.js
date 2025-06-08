@@ -1,4 +1,5 @@
 import { ref, unref } from 'vue';
+import { basePath } from '../utils/basePath';
 
 // Accepts a ref to a date string so the composable can
 // load new data when the date value changes.
@@ -49,7 +50,7 @@ export function useStaticData(dateRef) {
 
     try {
       // Get the base URL for GitHub Pages
-      const base = import.meta.env.MODE === 'production' ? '/nyc-water-app' : '';
+      const base = basePath;
 
       // Build URLs with correct base path
       const geojsonUrl = `${base}/data/${currentDate}/enriched.geojson`;

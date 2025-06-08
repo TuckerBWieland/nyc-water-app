@@ -4,12 +4,13 @@ import RainfallSampleTrend from '../components/RainfallSampleTrend.vue';
 import { isDarkMode } from '../stores/theme';
 import ThemeToggleButton from '../components/ThemeToggleButton.vue';
 
+
 const history = ref([]);
 const loading = ref(true);
 
 onMounted(async () => {
   try {
-    const base = import.meta.env.MODE === 'production' ? '/nyc-water-app' : '';
+    const base = basePath;
     const res = await fetch(`${base}/data/dates.json`);
     const dates = (await res.json()) || [];
     const weekly = (
