@@ -11,6 +11,7 @@ import DonatePopup from '../components/DonatePopup.vue';
 import TrendsButton from '../components/TrendsButton.vue';
 import ThemeToggleButton from '../components/ThemeToggleButton.vue';
 import { useStaticData } from '../composables/useStaticData';
+import { anyPopupOpen } from '../composables/usePopupManager';
 import { isDarkMode } from '../stores/theme';
 import { basePath } from '../utils/basePath';
 
@@ -76,7 +77,12 @@ watch(
     <ThemeToggleButton :isDarkMode="isDarkMode" />
 
     <div v-if="data && metadata">
-      <DateScroller :dates="availableDates" v-model="date" :isDarkMode="isDarkMode" />
+      <DateScroller
+        v-if="!anyPopupOpen"
+        :dates="availableDates"
+        v-model="date"
+        :isDarkMode="isDarkMode"
+      />
 
       <!-- Legends -->
       <div class="absolute top-2 left-2 z-10 space-y-2">

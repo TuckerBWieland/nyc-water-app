@@ -4,6 +4,13 @@ import { ref, computed } from 'vue';
 const activePopup = ref(null);
 
 /**
+ * Reactive flag indicating if any popup is open.
+ * Other components can use this to react when a popup is visible.
+ * @type {import('vue').ComputedRef<boolean>}
+ */
+export const anyPopupOpen = computed(() => activePopup.value !== null);
+
+/**
  * Provides reactive open state management for popups.
  * Only one popup can be open at a time.
  * @param {string} name - Unique name for the popup using this composable
