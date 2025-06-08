@@ -83,3 +83,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Jest testing framework for unit tests
 - Tests are located in the `tests` directory
 - Run tests with `npm run test`
+
+## Contributor Notes
+
+- Watcher callbacks should be written as async functions to avoid blocking the UI.
+- Add JSDoc blocks for all new or modified functions.
+- Execute `npm run test` before submitting changes.
