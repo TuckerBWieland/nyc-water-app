@@ -1,17 +1,17 @@
 <template>
-  <div
-    v-if="isOpen"
-    ref="popupRef"
-    @click.stop
-    :class="[
-      'fixed z-[400] bottom-[calc(4rem+env(safe-area-inset-bottom,0px))]',
-      'p-4 sm:p-6 rounded-lg shadow-lg',
-      'max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-stable',
-      'transition-colors duration-300',
-      isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black',
-    ]"
-    style="width: 455px;"
-  >
+    <div
+      v-if="isOpen"
+      ref="popupRef"
+      @click.stop
+      :class="[
+        'fixed z-[400] bottom-[calc(4rem+env(safe-area-inset-bottom,0px))] left-1/2 transform -translate-x-1/2',
+        'p-4 sm:p-6 rounded-lg shadow-lg',
+        'max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-stable',
+        'w-full sm:w-[455px] max-w-[95vw]',
+        'transition-colors duration-300',
+        isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black',
+      ]"
+    >
     <div class="flex justify-between items-center mb-2">
       <h3 class="font-bold">{{ title }}</h3>
       <button
