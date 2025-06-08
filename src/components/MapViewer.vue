@@ -534,8 +534,8 @@ export default {
   margin: 18px 20px;
   font-family: inherit;
   line-height: 1.5;
-  width: 220px;
-  max-width: 220px;
+  width: 280px;
+  max-width: 320px;
 }
 
 /* Fix close button position */

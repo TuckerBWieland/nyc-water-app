@@ -52,16 +52,16 @@ onMounted(async () => {
         Trends: Rainfall vs Water Quality
       </h1>
 
-      <div class="flex flex-wrap justify-center gap-4 mb-4 text-sm font-medium">
-        <div class="flex items-center gap-2"><span class="w-4 h-4 bg-blue-500 rounded"></span> Rainfall (in)</div>
-        <div class="flex items-center gap-2"><span class="w-4 h-4 bg-green-500 rounded"></span> Samples testing good (<35)</div>
-        <div class="flex items-center gap-2"><span class="w-4 h-4 bg-yellow-400 rounded"></span> Samples testing caution (35–104)</div>
-        <div class="flex items-center gap-2"><span class="w-4 h-4 bg-red-500 rounded"></span> Samples testing unsafe (>104)</div>
-      </div>
-
       <div v-if="loading" class="text-center py-10">Loading…</div>
       <div v-else class="overflow-x-auto">
         <RainfallSampleTrend :history="history" :isDarkMode="isDarkMode" />
+      </div>
+
+      <div class="flex flex-row flex-wrap justify-center gap-4 mt-4 text-xs">
+        <div class="flex items-center gap-1"><span class="w-3 h-3 bg-blue-500 rounded"></span> Rainfall (in)</div>
+        <div class="flex items-center gap-1"><span class="w-3 h-3 bg-green-500 rounded"></span> Good (<35)</div>
+        <div class="flex items-center gap-1"><span class="w-3 h-3 bg-yellow-400 rounded"></span> Caution (35–104)</div>
+        <div class="flex items-center gap-1"><span class="w-3 h-3 bg-red-500 rounded"></span> Unsafe (>104)</div>
       </div>
 
       <p class="text-base text-gray-700 dark:text-gray-300 mt-6 max-w-prose mx-auto">
@@ -71,8 +71,8 @@ onMounted(async () => {
         before Thursday is the biggest factor in poor water quality.
       </p>
 
-      <router-link to="/" class="inline-block mt-8">
-        <button class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-black dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600">
+      <router-link to="/" class="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50">
+        <button class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-black dark:text-white rounded-full shadow-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
           ← Back to Map
         </button>
       </router-link>

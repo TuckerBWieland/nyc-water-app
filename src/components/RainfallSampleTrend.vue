@@ -1,25 +1,9 @@
 <template>
   <div class="relative">
-    <div
-      class="absolute left-2 top-1/2 -translate-y-1/2 -rotate-90 origin-left pointer-events-none text-sm"
-      :class="isDarkMode ? 'text-gray-200' : 'text-gray-700'"
-    >
-      Rainfall (in)
-    </div>
-    <div
-      class="absolute right-2 top-1/2 -translate-y-1/2 rotate-90 origin-right pointer-events-none text-sm"
-      :class="isDarkMode ? 'text-gray-200' : 'text-gray-700'"
-    >
-      Sample Results (%)
-    </div>
     <div ref="scrollContainer" class="p-4 relative overflow-x-auto">
       <div class="min-w-[600px] w-full h-80">
         <canvas ref="chartCanvas" class="w-full h-full"></canvas>
       </div>
-      <canvas
-        ref="axesCanvas"
-        class="pointer-events-none absolute inset-0"
-      ></canvas>
     </div>
   </div>
 </template>
@@ -274,7 +258,10 @@ export default {
           responsive: true,
           maintainAspectRatio: false,
           interaction: { mode: 'index' },
-          animation: false,
+          animation: {
+            duration: 800,
+            easing: 'easeInOutCubic',
+          },
           plugins: {
             legend: { display: false },
             title: {
@@ -330,7 +317,9 @@ export default {
               position: 'left',
               beginAtZero: true,
               title: {
-                display: false,
+                display: true,
+                text: 'Rainfall (in)',
+                color: textColor,
               },
               ticks: { display: true, color: textColor },
               grid: { color: gridColor, drawBorder: false, lineWidth: 0.5 },
@@ -342,7 +331,9 @@ export default {
               min: 0,
               max: 100,
               title: {
-                display: false,
+                display: true,
+                text: 'Sample Results (%)',
+                color: textColor,
               },
               ticks: {
                 callback: value => `${value}%`,
