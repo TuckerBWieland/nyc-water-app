@@ -11,21 +11,24 @@ onMounted(async () => {
     const base = import.meta.env.MODE === 'production' ? '/nyc-water-app' : '';
     const res = await fetch(`${base}/data/dates.json`);
     const dates = (await res.json()) || [];
-    const weekly = [];
-    for (const date of dates) {
-      const geoRes = await fetch(`${base}/data/${date}/enriched.geojson`);
-      if (!geoRes.ok) continue;
-      const geo = await geoRes.json();
-      const summary = { good: 0, caution: 0, unsafe: 0 };
-      for (const f of geo.features) {
-        const mpn = Number(f.properties.mpn);
-        if (mpn < 35) summary.good++;
-        else if (mpn <= 104) summary.caution++;
-        else summary.unsafe++;
-      }
-      const rainfallByDay = geo.features[0]?.properties.rainByDay || [];
-      weekly.push({ date, rainfallByDay, sampleSummary: summary });
-    }
+    const weekly = (
+      await Promise.all(
+        dates.map(async date => {
+          const geoRes = await fetch(`${base}/data/${date}/enriched.geojson`);
+          if (!geoRes.ok) return null;
+          const geo = await geoRes.json();
+          const summary = { good: 0, caution: 0, unsafe: 0 };
+          for (const f of geo.features) {
+            const mpn = Number(f.properties.mpn);
+            if (mpn < 35) summary.good++;
+            else if (mpn <= 104) summary.caution++;
+            else summary.unsafe++;
+          }
+          const rainfallByDay = geo.features[0]?.properties.rainByDay || [];
+          return { date, rainfallByDay, sampleSummary: summary };
+        })
+      )
+    ).filter(Boolean);
     history.value = weekly.sort((a, b) => a.date.localeCompare(b.date));
   } catch (err) {
     console.warn('Error loading trend data:', err);
