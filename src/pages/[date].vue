@@ -8,6 +8,7 @@ import DateScroller from '../components/DateScroller.vue';
 import InfoPopup from '../components/InfoPopup.vue';
 import DataInfoPopup from '../components/DataInfoPopup.vue';
 import DonatePopup from '../components/DonatePopup.vue';
+import TrendsButton from '../components/TrendsButton.vue';
 import { useStaticData } from '../composables/useStaticData';
 
 const route = useRoute();
@@ -119,6 +120,7 @@ const toggleDarkMode = () => {
         :showNotification="showDataInfoNotification"
       />
       <DonatePopup :isDarkMode="isDarkMode" />
+      <TrendsButton :isDarkMode="isDarkMode" />
     </div>
 
     <div v-else class="text-center h-screen flex items-center justify-center flex-col">

@@ -7,6 +7,7 @@ import { initAnalytics, track } from './services/analytics';
 // Pages
 import IndexPage from './pages/index.vue';
 import DatePage from './pages/[date].vue';
+import TrendsPage from './pages/trends.vue';
 
 // Create router with correct base path for GitHub Pages
 const base = import.meta.env.MODE === 'production' ? '/nyc-water-app/' : '/';
@@ -15,6 +16,7 @@ const router = createRouter({
   routes: [
     { path: '/', component: IndexPage },
     { path: '/:date', component: DatePage },
+    { path: '/trends', component: TrendsPage },
   ],
 });
 
