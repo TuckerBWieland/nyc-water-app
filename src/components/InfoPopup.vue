@@ -45,8 +45,7 @@
 
 <script>
 import { onMounted } from 'vue';
-import { usePopupManager } from '../composables/usePopupManager';
-import { track, EVENT_OPEN_POPUP } from '../services/analytics';
+import { usePopupAnalytics } from '../composables/usePopupAnalytics';
 import PopupContainer from './PopupContainer.vue';
 import PopupButton from './PopupButton.vue';
 
@@ -69,26 +68,7 @@ export default {
    * @returns {Object} Reactive bindings for the template.
    */
   setup() {
-    const { isOpen, togglePopup: baseToggle } = usePopupManager('info');
-
-    /**
-     * Toggle popup visibility and optionally track an analytics event.
-     *
-     * @param {boolean} [trackEvent=true] - Whether to log the open event.
-     */
-    const togglePopup = (trackEvent = true) => {
-      try {
-        const wasClosed = !isOpen.value;
-        baseToggle();
-        if (wasClosed && trackEvent) {
-          track(EVENT_OPEN_POPUP, { component: 'InfoPopup' });
-        }
-      } catch (error) {
-        console.error('Error toggling InfoPopup:', error);
-        // Still toggle the popup even if tracking fails
-        baseToggle();
-      }
-    };
+    const { isOpen, togglePopup } = usePopupAnalytics('info', 'InfoPopup');
 
     onMounted(() => {
       try {
