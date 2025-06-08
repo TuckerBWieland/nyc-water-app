@@ -54,9 +54,9 @@ onMounted(async () => {
 
       <div class="flex flex-wrap justify-center gap-4 mb-4 text-sm font-medium">
         <div class="flex items-center gap-2"><span class="w-4 h-4 bg-blue-500 rounded"></span> Rainfall (in)</div>
-        <div class="flex items-center gap-2"><span class="w-4 h-4 bg-green-500 rounded"></span> % of samples testing good (<35)</div>
-        <div class="flex items-center gap-2"><span class="w-4 h-4 bg-yellow-400 rounded"></span> % of samples testing caution (35–104)</div>
-        <div class="flex items-center gap-2"><span class="w-4 h-4 bg-red-500 rounded"></span> % of samples testing unsafe (>104)</div>
+        <div class="flex items-center gap-2"><span class="w-4 h-4 bg-green-500 rounded"></span> Samples testing good (<35)</div>
+        <div class="flex items-center gap-2"><span class="w-4 h-4 bg-yellow-400 rounded"></span> Samples testing caution (35–104)</div>
+        <div class="flex items-center gap-2"><span class="w-4 h-4 bg-red-500 rounded"></span> Samples testing unsafe (>104)</div>
       </div>
 
       <div v-if="loading" class="text-center py-10">Loading…</div>
