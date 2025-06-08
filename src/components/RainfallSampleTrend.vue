@@ -12,8 +12,8 @@
     >
       Sample Results (%)
     </div>
-    <div ref="scrollContainer" class="overflow-x-auto p-4">
-      <div class="min-w-[600px]" :style="{ width: canvasWidth + 'px' }">
+    <div ref="scrollContainer" class="p-4">
+      <div class="min-w-[600px] w-full">
         <canvas ref="chartCanvas"></canvas>
       </div>
     </div>
@@ -73,7 +73,6 @@ export default {
       return Array.from(map.values()).sort((a, b) => a.date.localeCompare(b.date));
     });
 
-    const canvasWidth = computed(() => flattened.value.length * 30);
 
     const scrollToLatest = () => {
       if (scrollContainer.value) {
@@ -159,9 +158,7 @@ export default {
           plugins: {
             legend: { display: false },
             title: {
-              display: true,
-              text: 'Rainfall + Weekly Water Quality Breakdown',
-              color: textColor,
+              display: false,
             },
             tooltip: {
               callbacks: {
@@ -266,7 +263,7 @@ export default {
       }
     });
 
-    return { chartCanvas, scrollContainer, canvasWidth };
+    return { chartCanvas, scrollContainer };
   },
 };
 </script>
