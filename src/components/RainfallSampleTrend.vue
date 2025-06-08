@@ -142,15 +142,16 @@ export default {
             },
           ],
         },
-        options: {
-          responsive: true,
-          interaction: { mode: 'index' },
-          plugins: {
-            title: {
-              display: true,
-              text: 'Rainfall + Weekly Water Quality Breakdown',
-              color: textColor,
-            },
+          options: {
+            responsive: true,
+            interaction: { mode: 'index' },
+            plugins: {
+              legend: { display: false },
+              title: {
+                display: true,
+                text: 'Rainfall + Weekly Water Quality Breakdown',
+                color: textColor,
+              },
             tooltip: {
               callbacks: {
                 label: context => {
