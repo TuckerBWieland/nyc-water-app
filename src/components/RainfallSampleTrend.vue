@@ -244,6 +244,16 @@ export default {
       { deep: true }
     );
 
+    watch(
+      () => props.isDarkMode,
+      () => {
+        if (chartInstance) {
+          chartInstance.destroy();
+        }
+        createChart();
+      }
+    );
+
     onBeforeUnmount(() => {
       if (chartInstance) {
         chartInstance.destroy();
