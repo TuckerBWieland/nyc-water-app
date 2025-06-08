@@ -144,6 +144,8 @@ export default {
         ctx.stroke();
         ctx.textAlign = 'center';
         ctx.textBaseline = 'top';
+        // Use the loop index when converting ticks to pixel positions so that
+        // labels stay aligned while the chart scrolls.
         x.ticks.forEach((t, idx) => {
           const pos = x.getPixelForTick(idx) - chartArea.left;
           ctx.beginPath();
