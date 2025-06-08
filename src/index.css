@@ -22,3 +22,8 @@ body.dark {
 a {
   text-decoration: underline;
 }
+
+/* Ensure content does not shift when scrollbars appear */
+.scrollbar-stable {
+  scrollbar-gutter: stable;
+}
