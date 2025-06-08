@@ -4,7 +4,7 @@
     ref="popupRef"
     @click.stop
     :class="[
-      'fixed bottom-[calc(4rem+env(safe-area-inset-bottom,0px))] left-1/2 transform -translate-x-1/2 p-4 sm:p-6 rounded-lg shadow-lg z-[400] w-[95%] sm:w-[600px] max-w-[95vw] sm:max-w-[800px] transition-colors duration-300',
+      'z-[400] fixed bottom-[calc(4rem+env(safe-area-inset-bottom,0px))] left-1/2 transform -translate-x-1/2 p-4 sm:p-6 rounded-lg shadow-lg max-w-[95vw] sm:max-w-[800px] w-[95%] sm:w-[600px] transition-colors duration-300',
       isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black',
     ]"
   >
