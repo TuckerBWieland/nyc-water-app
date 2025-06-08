@@ -112,3 +112,13 @@ echo "VITE_POSTHOG_KEY=YOUR_KEY" >> .env
 ```
 
 With `VITE_POSTHOG_KEY` set, basic page views will be recorded automatically.
+
+## Recent Updates
+
+The project has seen significant improvements:
+
+- Rainfall and water quality trend charts now include sticky axes and refined tick alignment.
+- Watcher callbacks in components are asynchronous to prevent rendering glitches.
+- JSDoc comments cover all chart utilities and composables.
+- Additional Jest tests verify map and popup behavior.
+
