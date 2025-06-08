@@ -266,10 +266,10 @@ async function processDateFiles(date, sampleFile, rainFile, historyCounts) {
         key => key.toLowerCase().includes('precip') || key.toLowerCase().includes('rain')
       ) || Object.keys(rainfall[0])[0]; // Fallback to first column
 
-    const rainByDay = rainfall.map(row => {
-      const value = parseFloat(row[rainColumn]);
-      return isNaN(value) ? 0 : value;
-    });
+    const rainByDay = rainfall
+      .map(row => parseFloat(row[rainColumn]))
+      .filter(v => !Number.isNaN(v))
+      .slice(-7);
 
     const totalRain = rainByDay.reduce((sum, val) => sum + val, 0);
     // Convert the 7-day rainfall total from inches to millimeters for easier
