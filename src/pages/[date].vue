@@ -10,17 +10,11 @@ import DataInfoPopup from '../components/DataInfoPopup.vue';
 import DonatePopup from '../components/DonatePopup.vue';
 import TrendsButton from '../components/TrendsButton.vue';
 import { useStaticData } from '../composables/useStaticData';
+import { isDarkMode, toggleDarkMode } from '../stores/theme';
 
 const route = useRoute();
 const router = useRouter();
 const date = ref(route.params.date);
-const isDarkMode = ref(true);
-
-// Apply initial theme class to document
-if (typeof document !== 'undefined') {
-  document.documentElement.classList.toggle('dark', isDarkMode.value);
-  document.body.classList.toggle('dark', isDarkMode.value);
-}
 // List of available data dates will be loaded from dates.json
 const availableDates = ref([]);
 
@@ -72,18 +66,6 @@ watch(
 );
 
 
-// Watch for dark mode changes to update body class
-watch(isDarkMode, val => {
-  if (typeof document !== 'undefined') {
-    document.documentElement.classList.toggle('dark', val);
-    document.body.classList.toggle('dark', val);
-  }
-});
-
-// Toggle dark mode
-const toggleDarkMode = () => {
-  isDarkMode.value = !isDarkMode.value;
-};
 </script>
 
 <template>

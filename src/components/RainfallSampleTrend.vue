@@ -1,11 +1,21 @@
 <template>
   <div class="p-4">
-    <canvas ref="chartCanvas"></canvas>
+    <div class="flex justify-center text-sm mb-2 space-x-4">
+      <div class="flex items-center" v-for="item in legend" :key="item.label">
+        <span :class="['inline-block w-3 h-3 rounded-sm mr-1', item.color]"></span>
+        <span class="text-gray-700 dark:text-gray-300">{{ item.label }}</span>
+      </div>
+    </div>
+    <div ref="scrollContainer" class="overflow-x-auto">
+      <div class="min-w-[600px]" :style="{ width: canvasWidth + 'px' }">
+        <canvas ref="chartCanvas"></canvas>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { ref, watch, onMounted, onBeforeUnmount, computed } from 'vue';
+import { ref, watch, onMounted, onBeforeUnmount, computed, nextTick } from 'vue';
 
 export default {
   name: 'RainfallSampleTrend',
@@ -14,10 +24,22 @@ export default {
       type: Array,
       required: true,
     },
+    isDarkMode: {
+      type: Boolean,
+      default: false,
+    },
   },
   setup(props) {
     const chartCanvas = ref(null);
+    const scrollContainer = ref(null);
     let chartInstance = null;
+
+    const legend = [
+      { label: 'Rainfall (in)', color: 'bg-blue-500' },
+      { label: 'Good (<35)', color: 'bg-green-600' },
+      { label: 'Caution (35–104)', color: 'bg-yellow-400' },
+      { label: 'Unsafe (>104)', color: 'bg-red-600' },
+    ];
 
     const isThursday = dateStr => {
       const d = new Date(dateStr + 'T00:00:00Z');
@@ -52,6 +74,14 @@ export default {
       return Array.from(map.values()).sort((a, b) => a.date.localeCompare(b.date));
     });
 
+    const canvasWidth = computed(() => flattened.value.length * 30);
+
+    const scrollToLatest = () => {
+      if (scrollContainer.value) {
+        scrollContainer.value.scrollLeft = scrollContainer.value.scrollWidth;
+      }
+    };
+
     const buildDatasets = () => {
       const rainfall = [];
       const good = [];
@@ -83,6 +113,8 @@ export default {
       const ctx = chartCanvas.value.getContext('2d');
       const labels = flattened.value.map(h => h.date);
       const { rainfall, good, caution, unsafe } = buildDatasets();
+      const textColor = props.isDarkMode ? '#e5e7eb' : '#1f2937';
+      const gridColor = props.isDarkMode ? '#4b5563' : '#e5e7eb';
 
       chartInstance = new Chart(ctx, {
         type: 'bar',
@@ -131,6 +163,7 @@ export default {
             title: {
               display: true,
               text: 'Rainfall + Weekly Water Quality Breakdown',
+              color: textColor,
             },
             tooltip: {
               callbacks: {
@@ -165,6 +198,7 @@ export default {
           scales: {
             x: {
               ticks: {
+                color: textColor,
                 callback: (val, idx) => {
                   const label = labels[idx];
                   if (isThursday(label)) {
@@ -174,13 +208,17 @@ export default {
                   return '';
                 },
               },
+              grid: { color: gridColor },
             },
             yRain: {
               position: 'left',
               title: {
                 display: true,
                 text: 'Rainfall (in)',
+                color: textColor,
               },
+              ticks: { color: textColor },
+              grid: { color: gridColor },
             },
             ySample: {
               position: 'right',
@@ -189,17 +227,24 @@ export default {
               title: {
                 display: true,
                 text: 'Sample Results (%)',
+                color: textColor,
               },
               ticks: {
                 callback: value => `${value}%`,
+                color: textColor,
               },
+              grid: { color: gridColor },
             },
           },
         },
       });
     };
 
-    onMounted(createChart);
+    onMounted(async () => {
+      await nextTick();
+      await createChart();
+      scrollToLatest();
+    });
 
     watch(
       () => props.history,
@@ -208,6 +253,7 @@ export default {
           chartInstance.destroy();
         }
         createChart();
+        scrollToLatest();
       },
       { deep: true }
     );
@@ -218,7 +264,7 @@ export default {
       }
     });
 
-    return { chartCanvas };
+    return { chartCanvas, scrollContainer, canvasWidth, legend };
   },
 };
 </script>
