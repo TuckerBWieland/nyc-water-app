@@ -4,16 +4,16 @@
   >
     <div
       :class="[
-        'inline-flex items-center rounded-full px-4 py-2 shadow-md transition-colors duration-300',
+        'inline-flex items-center rounded-full px-6 py-3 shadow-md transition-colors duration-300',
         isDarkMode ? 'bg-gray-800 bg-opacity-90' : 'bg-white bg-opacity-90',
       ]"
     >
       <button
+        v-if="hasPrevious"
         :class="[
-          'w-8 h-8 flex items-center justify-center mr-2 disabled:opacity-30 focus:outline-none transition-colors duration-300',
-          isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-black',
+          'w-10 h-10 flex items-center justify-center mr-3 focus:outline-none transition-colors duration-300 text-xl',
+          isDarkMode ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-black',
         ]"
-        :disabled="!hasPrevious"
         aria-label="Previous date"
         @click="selectPrevious"
       >
@@ -23,7 +23,7 @@
       <div class="px-2 text-center whitespace-nowrap">
         <span
           :class="[
-            'font-medium transition-colors duration-300 text-xs sm:text-sm',
+            'font-semibold transition-colors duration-300 text-sm sm:text-lg',
             isDarkMode ? 'text-gray-200' : 'text-gray-800',
           ]"
         >
@@ -32,11 +32,11 @@
       </div>
 
       <button
+        v-if="hasNext"
         :class="[
-          'w-8 h-8 flex items-center justify-center ml-2 disabled:opacity-30 focus:outline-none transition-colors duration-300',
-          isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-black',
+          'w-10 h-10 flex items-center justify-center ml-3 focus:outline-none transition-colors duration-300 text-xl',
+          isDarkMode ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-black',
         ]"
-        :disabled="!hasNext"
         aria-label="Next date"
         @click="selectNext"
       >
