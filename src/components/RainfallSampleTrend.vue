@@ -129,6 +129,10 @@ export default {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.save();
         ctx.translate(chartArea.left - sc.scrollLeft, 0);
+        const ChartJs = window.Chart;
+        if (ChartJs?.defaults?.font?.string) {
+          ctx.font = ChartJs.defaults.font.string;
+        }
         const textColor = props.isDarkMode ? '#e5e7eb' : '#1f2937';
         ctx.strokeStyle = textColor;
         ctx.fillStyle = textColor;
