@@ -253,6 +253,7 @@ export default {
           },
           scales: {
             x: {
+              stacked: true,
               ticks: {
                 display: false,
                 callback: (val, idx) => {
@@ -276,6 +277,7 @@ export default {
             },
             ySample: {
               position: 'right',
+              stacked: true,
               min: 0,
               max: 100,
               title: {
