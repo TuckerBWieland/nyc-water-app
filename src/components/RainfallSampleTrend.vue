@@ -12,10 +12,14 @@
     >
       Sample Results (%)
     </div>
-    <div ref="scrollContainer" class="p-4">
+    <div ref="scrollContainer" class="p-4 relative overflow-x-auto">
       <div class="min-w-[600px] w-full">
         <canvas ref="chartCanvas"></canvas>
       </div>
+      <canvas
+        ref="axesCanvas"
+        class="pointer-events-none absolute inset-0"
+      ></canvas>
     </div>
   </div>
 </template>
@@ -37,6 +41,7 @@ export default {
   },
   setup(props) {
     const chartCanvas = ref(null);
+    const axesCanvas = ref(null);
     const scrollContainer = ref(null);
     let chartInstance = null;
 
@@ -104,8 +109,66 @@ export default {
       return { rainfall, good, caution, unsafe };
     };
 
+    const overlayAxesPlugin = {
+      id: 'overlayAxes',
+      afterDraw(chart) {
+        const canvas = axesCanvas.value;
+        const sc = scrollContainer.value;
+        if (!canvas || !sc) return;
+        const ctx = canvas.getContext('2d');
+        const { chartArea, scales } = chart;
+        canvas.width = sc.clientWidth;
+        canvas.height = chartCanvas.value.height;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.save();
+        ctx.translate(chartArea.left - sc.scrollLeft, 0);
+        const textColor = props.isDarkMode ? '#e5e7eb' : '#1f2937';
+        ctx.strokeStyle = textColor;
+        ctx.fillStyle = textColor;
+        ctx.lineWidth = 1;
+        const x = scales.x;
+        ctx.beginPath();
+        ctx.moveTo(0, chartArea.bottom);
+        ctx.lineTo(chartArea.right - chartArea.left, chartArea.bottom);
+        ctx.stroke();
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        x.ticks.forEach(t => {
+          const pos = x.getPixelForTick(t.index) - chartArea.left;
+          ctx.beginPath();
+          ctx.moveTo(pos, chartArea.bottom);
+          ctx.lineTo(pos, chartArea.bottom + 4);
+          ctx.stroke();
+          ctx.fillText(t.label, pos, chartArea.bottom + 6);
+        });
+        ctx.textBaseline = 'middle';
+        const yL = scales.yRain;
+        ctx.textAlign = 'right';
+        yL.ticks.forEach(t => {
+          const pos = yL.getPixelForValue(t.value);
+          ctx.beginPath();
+          ctx.moveTo(-4, pos);
+          ctx.lineTo(0, pos);
+          ctx.stroke();
+          ctx.fillText(t.label, -6, pos);
+        });
+        const yR = scales.ySample;
+        ctx.textAlign = 'left';
+        yR.ticks.forEach(t => {
+          const pos = yR.getPixelForValue(t.value);
+          ctx.beginPath();
+          ctx.moveTo(chartArea.right - chartArea.left, pos);
+          ctx.lineTo(chartArea.right - chartArea.left + 4, pos);
+          ctx.stroke();
+          ctx.fillText(t.label, chartArea.right - chartArea.left + 6, pos);
+        });
+        ctx.restore();
+      },
+    };
+
     const createChart = async () => {
       const Chart = await loadChartJs();
+      Chart.register(overlayAxesPlugin);
       const ctx = chartCanvas.value.getContext('2d');
       const labels = flattened.value.map(h => h.date);
       const { rainfall, good, caution, unsafe } = buildDatasets();
@@ -191,7 +254,7 @@ export default {
           scales: {
             x: {
               ticks: {
-                color: textColor,
+                display: false,
                 callback: (val, idx) => {
                   const label = labels[idx];
                   if (isThursday(label)) {
@@ -208,7 +271,7 @@ export default {
               title: {
                 display: false,
               },
-              ticks: { color: textColor },
+              ticks: { display: false },
               grid: { color: gridColor, drawBorder: false, lineWidth: 0.5 },
             },
             ySample: {
@@ -220,7 +283,7 @@ export default {
               },
               ticks: {
                 callback: value => `${value}%`,
-                color: textColor,
+                display: false,
               },
               grid: { color: gridColor, drawBorder: false, lineWidth: 0.5 },
             },
@@ -229,10 +292,15 @@ export default {
       });
     };
 
+    const onScroll = () => {
+      if (chartInstance) chartInstance.draw();
+    };
+
     onMounted(async () => {
       await nextTick();
       await createChart();
       scrollToLatest();
+      scrollContainer.value.addEventListener('scroll', onScroll);
     });
 
     watch(
@@ -261,9 +329,12 @@ export default {
       if (chartInstance) {
         chartInstance.destroy();
       }
+      if (scrollContainer.value) {
+        scrollContainer.value.removeEventListener('scroll', onScroll);
+      }
     });
 
-    return { chartCanvas, scrollContainer };
+    return { chartCanvas, axesCanvas, scrollContainer };
   },
 };
 </script>
