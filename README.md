@@ -19,6 +19,21 @@ An interactive web application to visualize water quality data across various sa
 - Tailwind CSS for styling
 - Vite for fast development and building
 
+## Project Structure
+
+```
+public/           - Static assets and processed data
+scripts/          - Data enrichment and utility scripts
+  input/         - Folder for raw CSV files
+src/              - Application source code
+  components/    - Vue components for UI and map display
+  composables/   - Reusable logic functions
+  pages/         - Route components including dynamic date pages
+  services/      - External integrations (e.g., analytics)
+  stores/        - Small reactive state modules
+tests/            - Jest unit tests
+```
+
 ## Development
 
 ```bash
@@ -76,16 +91,14 @@ The application uses a static data approach for improved performance and reliabi
 
 ## Scripts
 
-Data processing is handled by a single script:
+Key utilities live in the `scripts/` directory:
 
-- `scripts/enrich-data.js` - Reads CSV files from `scripts/input/` and writes GeoJSON
-  with rainfall totals and tide summaries to `public/data/<date>/`.
-  It also updates `latest.txt` and `dates.json` so the app automatically
-  recognizes new datasets.
-
-Additional utilities:
-
-- `scripts/cleanup-branches.js` - Interactive utility to delete merged remote branches safely.
+- `enrich-data.js` - Converts raw CSV files in `scripts/input/` to GeoJSON
+  with rainfall totals and tide summaries. Updates `latest.txt` and `dates.json`.
+- `tide-services.js` - Helper for retrieving NOAA tide predictions.
+- `gen-latest.js` and `inject-latest.js` - Inject the most recent dataset date into the build.
+- `copy-404.js` - Copies `index.html` to `404.html` for single-page app support on GitHub Pages.
+- `cleanup-branches.js` - Interactive utility to delete merged remote branches safely.
 
 ## Deployment
 
