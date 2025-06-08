@@ -44,7 +44,7 @@ onMounted(async () => {
 
 <template>
   <div class="min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
-    <div class="max-w-screen-lg mx-auto px-4 pt-16 pb-6 text-center">
+    <div class="max-w-screen-lg mx-auto px-4 pt-16 pb-24 text-center">
       <!-- Theme toggle -->
       <ThemeToggleButton :isDarkMode="isDarkMode" />
 
