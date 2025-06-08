@@ -12,6 +12,7 @@ import TrendsButton from '../components/TrendsButton.vue';
 import ThemeToggleButton from '../components/ThemeToggleButton.vue';
 import { useStaticData } from '../composables/useStaticData';
 import { isDarkMode } from '../stores/theme';
+import { basePath } from '../utils/basePath';
 
 const route = useRoute();
 const router = useRouter();

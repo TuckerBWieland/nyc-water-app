@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue';
 import RainfallSampleTrend from '../components/RainfallSampleTrend.vue';
 import { isDarkMode } from '../stores/theme';
 import ThemeToggleButton from '../components/ThemeToggleButton.vue';
+import { basePath } from '../utils/basePath';
 
 
 const history = ref([]);

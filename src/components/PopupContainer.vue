@@ -10,6 +10,7 @@
       'transition-colors duration-300',
       isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black',
     ]"
+    style="width: 455px;"
   >
     <div class="flex justify-between items-center mb-2">
       <h3 class="font-bold">{{ title }}</h3>

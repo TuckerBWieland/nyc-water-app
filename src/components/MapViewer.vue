@@ -58,6 +58,6 @@ export default {
     });
 
     return { map, markers, tileLayer, updatePopupStyles };
-
-
-
+  },
+};
+</script>
