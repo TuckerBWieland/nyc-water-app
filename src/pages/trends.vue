@@ -46,7 +46,7 @@ onMounted(async () => {
   <div class="min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
     <div class="max-w-screen-lg mx-auto px-4 pt-16 pb-6 text-center">
       <!-- Theme toggle -->
-      <ThemeToggleButton :isDarkMode="isDarkMode" />
+      <ThemeToggleButton :isDarkMode="isDarkMode" :sticky="false" />
 
       <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
         Trends: Rainfall vs Water Quality
