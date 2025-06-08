@@ -1,6 +1,6 @@
 <template>
   <div
-    class="fixed bottom-[calc(4rem+env(safe-area-inset-bottom,0px))] left-1/2 transform -translate-x-1/2 z-30"
+    class="fixed bottom-[calc(6rem+env(safe-area-inset-bottom,0px))] left-1/2 transform -translate-x-1/2 z-[320]"
   >
     <div
       :class="[
