@@ -13,8 +13,8 @@
       Sample Results (%)
     </div>
     <div ref="scrollContainer" class="p-4 relative overflow-x-auto">
-      <div class="min-w-[600px] w-full">
-        <canvas ref="chartCanvas"></canvas>
+      <div class="min-w-[600px] w-full h-80">
+        <canvas ref="chartCanvas" class="w-full h-full"></canvas>
       </div>
       <canvas
         ref="axesCanvas"
@@ -26,6 +26,19 @@
 
 <script>
 import { ref, watch, onMounted, onBeforeUnmount, computed, nextTick } from 'vue';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  LineElement,
+  PointElement,
+  Title,
+  Tooltip,
+  Legend,
+  LineController,
+  BarController,
+} from 'chart.js';
 
 export default {
   name: 'RainfallSampleTrend',
@@ -50,27 +63,36 @@ export default {
       return d.getUTCDay() === 4; // Thursday
     };
 
-    const loadChartJs = async () => {
-      if (!window.Chart) {
-        await import('https://cdn.jsdelivr.net/npm/chart.js');
-      }
-      return window.Chart;
-    };
+    // Register Chart.js components
+    ChartJS.register(
+      CategoryScale,
+      LinearScale,
+      BarElement,
+      LineElement,
+      PointElement,
+      Title,
+      Tooltip,
+      Legend,
+      LineController,
+      BarController
+    );
 
     const flattened = computed(() => {
       const map = new Map();
       for (const week of props.history) {
         const base = new Date(week.date + 'T00:00:00Z');
         const rain = week.rainfallByDay || [];
-        for (let i = rain.length - 1; i >= 0; i--) {
+        
+        // Process each day in the rainfall data
+        for (let i = 0; i < rain.length; i++) {
           const d = new Date(base);
-          d.setUTCDate(d.getUTCDate() - i);
+          d.setUTCDate(d.getUTCDate() - (rain.length - 1 - i));
           const key = d.toISOString().slice(0, 10);
           if (!map.has(key)) {
             map.set(key, {
               date: key,
-              rainfall: rain[i],
-              sampleSummary: i === 0 ? week.sampleSummary : null,
+              rainfall: rain[i] || 0,
+              sampleSummary: i === (rain.length - 1) ? week.sampleSummary : null,
             });
           }
         }
@@ -128,9 +150,8 @@ export default {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.save();
         ctx.translate(chartArea.left - sc.scrollLeft, 0);
-        const ChartJs = window.Chart;
-        if (ChartJs?.defaults?.font?.string) {
-          ctx.font = ChartJs.defaults.font.string;
+        if (ChartJS?.defaults?.font?.string) {
+          ctx.font = ChartJS.defaults.font.string;
         }
         const textColor = props.isDarkMode ? '#e5e7eb' : '#1f2937';
         ctx.strokeStyle = textColor;
@@ -184,15 +205,32 @@ export default {
      * @returns {Promise<void>} Resolves when the chart has been created.
      */
     const createChart = async () => {
-      const Chart = await loadChartJs();
-      Chart.register(overlayAxesPlugin);
+      if (!chartCanvas.value) {
+        console.warn('Chart canvas not available');
+        return;
+      }
+      
+      if (props.history.length === 0) {
+        console.warn('No history data available for chart');
+        return;
+      }
+      
+      // Destroy existing chart if it exists
+      if (chartInstance) {
+        chartInstance.destroy();
+        chartInstance = null;
+      }
+      
+      // ChartJS.register(overlayAxesPlugin); // Temporarily disable custom plugin
       const ctx = chartCanvas.value.getContext('2d');
       const labels = flattened.value.map(h => h.date);
       const { rainfall, good, caution, unsafe } = buildDatasets();
       const textColor = props.isDarkMode ? '#e5e7eb' : '#1f2937';
       const gridColor = props.isDarkMode ? 'rgba(75, 85, 99, 0.3)' : 'rgba(229, 231, 235, 0.5)';
+      
 
-      chartInstance = new Chart(ctx, {
+      try {
+        chartInstance = new ChartJS(ctx, {
         type: 'bar',
         data: {
           labels,
@@ -234,7 +272,9 @@ export default {
         },
         options: {
           responsive: true,
+          maintainAspectRatio: false,
           interaction: { mode: 'index' },
+          animation: false,
           plugins: {
             legend: { display: false },
             title: {
@@ -272,11 +312,12 @@ export default {
             x: {
               stacked: true,
               ticks: {
-                display: false,
-                callback: (val, idx) => {
+                display: true,
+                color: textColor,
+                callback: (_, idx) => {
                   const label = labels[idx];
                   if (isThursday(label)) {
-                    const [y, m, d] = label.split('-');
+                    const [, m, d] = label.split('-');
                     return `${m}/${d}`;
                   }
                   return '';
@@ -285,14 +326,17 @@ export default {
               grid: { color: gridColor, drawBorder: false, lineWidth: 0.5 },
             },
             yRain: {
+              type: 'linear',
               position: 'left',
+              beginAtZero: true,
               title: {
                 display: false,
               },
-              ticks: { display: false },
+              ticks: { display: true, color: textColor },
               grid: { color: gridColor, drawBorder: false, lineWidth: 0.5 },
             },
             ySample: {
+              type: 'linear',
               position: 'right',
               stacked: true,
               min: 0,
@@ -302,13 +346,17 @@ export default {
               },
               ticks: {
                 callback: value => `${value}%`,
-                display: false,
+                display: true,
+                color: textColor,
               },
               grid: { color: gridColor, drawBorder: false, lineWidth: 0.5 },
             },
           },
         },
       });
+      } catch (error) {
+        console.error('Error creating chart:', error);
+      }
     };
 
     /**
@@ -330,9 +378,6 @@ export default {
     watch(
       () => props.history,
       async () => {
-        if (chartInstance) {
-          chartInstance.destroy();
-        }
         await createChart();
         scrollToLatest();
       },
@@ -342,9 +387,6 @@ export default {
     watch(
       () => props.isDarkMode,
       async () => {
-        if (chartInstance) {
-          chartInstance.destroy();
-        }
         await createChart();
       }
     );

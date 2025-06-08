@@ -90,7 +90,7 @@ export default {
     const hasValidRainfallData = computed(() => {
       return (
         activeRainData.value.length > 0 &&
-        activeRainData.value.some(val => val !== null && val !== undefined && val > 0)
+        activeRainData.value.some(val => val !== null && val !== undefined && val >= 0)
       );
     });
 
@@ -119,10 +119,13 @@ export default {
       // Determine the maximum rainfall for scaling
       const max = numericValues.length ? Math.max(...numericValues) : 0;
 
-      // Avoid division by zero when all values are 0 or missing
-      if (max === 0) return 0;
+      // When all values are 0, show minimum height bars
+      if (max === 0) return 10;
 
-      return (value / max) * 100;
+      // For zero values, show a minimal bar
+      if (value === 0) return 5;
+
+      return Math.max((value / max) * 100, 10);
     };
 
     return {
