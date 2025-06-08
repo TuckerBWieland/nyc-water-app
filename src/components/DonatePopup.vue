@@ -37,12 +37,11 @@
 </template>
 
 <script>
-import { usePopupManager } from '../composables/usePopupManager';
+import { usePopupAnalytics } from '../composables/usePopupAnalytics';
 import {
   track,
   EVENT_CLICK_DONATE_BUTTON,
   EVENT_CLICK_OUTBOUND_LINK,
-  EVENT_OPEN_POPUP,
 } from '../services/analytics';
 import PopupContainer from './PopupContainer.vue';
 import PopupButton from './PopupButton.vue';
@@ -66,25 +65,11 @@ export default {
    * @returns {Object} Reactive bindings for the template.
    */
   setup() {
-    const { isOpen, togglePopup: baseToggle } = usePopupManager('donate');
-
-    /**
-     * Toggle popup visibility and log analytics events.
-     */
-    const togglePopup = () => {
-      try {
-        const wasClosed = !isOpen.value;
-        baseToggle();
-        if (wasClosed) {
-          track(EVENT_OPEN_POPUP, { component: 'DonatePopup' });
-          track(EVENT_CLICK_DONATE_BUTTON);
-        }
-      } catch (error) {
-        console.error('Error toggling DonatePopup:', error);
-        // Still toggle the popup even if tracking fails
-        baseToggle();
-      }
-    };
+    const { isOpen, togglePopup } = usePopupAnalytics(
+      'donate',
+      'DonatePopup',
+      EVENT_CLICK_DONATE_BUTTON
+    );
 
     /**
      * Track clicks on outbound donation links.

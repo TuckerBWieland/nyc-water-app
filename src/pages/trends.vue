@@ -1,8 +1,9 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import RainfallSampleTrend from '../components/RainfallSampleTrend.vue';
-import { isDarkMode, toggleDarkMode } from '../stores/theme';
-import { basePath } from '../utils/basePath';
+import { isDarkMode } from '../stores/theme';
+import ThemeToggleButton from '../components/ThemeToggleButton.vue';
+
 
 const history = ref([]);
 const loading = ref(true);
@@ -12,21 +13,24 @@ onMounted(async () => {
     const base = basePath;
     const res = await fetch(`${base}/data/dates.json`);
     const dates = (await res.json()) || [];
-    const weekly = [];
-    for (const date of dates) {
-      const geoRes = await fetch(`${base}/data/${date}/enriched.geojson`);
-      if (!geoRes.ok) continue;
-      const geo = await geoRes.json();
-      const summary = { good: 0, caution: 0, unsafe: 0 };
-      for (const f of geo.features) {
-        const mpn = Number(f.properties.mpn);
-        if (mpn < 35) summary.good++;
-        else if (mpn <= 104) summary.caution++;
-        else summary.unsafe++;
-      }
-      const rainfallByDay = geo.features[0]?.properties.rainByDay || [];
-      weekly.push({ date, rainfallByDay, sampleSummary: summary });
-    }
+    const weekly = (
+      await Promise.all(
+        dates.map(async date => {
+          const geoRes = await fetch(`${base}/data/${date}/enriched.geojson`);
+          if (!geoRes.ok) return null;
+          const geo = await geoRes.json();
+          const summary = { good: 0, caution: 0, unsafe: 0 };
+          for (const f of geo.features) {
+            const mpn = Number(f.properties.mpn);
+            if (mpn < 35) summary.good++;
+            else if (mpn <= 104) summary.caution++;
+            else summary.unsafe++;
+          }
+          const rainfallByDay = geo.features[0]?.properties.rainByDay || [];
+          return { date, rainfallByDay, sampleSummary: summary };
+        })
+      )
+    ).filter(Boolean);
     history.value = weekly.sort((a, b) => a.date.localeCompare(b.date));
   } catch (err) {
     console.warn('Error loading trend data:', err);
@@ -41,13 +45,7 @@ onMounted(async () => {
   <div class="min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
     <div class="max-w-screen-lg mx-auto px-4 py-6 text-center">
       <!-- Theme toggle -->
-      <button
-        @click="toggleDarkMode"
-        class="fixed top-4 right-4 z-50 w-10 h-10 rounded-full shadow-md flex items-center justify-center transition-colors duration-300"
-        :class="isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'"
-      >
-        {{ isDarkMode ? '☀️' : '🌙' }}
-      </button>
+      <ThemeToggleButton :isDarkMode="isDarkMode" />
 
       <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
         Trends: Rainfall vs Water Quality

@@ -9,9 +9,9 @@ import InfoPopup from '../components/InfoPopup.vue';
 import DataInfoPopup from '../components/DataInfoPopup.vue';
 import DonatePopup from '../components/DonatePopup.vue';
 import TrendsButton from '../components/TrendsButton.vue';
+import ThemeToggleButton from '../components/ThemeToggleButton.vue';
 import { useStaticData } from '../composables/useStaticData';
-import { isDarkMode, toggleDarkMode } from '../stores/theme';
-import { basePath } from '../utils/basePath';
+import { isDarkMode } from '../stores/theme';
 
 const route = useRoute();
 const router = useRouter();
@@ -72,13 +72,7 @@ watch(
 <template>
   <div>
     <!-- Theme toggle button -->
-    <button
-      @click="toggleDarkMode"
-      class="fixed top-4 right-4 z-50 w-10 h-10 rounded-full shadow-md flex items-center justify-center transition-colors duration-300"
-      :class="isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'"
-    >
-      {{ isDarkMode ? '☀️' : '🌙' }}
-    </button>
+    <ThemeToggleButton :isDarkMode="isDarkMode" />
 
     <div v-if="data && metadata">
       <DateScroller :dates="availableDates" v-model="date" :isDarkMode="isDarkMode" />
