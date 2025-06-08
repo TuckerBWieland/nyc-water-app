@@ -133,8 +133,8 @@ export default {
         ctx.stroke();
         ctx.textAlign = 'center';
         ctx.textBaseline = 'top';
-        x.ticks.forEach(t => {
-          const pos = x.getPixelForTick(t.index) - chartArea.left;
+        x.ticks.forEach((t, idx) => {
+          const pos = x.getPixelForTick(idx) - chartArea.left;
           ctx.beginPath();
           ctx.moveTo(pos, chartArea.bottom);
           ctx.lineTo(pos, chartArea.bottom + 4);
