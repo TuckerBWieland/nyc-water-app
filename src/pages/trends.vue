@@ -1,7 +1,8 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import RainfallSampleTrend from '../components/RainfallSampleTrend.vue';
-import { isDarkMode, toggleDarkMode } from '../stores/theme';
+import { isDarkMode } from '../stores/theme';
+import ThemeToggleButton from '../components/ThemeToggleButton.vue';
 
 const history = ref([]);
 const loading = ref(true);
@@ -40,13 +41,7 @@ onMounted(async () => {
   <div class="min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
     <div class="max-w-screen-lg mx-auto px-4 py-6 text-center">
       <!-- Theme toggle -->
-      <button
-        @click="toggleDarkMode"
-        class="fixed top-4 right-4 z-50 w-10 h-10 rounded-full shadow-md flex items-center justify-center transition-colors duration-300"
-        :class="isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'"
-      >
-        {{ isDarkMode ? '☀️' : '🌙' }}
-      </button>
+      <ThemeToggleButton :isDarkMode="isDarkMode" />
 
       <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
         Trends: Rainfall vs Water Quality
