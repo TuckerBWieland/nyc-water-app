@@ -329,11 +329,11 @@ export default {
 
     watch(
       () => props.history,
-      () => {
+      async () => {
         if (chartInstance) {
           chartInstance.destroy();
         }
-        createChart();
+        await createChart();
         scrollToLatest();
       },
       { deep: true }
@@ -341,11 +341,11 @@ export default {
 
     watch(
       () => props.isDarkMode,
-      () => {
+      async () => {
         if (chartInstance) {
           chartInstance.destroy();
         }
-        createChart();
+        await createChart();
       }
     );
 
