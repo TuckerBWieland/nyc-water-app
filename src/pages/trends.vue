@@ -2,13 +2,14 @@
 import { ref, onMounted } from 'vue';
 import RainfallSampleTrend from '../components/RainfallSampleTrend.vue';
 import { isDarkMode, toggleDarkMode } from '../stores/theme';
+import { basePath } from '../utils/basePath';
 
 const history = ref([]);
 const loading = ref(true);
 
 onMounted(async () => {
   try {
-    const base = import.meta.env.MODE === 'production' ? '/nyc-water-app' : '';
+    const base = basePath;
     const res = await fetch(`${base}/data/dates.json`);
     const dates = (await res.json()) || [];
     const weekly = [];

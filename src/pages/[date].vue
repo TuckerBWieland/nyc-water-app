@@ -11,6 +11,7 @@ import DonatePopup from '../components/DonatePopup.vue';
 import TrendsButton from '../components/TrendsButton.vue';
 import { useStaticData } from '../composables/useStaticData';
 import { isDarkMode, toggleDarkMode } from '../stores/theme';
+import { basePath } from '../utils/basePath';
 
 const route = useRoute();
 const router = useRouter();
@@ -38,7 +39,7 @@ const showDataInfoNotification = computed(() => poorPercentage.value > 50);
 onMounted(async () => {
   // Load list of available dates
   try {
-    const base = import.meta.env.MODE === 'production' ? '/nyc-water-app' : '';
+    const base = basePath;
     const res = await fetch(`${base}/data/dates.json`);
     if (res.ok) {
       const dates = await res.json();
