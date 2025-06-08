@@ -1,159 +1,23 @@
 const fs = require('fs');
 const path = require('path');
 const Papa = require('papaparse');
-const { findNearestTideStation, getTideData, analyzeTideData } = require('./tide-services');
-
-// Thresholds for water quality buckets
-const MPN_THRESHOLD_LOW = 35;
-const MPN_THRESHOLD_MEDIUM = 104;
-
-/**
- * Determine quality bucket for a given MPN value.
- * @param {number} mpn
- * @returns {'good'|'caution'|'poor'}
- */
-function getQualityBucket(mpn) {
-  if (mpn < MPN_THRESHOLD_LOW) return 'good';
-  if (mpn <= MPN_THRESHOLD_MEDIUM) return 'caution';
-  return 'poor';
-}
-
-/**
- * Load historical quality counts from existing GeoJSON files.
- * @returns {Map<string,{good:number,caution:number,poor:number}>}
- */
-function loadHistoricalCounts() {
-  const counts = new Map();
-  if (!fs.existsSync(OUTPUT_DIR)) return counts;
-
-  const dirs = fs
-    .readdirSync(OUTPUT_DIR, { withFileTypes: true })
-    .filter(d => d.isDirectory() && /\d{4}-\d{2}-\d{2}/.test(d.name))
-    .map(d => d.name);
-
-  for (const dir of dirs) {
-    const file = path.join(OUTPUT_DIR, dir, 'enriched.geojson');
-    if (!fs.existsSync(file)) continue;
-    try {
-      const data = JSON.parse(fs.readFileSync(file, 'utf-8'));
-      if (!data.features) continue;
-      for (const feature of data.features) {
-        const props = feature.properties || {};
-        const site = props.siteName;
-        const mpn = props.mpn;
-        if (!site || mpn === undefined || mpn === null) continue;
-        const bucket = getQualityBucket(Number(mpn));
-        if (!counts.has(site)) {
-          counts.set(site, { good: 0, caution: 0, poor: 0 });
-        }
-        counts.get(site)[bucket]++;
-      }
-    } catch (err) {
-      console.warn(`Failed to load history from ${file}:`, err);
-    }
-  }
-
-  return counts;
-}
+const {
+  findNearestTideStation,
+  getTideData,
+  analyzeTideData,
+} = require('./tide-services');
+const {
+  extractDateFromFilename,
+  formatSampleTime,
+} = require('./parsing-utils');
+const { isDateProcessed, removeProcessedData } = require('./data-utils');
+const { getQualityBucket, loadHistoricalCounts } = require('./quality-utils');
 
 // Constants
 const INPUT_DIR = './scripts/input/';
 const OUTPUT_DIR = './public/data';
 
-/**
- * Check if a date has already been processed by looking for an existing
- * enriched GeoJSON file.
- * @param {string} date - Date in YYYY-MM-DD format
- * @returns {boolean} True if data for the date already exists
- */
-function isDateProcessed(date) {
-  const geojsonFile = path.join(OUTPUT_DIR, date, 'enriched.geojson');
-  return fs.existsSync(geojsonFile);
-}
 
-/**
- * Remove previously processed data for a given date.
- * @param {string} date - Date in YYYY-MM-DD format
- */
-function removeProcessedData(date) {
-  const dir = path.join(OUTPUT_DIR, date);
-  try {
-    fs.rmSync(dir, { recursive: true, force: true });
-  } catch (err) {
-    console.warn(`⚠️  Failed to remove existing data for ${date}:`, err);
-  }
-}
-
-/**
- * Extract date from filename (e.g., "samples - 2025-05-08.csv" -> "2025-05-08")
- * @param {string} filename
- * @returns {string|null} The extracted date or null if no match
- */
-function extractDateFromFilename(filename) {
-  const dateMatch = filename.match(/\d{4}-\d{2}-\d{2}/);
-  return dateMatch ? dateMatch[0] : null;
-}
-
-/**
- * Format sample time to ISO string
- * @param {string} date - Date in YYYY-MM-DD format
- * @param {string} timeStr - Time string (could be "9:02", "9:02 AM", "13:45", etc.)
- * @returns {string} ISO formatted date-time string or null if parsing fails
- */
-function formatSampleTime(date, timeStr) {
-  if (!timeStr) return `${date}T12:00:00Z`; // Default to noon
-
-  try {
-    let formattedTime = timeStr.trim();
-    let hour, minute;
-
-    // Handle different time formats
-    if (formattedTime.includes(':')) {
-      const parts = formattedTime.split(':');
-      hour = parseInt(parts[0], 10);
-
-      // Handle minute part which might have AM/PM
-      if (parts[1].includes('AM') || parts[1].includes('PM')) {
-        const minMatch = parts[1].match(/(\d+)/);
-        minute = minMatch ? parseInt(minMatch[1], 10) : 0;
-
-        // Handle AM/PM
-        if (parts[1].includes('PM') && hour < 12) {
-          hour += 12;
-        } else if (parts[1].includes('AM') && hour === 12) {
-          hour = 0;
-        }
-      } else {
-        minute = parseInt(parts[1], 10);
-      }
-    } else {
-      // Just a number, assume it's the hour
-      hour = parseInt(formattedTime, 10);
-      minute = 0;
-    }
-
-    // Validate parsed values
-    if (isNaN(hour) || isNaN(minute) || hour < 0 || hour > 23 || minute < 0 || minute > 59) {
-      throw new Error(`Invalid time components: hour=${hour}, minute=${minute}`);
-    }
-
-    // Format as ISO
-    const isoDate = new Date(
-      Date.UTC(
-        parseInt(date.substring(0, 4)), // year
-        parseInt(date.substring(5, 7)) - 1, // month (0-based)
-        parseInt(date.substring(8, 10)), // day
-        hour,
-        minute
-      )
-    );
-
-    return isoDate.toISOString();
-  } catch (e) {
-    console.warn(`Could not parse time: ${timeStr} for date ${date}. Using default.`);
-    return `${date}T12:00:00Z`; // Default to noon
-  }
-}
 
 /**
  * Find and process sample-rain file pairs
@@ -190,9 +54,9 @@ async function processDatasets() {
 
   // Remove any existing processed data so we can overwrite with new files
   for (const date of dateMap.keys()) {
-    if (isDateProcessed(date)) {
+    if (isDateProcessed(OUTPUT_DIR, date)) {
       console.warn(`⚠️  Data for ${date} already exists and will be overwritten.`);
-      removeProcessedData(date);
+      removeProcessedData(OUTPUT_DIR, date);
     }
   }
 
@@ -200,7 +64,7 @@ async function processDatasets() {
   let processedDates = 0;
 
   // Load existing history counts after cleaning any overwritten dates
-  const historyCounts = loadHistoricalCounts();
+  const historyCounts = loadHistoricalCounts(OUTPUT_DIR);
 
   for (const [date, files] of dateMap.entries()) {
     if (files.samples && files.rain) {
