@@ -97,7 +97,7 @@ watch(
 
       <!-- Info and action buttons -->
       <div
-        class="fixed bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] left-1/2 transform -translate-x-1/2 flex gap-4 z-[300]"
+        class="fixed bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] left-1/2 transform -translate-x-1/2 flex flex-wrap justify-center gap-4 z-[300]"
       >
         <InfoPopup :isDarkMode="isDarkMode" />
         <DataInfoPopup
