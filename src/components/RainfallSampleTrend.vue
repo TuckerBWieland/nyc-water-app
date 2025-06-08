@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { ref, watch, onMounted, onBeforeUnmount } from 'vue';
+import { ref, watch, onMounted, onBeforeUnmount, computed } from 'vue';
 
 export default {
   name: 'RainfallSampleTrend',
@@ -31,15 +31,36 @@ export default {
       return window.Chart;
     };
 
+    const flattened = computed(() => {
+      const map = new Map();
+      for (const week of props.history) {
+        const base = new Date(week.date + 'T00:00:00Z');
+        const rain = week.rainfallByDay || [];
+        for (let i = rain.length - 1; i >= 0; i--) {
+          const d = new Date(base);
+          d.setUTCDate(d.getUTCDate() - i);
+          const key = d.toISOString().slice(0, 10);
+          if (!map.has(key)) {
+            map.set(key, {
+              date: key,
+              rainfall: rain[i],
+              sampleSummary: i === 0 ? week.sampleSummary : null,
+            });
+          }
+        }
+      }
+      return Array.from(map.values()).sort((a, b) => a.date.localeCompare(b.date));
+    });
+
     const buildDatasets = () => {
       const rainfall = [];
       const good = [];
       const caution = [];
       const unsafe = [];
 
-      for (const entry of props.history) {
+      for (const entry of flattened.value) {
         rainfall.push(entry.rainfall);
-        if (isThursday(entry.date)) {
+        if (entry.sampleSummary) {
           const total =
             entry.sampleSummary.good +
             entry.sampleSummary.caution +
@@ -60,7 +81,7 @@ export default {
     const createChart = async () => {
       const Chart = await loadChartJs();
       const ctx = chartCanvas.value.getContext('2d');
-      const labels = props.history.map(h => h.date);
+      const labels = flattened.value.map(h => h.date);
       const { rainfall, good, caution, unsafe } = buildDatasets();
 
       chartInstance = new Chart(ctx, {
@@ -114,25 +135,29 @@ export default {
             tooltip: {
               callbacks: {
                 label: context => {
+                  const entry = flattened.value[context.dataIndex];
                   if (context.dataset.type === 'line') {
                     return `Rainfall: ${context.parsed.y} in`;
                   }
-                  return `${context.dataset.label}: ${Math.round(context.parsed.y)}%`;
+                  if (!entry || !entry.sampleSummary) return '';
+                  const total =
+                    entry.sampleSummary.good +
+                    entry.sampleSummary.caution +
+                    entry.sampleSummary.unsafe;
+                  const count = entry.sampleSummary[
+                    context.dataset.label.toLowerCase()
+                  ];
+                  const pct = total ? Math.round((count / total) * 100) : 0;
+                  return `${context.dataset.label}: ${count} (${pct}%)`;
                 },
                 afterBody: ctx => {
-                  const index = ctx[0].dataIndex;
-                  const item = props.history[index];
-                  if (!item || !isThursday(item.date)) return [];
+                  const entry = flattened.value[ctx[0].dataIndex];
+                  if (!entry || !entry.sampleSummary) return [];
                   const total =
-                    item.sampleSummary.good +
-                    item.sampleSummary.caution +
-                    item.sampleSummary.unsafe;
-                  return [
-                    `Total samples: ${total}`,
-                    `Good: ${item.sampleSummary.good}`,
-                    `Caution: ${item.sampleSummary.caution}`,
-                    `Unsafe: ${item.sampleSummary.unsafe}`,
-                  ];
+                    entry.sampleSummary.good +
+                    entry.sampleSummary.caution +
+                    entry.sampleSummary.unsafe;
+                  return [`Total samples: ${total}`];
                 },
               },
             },
