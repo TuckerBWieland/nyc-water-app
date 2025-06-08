@@ -110,10 +110,9 @@ export default {
     };
 
     /**
-     * Chart.js plugin that renders static axes and tick marks on a
-     * secondary canvas over the scrollable chart.
+     * Chart.js plugin that draws static axes on an overlay canvas.
      *
-     * @param {import('chart.js').Chart} chart - Chart instance being drawn.
+     * @param {Chart} chart - Chart instance being drawn.
      * @returns {void}
      */
     const overlayAxesPlugin = {
@@ -176,7 +175,7 @@ export default {
     /**
      * Initialize the rainfall and sample results chart.
      *
-     * @returns {Promise<void>} Resolves when the chart instance is created.
+     * @returns {Promise<void>} Resolves when the chart has been created.
      */
     const createChart = async () => {
       const Chart = await loadChartJs();
@@ -307,8 +306,7 @@ export default {
     };
 
     /**
-     * Redraws the chart while the scroll container is scrolled so that
-     * the overlay axes remain aligned.
+     * Redraws the chart as the container scrolls so the overlay axes stay aligned.
      *
      * @returns {void}
      */
