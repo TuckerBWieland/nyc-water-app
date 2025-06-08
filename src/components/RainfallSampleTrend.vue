@@ -1,15 +1,7 @@
 <template>
-  <div class="p-4">
-    <div class="flex justify-center text-sm mb-2 space-x-4">
-      <div class="flex items-center" v-for="item in legend" :key="item.label">
-        <span :class="['inline-block w-3 h-3 rounded-sm mr-1', item.color]"></span>
-        <span class="text-gray-700 dark:text-gray-300">{{ item.label }}</span>
-      </div>
-    </div>
-    <div ref="scrollContainer" class="overflow-x-auto">
-      <div class="min-w-[600px]" :style="{ width: canvasWidth + 'px' }">
-        <canvas ref="chartCanvas"></canvas>
-      </div>
+  <div ref="scrollContainer" class="overflow-x-auto p-4">
+    <div class="min-w-[600px]" :style="{ width: canvasWidth + 'px' }">
+      <canvas ref="chartCanvas"></canvas>
     </div>
   </div>
 </template>
@@ -34,12 +26,6 @@ export default {
     const scrollContainer = ref(null);
     let chartInstance = null;
 
-    const legend = [
-      { label: 'Rainfall (in)', color: 'bg-blue-500' },
-      { label: 'Good (<35)', color: 'bg-green-600' },
-      { label: 'Caution (35–104)', color: 'bg-yellow-400' },
-      { label: 'Unsafe (>104)', color: 'bg-red-600' },
-    ];
 
     const isThursday = dateStr => {
       const d = new Date(dateStr + 'T00:00:00Z');
@@ -264,7 +250,7 @@ export default {
       }
     });
 
-    return { chartCanvas, scrollContainer, canvasWidth, legend };
+    return { chartCanvas, scrollContainer, canvasWidth };
   },
 };
 </script>
