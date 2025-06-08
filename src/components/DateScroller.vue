@@ -9,13 +9,13 @@
       ]"
     >
       <button
-        v-if="hasPrevious"
         :class="[
           'w-10 h-10 flex items-center justify-center mr-3 focus:outline-none transition-colors duration-300 text-xl',
           isDarkMode ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-black',
+          { 'opacity-0 pointer-events-none': !hasPrevious }
         ]"
         aria-label="Previous date"
-        @click="selectPrevious"
+        @click="hasPrevious && selectPrevious()"
       >
         &larr;
       </button>
@@ -32,13 +32,13 @@
       </div>
 
       <button
-        v-if="hasNext"
         :class="[
           'w-10 h-10 flex items-center justify-center ml-3 focus:outline-none transition-colors duration-300 text-xl',
           isDarkMode ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-black',
+          { 'opacity-0 pointer-events-none': !hasNext }
         ]"
         aria-label="Next date"
-        @click="selectNext"
+        @click="hasNext && selectNext()"
       >
         &rarr;
       </button>
