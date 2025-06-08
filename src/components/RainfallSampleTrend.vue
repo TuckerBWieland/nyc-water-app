@@ -1,7 +1,21 @@
 <template>
-  <div ref="scrollContainer" class="overflow-x-auto p-4">
-    <div class="min-w-[600px]" :style="{ width: canvasWidth + 'px' }">
-      <canvas ref="chartCanvas"></canvas>
+  <div class="relative">
+    <div
+      class="absolute left-2 top-1/2 -translate-y-1/2 -rotate-90 origin-left pointer-events-none text-sm"
+      :class="isDarkMode ? 'text-gray-200' : 'text-gray-700'"
+    >
+      Rainfall (in)
+    </div>
+    <div
+      class="absolute right-2 top-1/2 -translate-y-1/2 rotate-90 origin-right pointer-events-none text-sm"
+      :class="isDarkMode ? 'text-gray-200' : 'text-gray-700'"
+    >
+      Sample Results (%)
+    </div>
+    <div ref="scrollContainer" class="overflow-x-auto p-4">
+      <div class="min-w-[600px]" :style="{ width: canvasWidth + 'px' }">
+        <canvas ref="chartCanvas"></canvas>
+      </div>
     </div>
   </div>
 </template>
@@ -25,7 +39,6 @@ export default {
     const chartCanvas = ref(null);
     const scrollContainer = ref(null);
     let chartInstance = null;
-
 
     const isThursday = dateStr => {
       const d = new Date(dateStr + 'T00:00:00Z');
@@ -78,9 +91,7 @@ export default {
         rainfall.push(entry.rainfall);
         if (entry.sampleSummary) {
           const total =
-            entry.sampleSummary.good +
-            entry.sampleSummary.caution +
-            entry.sampleSummary.unsafe;
+            entry.sampleSummary.good + entry.sampleSummary.caution + entry.sampleSummary.unsafe;
           good.push((entry.sampleSummary.good / total) * 100);
           caution.push((entry.sampleSummary.caution / total) * 100);
           unsafe.push((entry.sampleSummary.unsafe / total) * 100);
@@ -100,7 +111,7 @@ export default {
       const labels = flattened.value.map(h => h.date);
       const { rainfall, good, caution, unsafe } = buildDatasets();
       const textColor = props.isDarkMode ? '#e5e7eb' : '#1f2937';
-      const gridColor = props.isDarkMode ? '#4b5563' : '#e5e7eb';
+      const gridColor = props.isDarkMode ? 'rgba(75, 85, 99, 0.3)' : 'rgba(229, 231, 235, 0.5)';
 
       chartInstance = new Chart(ctx, {
         type: 'bar',
@@ -142,16 +153,16 @@ export default {
             },
           ],
         },
-          options: {
-            responsive: true,
-            interaction: { mode: 'index' },
-            plugins: {
-              legend: { display: false },
-              title: {
-                display: true,
-                text: 'Rainfall + Weekly Water Quality Breakdown',
-                color: textColor,
-              },
+        options: {
+          responsive: true,
+          interaction: { mode: 'index' },
+          plugins: {
+            legend: { display: false },
+            title: {
+              display: true,
+              text: 'Rainfall + Weekly Water Quality Breakdown',
+              color: textColor,
+            },
             tooltip: {
               callbacks: {
                 label: context => {
@@ -164,9 +175,7 @@ export default {
                     entry.sampleSummary.good +
                     entry.sampleSummary.caution +
                     entry.sampleSummary.unsafe;
-                  const count = entry.sampleSummary[
-                    context.dataset.label.toLowerCase()
-                  ];
+                  const count = entry.sampleSummary[context.dataset.label.toLowerCase()];
                   const pct = total ? Math.round((count / total) * 100) : 0;
                   return `${context.dataset.label}: ${count} (${pct}%)`;
                 },
@@ -195,32 +204,28 @@ export default {
                   return '';
                 },
               },
-              grid: { color: gridColor },
+              grid: { color: gridColor, drawBorder: false, lineWidth: 0.5 },
             },
             yRain: {
               position: 'left',
               title: {
-                display: true,
-                text: 'Rainfall (in)',
-                color: textColor,
+                display: false,
               },
               ticks: { color: textColor },
-              grid: { color: gridColor },
+              grid: { color: gridColor, drawBorder: false, lineWidth: 0.5 },
             },
             ySample: {
               position: 'right',
               min: 0,
               max: 100,
               title: {
-                display: true,
-                text: 'Sample Results (%)',
-                color: textColor,
+                display: false,
               },
               ticks: {
                 callback: value => `${value}%`,
                 color: textColor,
               },
-              grid: { color: gridColor },
+              grid: { color: gridColor, drawBorder: false, lineWidth: 0.5 },
             },
           },
         },
@@ -271,4 +276,3 @@ canvas {
   max-height: 300px;
 }
 </style>
-
