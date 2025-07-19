@@ -16,5 +16,5 @@ if (!fs.existsSync(latestPath)) {
 const latest: string = fs.readFileSync(latestPath, 'utf-8').trim()
 const outDir = path.join(ROOT, 'src', 'generated')
 fs.mkdirSync(outDir, { recursive: true })
-const outFile = path.join(outDir, 'latest-date.js')
+const outFile = path.join(outDir, 'latest-date.ts')
 fs.writeFileSync(outFile, `export default '${latest}';\n`) 
