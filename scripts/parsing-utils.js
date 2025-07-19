@@ -6,7 +6,7 @@ function extractDateFromFilename(filename) {
 }
 
 function formatSampleTime(date, timeStr) {
-  if (!timeStr) return `${date}T12:00:00Z`;
+  if (!timeStr) return `${date}T16:00:00.000Z`; // Default to noon Eastern Time
 
   try {
     let formattedTime = timeStr.trim();
@@ -44,20 +44,33 @@ function formatSampleTime(date, timeStr) {
       throw new Error(`Invalid time components: hour=${hour}, minute=${minute}`);
     }
 
-    const isoDate = new Date(
-      Date.UTC(
-        parseInt(date.substring(0, 4)),
-        parseInt(date.substring(5, 7)) - 1,
-        parseInt(date.substring(8, 10)),
-        hour,
-        minute
-      )
-    );
+    // Parse the date string to get year, month, day
+    const year = parseInt(date.substring(0, 4));
+    const month = parseInt(date.substring(5, 7)) - 1; // JS months are 0-indexed
+    const day = parseInt(date.substring(8, 10));
 
-    return isoDate.toISOString();
+    // Create a date string in Eastern Time timezone and parse it
+    // Use Intl.DateTimeFormat to determine if the date falls in DST
+    const testDate = new Date(year, month, day);
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/New_York',
+      timeZoneName: 'short'
+    });
+    const formattedDate = formatter.formatToParts(testDate);
+    const tzName = formattedDate.find(part => part.type === 'timeZoneName')?.value;
+    const isDST = tzName === 'EDT'; // Eastern Daylight Time vs EST (Eastern Standard Time)
+
+    // Convert Eastern Time to UTC
+    // EST is UTC-5, EDT is UTC-4
+    const offsetHours = isDST ? 4 : 5;
+    
+    // Create the final UTC date
+    const utcDate = new Date(Date.UTC(year, month, day, hour + offsetHours, minute));
+    
+    return utcDate.toISOString();
   } catch (e) {
     console.warn(`Could not parse time: ${timeStr} for date ${date}. Using default.`);
-    return `${date}T12:00:00Z`;
+    return `${date}T16:00:00.000Z`; // Default to noon Eastern Time
   }
 }
 

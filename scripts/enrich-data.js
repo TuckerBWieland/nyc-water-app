@@ -177,7 +177,6 @@ async function processDateFiles(date, sampleFile, rainFile, historyCounts) {
           siteName,
           mpn: mpnValue,
           timestamp: isoTime,
-          sampleTime: isoTime,
           rainByDay,
           totalRain,
           rainfall_mm_7day,
@@ -236,7 +235,18 @@ async function processDateFiles(date, sampleFile, rainFile, historyCounts) {
       type: 'FeatureCollection',
       features,
     };
-    fs.writeFileSync(path.join(outputPath, 'enriched.geojson'), JSON.stringify(geojson, null, 2));
+    
+    // Custom JSON formatting to keep arrays compact while maintaining readability
+    const jsonString = JSON.stringify(geojson, null, 2)
+      .replace(/\[\s*([^\[\]]*?)\s*\]/g, (match, content) => {
+        // Only compact arrays that don't contain objects or nested arrays
+        if (!content.includes('{') && !content.includes('[')) {
+          return `[${content.replace(/\s+/g, ' ').trim()}]`;
+        }
+        return match;
+      });
+    
+    fs.writeFileSync(path.join(outputPath, 'enriched.geojson'), jsonString);
 
     // Write metadata
     const metadata = {
