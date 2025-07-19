@@ -26,7 +26,7 @@ jobs:
         VITE_POSTHOG_KEY: ${{ secrets.VITE_POSTHOG_KEY }}
     
     - name: Copy 404 page
-      run: node --loader ts-node/esm scripts/copy-404.ts
+      run: npx tsx scripts/copy-404.ts
     
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
