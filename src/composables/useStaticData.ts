@@ -1,20 +1,17 @@
-import { ref, unref } from 'vue';
+import { ref, unref, type Ref } from 'vue';
 import { basePath } from '../utils/basePath';
+import type { WaterQualityGeoJSON, DataMetadata, StaticDataReturn } from '../types';
 
 // Accepts a ref to a date string so the composable can
 // load new data when the date value changes.
 /**
  * Load static GeoJSON data and related metadata for a specific date.
- *
- * @param {import('vue').Ref<string>|string} dateRef - Reactive date value.
- * @returns {{ data: import('vue').Ref<any>, metadata: import('vue').Ref<any>, loading: import('vue').Ref<boolean>, error: import('vue').Ref<string|null>, load: Function }}
- *   Reactive data references and a load function.
  */
-export function useStaticData(dateRef) {
-  const data = ref(null);
-  const metadata = ref(null);
+export function useStaticData(dateRef: Ref<string> | string): StaticDataReturn {
+  const data = ref<WaterQualityGeoJSON | null>(null);
+  const metadata = ref<DataMetadata | null>(null);
   const loading = ref(false);
-  const error = ref(null);
+  const error = ref<string | null>(null);
 
   /**
    * Fetch and cache GeoJSON and metadata for the provided date.
@@ -86,7 +83,7 @@ export function useStaticData(dateRef) {
       }
     } catch (err) {
       console.error('Error loading data:', err);
-      error.value = err.message;
+      error.value = err instanceof Error ? err.message : 'An unknown error occurred';
       data.value = null;
       metadata.value = null;
     } finally {

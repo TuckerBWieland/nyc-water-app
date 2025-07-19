@@ -36,10 +36,11 @@ npm run dev
 ## 🏗️ Architecture Deep Dive
 
 ### Core Technology Stack
-- **Frontend**: Vue 3 + Composition API + Vite
+- **Frontend**: Vue 3 + Composition API + TypeScript + Vite
+- **Type System**: TypeScript for enhanced type safety and developer experience
 - **Mapping**: Leaflet.js for interactive maps
 - **Styling**: Tailwind CSS + custom CSS
-- **Testing**: Jest + Vue Test Utils
+- **Testing**: Jest + Vue Test Utils + TypeScript support
 - **Analytics**: PostHog for user behavior tracking
 - **Deployment**: GitHub Pages with automated workflows
 
@@ -75,61 +76,74 @@ npm run dev
 
 ### Key Design Patterns
 
-#### 1. Composition API Pattern
-```javascript
+#### 1. TypeScript Composition API Pattern
+```typescript
 // ALWAYS use this pattern for new components
-<script setup>
-import { ref, computed, onMounted } from 'vue'
+<script setup lang="ts">
+import { ref, computed, onMounted, type Ref } from 'vue'
+import type { WaterQualityGeoJSON } from '@/types'
 import { useComposableName } from '@/composables/useComposableName'
 
-// Reactive state
-const isLoading = ref(false)
-const data = ref(null)
+// Typed reactive state
+const isLoading = ref<boolean>(false)
+const data = ref<WaterQualityGeoJSON | null>(null)
 
-// Composable usage
+// Composable usage (with proper typing)
 const { someUtility } = useComposableName()
 
-// Computed properties
-const processedData = computed(() => {
+// Computed properties with inferred types
+const processedData = computed<ProcessedData[]>(() => {
   return data.value ? processData(data.value) : []
 })
 
-// Lifecycle
-onMounted(async () => {
+// Lifecycle with proper async typing
+onMounted(async (): Promise<void> => {
   await loadData()
 })
 </script>
 ```
 
-#### 2. Data Loading Pattern
-```javascript
-// Standard async data loading with error handling
-const loadData = async () => {
+#### 2. TypeScript Data Loading Pattern
+```typescript
+// Standard async data loading with error handling and type safety
+const loadData = async (): Promise<void> => {
   try {
     isLoading.value = true
     const response = await fetch('/api/data')
     if (!response.ok) throw new Error(`HTTP ${response.status}`)
-    data.value = await response.json()
+    
+    // Type-safe JSON parsing
+    const result: WaterQualityGeoJSON = await response.json()
+    data.value = result
   } catch (error) {
     console.error('Data loading failed:', error)
-    // Always provide user feedback on errors
-    errorMessage.value = 'Failed to load data. Please try again.'
+    // Type-safe error handling
+    errorMessage.value = error instanceof Error ? 
+      error.message : 'Failed to load data. Please try again.'
   } finally {
     isLoading.value = false
   }
 }
 ```
 
-#### 3. Event Handling Pattern
-```javascript
-// Always use analytics tracking for user interactions
-import { track, EVENTS } from '@/services/analytics'
+#### 3. TypeScript Event Handling Pattern
+```typescript
+// Always use analytics tracking for user interactions with proper typing
+import { track, EVENT_CLICK_SITE_MARKER } from '@/services/analytics'
+import type { WaterQualityFeature } from '@/types'
 
-const handleUserAction = (actionData) => {
-  // Track the event
-  track(EVENTS.USER_CLICKED_SAMPLE, { 
+interface ActionData {
+  id: string
+  location: string
+  feature: WaterQualityFeature
+}
+
+const handleUserAction = (actionData: ActionData): void => {
+  // Type-safe event tracking
+  track(EVENT_CLICK_SITE_MARKER, { 
     sampleId: actionData.id,
-    location: actionData.location 
+    location: actionData.location,
+    siteName: actionData.feature.properties.siteName
   })
   
   // Execute the action
@@ -143,6 +157,9 @@ const handleUserAction = (actionData) => {
 
 #### 1. Before Any Code Changes
 ```bash
+# Ensure TypeScript compiles without errors
+npm run type-check
+
 # Ensure tests pass
 npm run test
 
@@ -173,9 +190,9 @@ npm run test
 
 ### Code Style Requirements
 
-#### Vue Components
+#### TypeScript Vue Components
 ```vue
-<!-- ALWAYS follow this structure -->
+<!-- ALWAYS follow this structure with TypeScript -->
 <template>
   <!-- Use semantic HTML -->
   <main class="container mx-auto px-4">
@@ -189,42 +206,55 @@ npm run test
   </main>
 </template>
 
-<script setup>
-// Imports at top
-import { ref, computed, onMounted } from 'vue'
+<script setup lang="ts">
+// Imports at top with type imports
+import { ref, computed, onMounted, type Ref } from 'vue'
+import type { WaterQualityGeoJSON } from '@/types'
 import ComponentName from '@/components/ComponentName.vue'
 
-// Props definition
-const props = defineProps({
-  dataSource: {
-    type: String,
-    required: true
-  },
-  options: {
-    type: Object,
-    default: () => ({})
+// TypeScript interface for props
+interface Props {
+  dataSource: string
+  options?: Record<string, any>
+}
+
+// Props definition with defaults
+const props = withDefaults(defineProps<Props>(), {
+  options: () => ({})
+})
+
+// Typed emits definition
+interface Emits {
+  update: [data: WaterQualityGeoJSON]
+  error: [message: string]
+}
+
+const emit = defineEmits<Emits>()
+
+// Typed reactive state
+const isLoading = ref<boolean>(false)
+const error = ref<string | null>(null)
+
+// Computed properties with explicit types when needed
+const processedData = computed<ProcessedData[]>(() => {
+  // Process data logic with type safety
+  return processDataSafely(props.dataSource)
+})
+
+// Typed methods
+const handleAction = async (): Promise<void> => {
+  // Method implementation with proper error handling
+  try {
+    const result = await performAction()
+    emit('update', result)
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Unknown error'
+    emit('error', message)
   }
-})
-
-// Emits definition
-const emit = defineEmits(['update', 'error'])
-
-// Reactive state
-const isLoading = ref(false)
-const error = ref(null)
-
-// Computed properties
-const processedData = computed(() => {
-  // Process data logic
-})
-
-// Methods
-const handleAction = async () => {
-  // Method implementation
 }
 
 // Lifecycle hooks
-onMounted(() => {
+onMounted((): void => {
   // Initialization logic
 })
 </script>
@@ -237,17 +267,30 @@ onMounted(() => {
 </style>
 ```
 
-#### JavaScript Functions
-```javascript
+#### TypeScript Functions
+```typescript
 /**
- * Always include JSDoc comments for functions
- * @param {Object} params - Parameter description
- * @param {string} params.id - Specific parameter details
- * @returns {Promise<Object>} Return value description
+ * TypeScript functions with comprehensive typing and JSDoc
+ * @param params - Parameter description with TypeScript interface
+ * @returns Promise resolving to processed data
  */
-export const processData = async ({ id, options = {} }) => {
+interface ProcessDataParams {
+  id: string
+  options?: Record<string, any>
+}
+
+interface ProcessDataResult {
+  data: WaterQualityGeoJSON
+  metadata: DataMetadata
+}
+
+export const processData = async ({ 
+  id, 
+  options = {} 
+}: ProcessDataParams): Promise<ProcessDataResult> => {
   try {
-    // Implementation
+    // Implementation with type safety
+    const result: ProcessDataResult = await performProcessing(id, options)
     return result
   } catch (error) {
     console.error('processData failed:', error)
@@ -278,25 +321,51 @@ npm run enrich
 - Generates metadata.json with summary statistics
 - Creates date-specific directories in `public/data/`
 
-#### 3. Data Structure
-```javascript
-// enriched.geojson structure
-{
-  "type": "FeatureCollection",
-  "features": [
+#### 3. TypeScript Data Structure
+```typescript
+// Type-safe enriched.geojson structure
+interface WaterQualityGeoJSON {
+  type: 'FeatureCollection'
+  features: WaterQualityFeature[]
+}
+
+interface WaterQualityFeature {
+  type: 'Feature'
+  geometry: {
+    type: 'Point'
+    coordinates: [number, number] // [longitude, latitude]
+  }
+  properties: WaterQualityFeatureProperties
+}
+
+interface WaterQualityFeatureProperties {
+  siteName: string
+  mpn: number | null
+  timestamp?: string
+  tide?: string
+  rainfall_mm_7day?: number | null
+  rainByDay?: (number | null)[]
+  goodCount?: number
+  cautionCount?: number
+  poorCount?: number
+}
+
+// Example usage with full type safety
+const sampleData: WaterQualityGeoJSON = {
+  type: 'FeatureCollection',
+  features: [
     {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [longitude, latitude]
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [-74.006, 40.7128]
       },
-      "properties": {
-        "sampleId": "unique_identifier",
-        "collectionDate": "ISO_date_string",
-        "enterococcus": number,
-        "rainfall": number,
-        "tideState": "rising|falling|high|low|mid",
-        "location": "descriptive_name"
+      properties: {
+        siteName: "Hudson River Sample Site",
+        mpn: 45,
+        timestamp: "2025-05-15T10:30:00Z",
+        tide: "rising",
+        rainfall_mm_7day: 12.5
       }
     }
   ]
@@ -305,18 +374,25 @@ npm run enrich
 
 ### Working with Data
 
-#### Loading Data in Components
-```javascript
+#### Loading Data in Components (TypeScript)
+```typescript
 import { useStaticData } from '@/composables/useStaticData'
+import type { WaterQualityFeature } from '@/types'
 
-// In component setup
-const { loadDateData, currentData, isLoading, error } = useStaticData()
+// In component setup with proper typing
+const { data, metadata, loading, error, load } = useStaticData('2025-05-15')
 
 // Load specific date data
-await loadDateData('2025-05-15')
+await load('2025-05-15')
 
-// Access the loaded data
-const samples = currentData.value?.features || []
+// Access the loaded data with type safety
+const samples: WaterQualityFeature[] = data.value?.features || []
+
+// Type-safe property access
+samples.forEach((sample: WaterQualityFeature) => {
+  const siteName: string = sample.properties.siteName
+  const mpnValue: number | null = sample.properties.mpn
+})
 ```
 
 #### Adding New Data Fields
@@ -336,29 +412,44 @@ This is the core component - understand it thoroughly:
 - **Marker Creation**: Converts GeoJSON features to map markers
 - **Interaction Handling**: Click events, popups, zoom controls
 
-#### Adding New Map Features
-```javascript
-// Pattern for adding new map functionality
+#### Adding New Map Features (TypeScript)
+```typescript
+// Pattern for adding new map functionality with TypeScript
 import L from 'leaflet'
+import type { WaterQualityGeoJSON, WaterQualityFeature } from '@/types'
 
-// In the map setup
-const addCustomLayer = (map, data) => {
+// In the map setup with proper typing
+const addCustomLayer = (
+  map: L.Map, 
+  data: WaterQualityGeoJSON
+): L.GeoJSON => {
   const layer = L.geoJSON(data, {
-    // Styling function
-    style: (feature) => ({
+    // Styling function with typed parameters
+    style: (feature?: WaterQualityFeature): L.PathOptions => ({
       color: getColorForFeature(feature),
       weight: 2,
       opacity: 0.8
     }),
     
-    // Popup binding
-    onEachFeature: (feature, layer) => {
-      layer.bindPopup(createPopupContent(feature))
+    // Popup binding with type safety
+    onEachFeature: (feature: WaterQualityFeature, layer: L.Layer): void => {
+      if (layer instanceof L.Marker || layer instanceof L.Path) {
+        layer.bindPopup(createPopupContent(feature))
+      }
     }
   })
   
   layer.addTo(map)
   return layer
+}
+
+// Type-safe color function
+const getColorForFeature = (feature?: WaterQualityFeature): string => {
+  if (!feature?.properties.mpn) return '#gray'
+  const mpn = feature.properties.mpn
+  if (mpn < 35) return '#green'
+  if (mpn <= 104) return '#yellow'
+  return '#red'
 }
 ```
 
@@ -374,31 +465,45 @@ const addCustomLayer = (map, data) => {
 - **Composable Tests**: Test reusable logic functions
 - **Utility Tests**: Test data processing functions
 
-### Writing Effective Tests
-```javascript
-// Component testing pattern
-import { mount } from '@vue/test-utils'
+### Writing Effective TypeScript Tests
+```typescript
+// Component testing pattern with TypeScript
+import { mount, type VueWrapper } from '@vue/test-utils'
 import { describe, it, expect, beforeEach } from 'vitest'
 import ComponentName from '@/components/ComponentName.vue'
+import type { ComponentProps } from '@/types'
+
+// Type the component wrapper
+type ComponentWrapper = VueWrapper<InstanceType<typeof ComponentName>>
 
 describe('ComponentName', () => {
-  let wrapper
+  let wrapper: ComponentWrapper
   
   beforeEach(() => {
-    wrapper = mount(ComponentName, {
-      props: {
-        requiredProp: 'test-value'
-      }
-    })
+    const props: ComponentProps = {
+      requiredProp: 'test-value',
+      optionalProp: { data: 'test' }
+    }
+    
+    wrapper = mount(ComponentName, { props })
   })
   
   it('should render correctly with props', () => {
     expect(wrapper.find('.expected-element').exists()).toBe(true)
   })
   
-  it('should handle user interactions', async () => {
+  it('should handle user interactions', async (): Promise<void> => {
     await wrapper.find('button').trigger('click')
-    expect(wrapper.emitted('expected-event')).toBeTruthy()
+    
+    // Type-safe event checking
+    const emittedEvents = wrapper.emitted('expected-event')
+    expect(emittedEvents).toBeTruthy()
+    
+    // Type-safe payload checking
+    if (emittedEvents) {
+      const [eventPayload] = emittedEvents[0]
+      expect(eventPayload).toMatchObject({ expected: 'data' })
+    }
   })
 })
 ```
@@ -410,13 +515,15 @@ describe('ComponentName', () => {
 
 ## 🔧 Common Tasks & Approaches
 
-### Task: Adding a New Component
-1. **Create Component File**: `src/components/NewComponent.vue`
-2. **Follow Template Structure**: Use the Vue component template above
-3. **Add Props/Emits**: Define clear interfaces
-4. **Import and Use**: Add to parent components
-5. **Write Tests**: Create `tests/NewComponent.test.js`
-6. **Update Documentation**: Add to this guide if it's a major component
+### Task: Adding a New TypeScript Component
+1. **Create Component File**: `src/components/NewComponent.vue` with `<script setup lang="ts">`
+2. **Follow Template Structure**: Use the TypeScript Vue component template above
+3. **Define Types**: Create interfaces for props, emits, and internal data structures
+4. **Add Type Definitions**: Update `src/types/index.ts` if introducing new data types
+5. **Import and Use**: Add to parent components with proper typing
+6. **Write Tests**: Create `tests/NewComponent.test.ts` with TypeScript
+7. **Type Check**: Run `npm run type-check` to verify type safety
+8. **Update Documentation**: Add to this guide if it's a major component
 
 ### Task: Modifying Data Display
 1. **Understand Current Data Flow**: Trace from data source to display
@@ -459,6 +566,7 @@ npm run predeploy && npm run deploy
 3. GitHub Pages serves the application
 
 ### Pre-deployment Checklist
+- [ ] TypeScript compiles without errors: `npm run type-check`
 - [ ] All tests pass: `npm run test`
 - [ ] Build succeeds: `npm run build`
 - [ ] Local preview works: `npm run preview`
@@ -466,6 +574,7 @@ npm run predeploy && npm run deploy
 - [ ] Analytics events work correctly
 - [ ] All data loads correctly
 - [ ] Mobile responsiveness verified
+- [ ] Type definitions are complete and accurate
 
 ## 🐛 Debugging & Troubleshooting
 
@@ -484,24 +593,51 @@ npm run predeploy && npm run deploy
 4. Verify date format matches expected pattern
 
 #### Build Failures
-1. Check for TypeScript errors (if applicable)
-2. Verify all imports are correct
-3. Check for missing dependencies
-4. Clear node_modules and reinstall
+1. **Check TypeScript errors first**: `npm run type-check`
+2. Verify all imports are correct and properly typed
+3. Check for missing dependencies and their type definitions
+4. Ensure all `.vue` files have `lang="ts"` in script tags if using TypeScript
+5. Clear node_modules and reinstall if type errors persist
 
-### Debugging Tools
-```javascript
-// Add debugging to components
-import { ref, watch } from 'vue'
+### TypeScript Debugging Tools
+```typescript
+// Add debugging to components with TypeScript
+import { ref, watch, type Ref } from 'vue'
+import type { WaterQualityGeoJSON } from '@/types'
 
-const debugMode = ref(process.env.NODE_ENV === 'development')
+const debugMode: Ref<boolean> = ref(process.env.NODE_ENV === 'development')
 
-// Watch for data changes
-watch(someData, (newValue, oldValue) => {
+// Type-safe watching for data changes
+watch<WaterQualityGeoJSON | null>(
+  someData, 
+  (newValue: WaterQualityGeoJSON | null, oldValue: WaterQualityGeoJSON | null) => {
+    if (debugMode.value) {
+      console.log('Data changed:', { 
+        newFeatureCount: newValue?.features.length || 0,
+        oldFeatureCount: oldValue?.features.length || 0,
+        newValue, 
+        oldValue 
+      })
+    }
+  }, 
+  { deep: true }
+)
+
+// Type-safe development utilities
+interface DebugInfo {
+  componentName: string
+  timestamp: string
+  data: any
+}
+
+const logDebugInfo = (info: DebugInfo): void => {
   if (debugMode.value) {
-    console.log('Data changed:', { newValue, oldValue })
+    console.group(`🐛 ${info.componentName} Debug`)
+    console.log('Timestamp:', info.timestamp)
+    console.log('Data:', info.data)
+    console.groupEnd()
   }
-}, { deep: true })
+}
 ```
 
 ## 📈 Performance Guidelines
@@ -563,30 +699,255 @@ watch(someData, (newValue, oldValue) => {
 
 ### Before Starting Any Task
 1. **Read the request completely** - understand the full scope
-2. **Identify affected components** - use search tools to map dependencies
-3. **Check existing tests** - understand current behavior
-4. **Plan your approach** - consider multiple solutions
-5. **Start with smallest changes** - iterate incrementally
+2. **Run type checker** - ensure current codebase is type-safe: `npm run type-check`
+3. **Identify affected components** - use search tools to map dependencies
+4. **Check existing tests** - understand current behavior
+5. **Review type definitions** - check `src/types/index.ts` for relevant interfaces
+6. **Plan your approach** - consider type safety and multiple solutions
+7. **Start with smallest changes** - iterate incrementally with type checking
 
 ### During Development
-1. **Test continuously** - run tests after each change
-2. **Check the live app** - verify changes work in browser
-3. **Follow established patterns** - don't reinvent existing solutions
-4. **Consider edge cases** - handle loading states, errors, empty data
-5. **Think about performance** - especially for map and data operations
+1. **Type check continuously** - run `npm run type-check` after significant changes
+2. **Test continuously** - run tests after each change
+3. **Check the live app** - verify changes work in browser
+4. **Follow established TypeScript patterns** - use existing interfaces and types
+5. **Maintain type safety** - avoid `any` types unless absolutely necessary
+6. **Consider edge cases** - handle loading states, errors, empty data with proper typing
+7. **Think about performance** - especially for map and data operations
 
 ### Before Completing
-1. **Run full test suite** - ensure nothing broke
-2. **Test with real data** - use actual datasets
-3. **Check all user flows** - verify complete functionality
-4. **Review code quality** - ensure it meets standards
-5. **Update documentation** - if you added new patterns or components
+1. **Run TypeScript type checking** - `npm run type-check` must pass
+2. **Run full test suite** - ensure nothing broke
+3. **Test with real data** - use actual datasets
+4. **Check all user flows** - verify complete functionality
+5. **Review code quality** - ensure it meets TypeScript standards
+6. **Verify type definitions** - ensure all new types are properly exported from `src/types/`
+7. **Update documentation** - if you added new patterns, components, or types
+
+## 🔧 TypeScript Best Practices
+
+### Type Definition Organization
+
+The application uses a centralized type system in `src/types/index.ts`. When adding new types:
+
+#### 1. Data Types
+```typescript
+// Always export interfaces for external data structures
+export interface NewDataType {
+  id: string
+  name: string
+  value: number | null
+  metadata?: Record<string, any>
+}
+
+// Use union types for known string values
+export type StatusType = 'pending' | 'loading' | 'success' | 'error'
+
+// Create mapped types for transformations
+export type PartialData<T> = {
+  [K in keyof T]?: T[K]
+}
+```
+
+#### 2. Component Types
+```typescript
+// Define props interfaces with optional properties
+export interface ComponentProps {
+  requiredProp: string
+  optionalProp?: number
+  callbackProp?: (data: SomeType) => void
+}
+
+// Define event payload interfaces
+export interface ComponentEvents {
+  update: [data: UpdatedData]
+  error: [message: string, code?: number]
+  close: []
+}
+```
+
+#### 3. Composable Types
+```typescript
+// Define return types for composables
+export interface UseDataReturn {
+  data: Ref<DataType | null>
+  loading: Ref<boolean>
+  error: Ref<string | null>
+  refresh: () => Promise<void>
+}
+
+// Use generic types for reusable composables
+export interface UseAsyncReturn<T> {
+  data: Ref<T | null>
+  loading: Ref<boolean>
+  error: Ref<Error | null>
+  execute: (...args: any[]) => Promise<T>
+}
+```
+
+### Type Safety Guidelines
+
+#### 1. Strict Type Checking
+- **Never use `any`** unless interfacing with untyped external libraries
+- **Use `unknown`** instead of `any` when type is truly unknown
+- **Prefer union types** over broad types like `object` or `Record<string, any>`
+
+#### 2. Null Safety
+```typescript
+// Always handle null/undefined explicitly
+const processData = (data: DataType | null): ProcessedData[] => {
+  if (!data) return []
+  return data.items.map(transformItem)
+}
+
+// Use optional chaining for nested properties
+const siteName = feature?.properties?.siteName ?? 'Unknown Site'
+
+// Use nullish coalescing for default values
+const displayValue = value ?? 'N/A'
+```
+
+#### 3. Generic Constraints
+```typescript
+// Use constraints to limit generic types
+interface ApiResponse<T extends Record<string, any>> {
+  data: T
+  status: number
+  message: string
+}
+
+// Constrain function parameters
+function processItems<T extends { id: string }>(items: T[]): T[] {
+  return items.filter(item => item.id.length > 0)
+}
+```
+
+### Working with Vue 3 TypeScript
+
+#### 1. Component Props
+```typescript
+// Use defineProps with TypeScript interface
+interface Props {
+  items: Item[]
+  selectedId?: string
+  onSelect?: (id: string) => void
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  selectedId: undefined,
+  onSelect: undefined
+})
+```
+
+#### 2. Template Refs
+```typescript
+// Type template refs properly
+const mapContainer = ref<HTMLDivElement | null>(null)
+const inputElement = ref<HTMLInputElement | null>(null)
+
+// Use type assertion only when necessary
+const specificElement = ref<HTMLElement>(null as any)
+```
+
+#### 3. Computed Properties
+```typescript
+// Explicitly type complex computed properties
+const filteredItems = computed<FilteredItem[]>(() => {
+  return items.value
+    .filter(item => item.isVisible)
+    .map(item => transformToFiltered(item))
+})
+```
+
+### Error Handling Patterns
+
+#### 1. Type-Safe Error Handling
+```typescript
+// Create error union types
+type ApiError = {
+  type: 'network'
+  message: string
+} | {
+  type: 'validation'
+  field: string
+  message: string
+} | {
+  type: 'unknown'
+  error: unknown
+}
+
+// Handle errors with type guards
+const handleError = (error: ApiError): void => {
+  switch (error.type) {
+    case 'network':
+      showNetworkError(error.message)
+      break
+    case 'validation':
+      highlightField(error.field, error.message)
+      break
+    case 'unknown':
+      console.error('Unknown error:', error.error)
+      break
+  }
+}
+```
+
+#### 2. Result Types
+```typescript
+// Use Result pattern for error handling
+type Result<T, E = Error> = 
+  | { success: true; data: T }
+  | { success: false; error: E }
+
+const fetchData = async (): Promise<Result<DataType>> => {
+  try {
+    const data = await api.getData()
+    return { success: true, data }
+  } catch (error) {
+    return { 
+      success: false, 
+      error: error instanceof Error ? error : new Error('Unknown error')
+    }
+  }
+}
+```
+
+### Performance Considerations
+
+#### 1. Type Imports
+```typescript
+// Use type-only imports when possible
+import type { LargeInterface } from './types'
+import { someFunction } from './utils'
+
+// This reduces bundle size as types are erased at runtime
+```
+
+#### 2. Interface vs Type Aliases
+```typescript
+// Use interfaces for object shapes (can be extended)
+interface User {
+  id: string
+  name: string
+}
+
+interface AdminUser extends User {
+  permissions: string[]
+}
+
+// Use type aliases for unions, primitives, computed types
+type Status = 'idle' | 'loading' | 'error'
+type UserKeys = keyof User
+```
 
 ## 📚 Additional Resources
 
 ### Key Dependencies Documentation
 - **Vue 3**: https://vuejs.org/guide/
+- **Vue 3 TypeScript**: https://vuejs.org/guide/typescript/overview.html
+- **TypeScript**: https://www.typescriptlang.org/docs/
 - **Leaflet**: https://leafletjs.com/reference.html
+- **Leaflet Types**: https://www.npmjs.com/package/@types/leaflet
 - **Tailwind CSS**: https://tailwindcss.com/docs
 - **Vite**: https://vitejs.dev/guide/
 - **Jest**: https://jestjs.io/docs/getting-started

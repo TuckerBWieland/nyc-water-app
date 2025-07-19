@@ -2,6 +2,7 @@ module.exports = {
   testEnvironment: 'jsdom',
   transform: {
     '^.+\\.js$': 'babel-jest',
+    '^.+\\.ts$': 'ts-jest',
     '^.+\\.vue$': '@vue/vue3-jest',
   },
   moduleNameMapper: {
@@ -14,4 +15,5 @@ module.exports = {
     'node_modules/(?!(vue|@vue|posthog-js)/)',
   ],
   setupFilesAfterEnv: ['<rootDir>/tests/setup.js'],
+  moduleFileExtensions: ['js', 'ts', 'vue', 'json'],
 };

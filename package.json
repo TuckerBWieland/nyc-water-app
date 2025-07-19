@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/gen-latest.js && vite build",
+    "build": "node scripts/gen-latest.js && vue-tsc && vite build",
+    "build:fast": "node scripts/gen-latest.js && vite build",
     "preview": "vite preview",
     "test": "jest",
+    "type-check": "vue-tsc --noEmit",
     "enrich": "node scripts/enrich-data.js",
     "cleanup": "node scripts/cleanup-branches.js",
     "predeploy": "npm run build && node scripts/copy-404.js",
@@ -23,6 +25,9 @@
   "devDependencies": {
     "@babel/core": "^7.22.20",
     "@babel/preset-env": "^7.22.20",
+    "@types/jest": "^30.0.0",
+    "@types/leaflet": "^1.9.20",
+    "@types/node": "^24.0.15",
     "@vitejs/plugin-vue": "^5.0.0",
     "@vue/test-utils": "^2.4.6",
     "@vue/vue3-jest": "^29.2.6",
@@ -35,6 +40,9 @@
     "postcss": "^8.4.0",
     "tailwindcss": "^3.3.0",
     "test-exclude": "^7.0.1",
-    "vite": "^6.3.5"
+    "ts-jest": "^29.4.0",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5",
+    "vue-tsc": "^3.0.3"
   }
 }

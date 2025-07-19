@@ -1,5 +1,6 @@
 // Dynamically imported PostHog instance
-let posthog;
+import type { PostHog } from 'posthog-js';
+let posthog: PostHog | undefined;
 
 export const EVENT_CLICK_SITE_MARKER = 'click_site_marker';
 export const EVENT_CLICK_DATA_INFO_BUTTON = 'click_data_info_button';
@@ -32,7 +33,7 @@ export async function initAnalytics() {
   }
 }
 
-export function track(event, properties = {}) {
+export function track(event: string, properties: Record<string, any> = {}) {
   try {
     if (!isInitialized || !posthog) return;
     posthog.capture(event, properties);

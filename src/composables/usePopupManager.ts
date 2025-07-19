@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue';
 
 // Holds the name of the currently open popup
-const activePopup = ref(null);
+const activePopup = ref<string | null>(null);
 
 /**
  * Reactive flag indicating if any popup is open.
@@ -15,7 +15,7 @@ export const anyPopupOpen = computed(() => activePopup.value !== null);
  * Only one popup can be open at a time.
  * @param {string} name - Unique name for the popup using this composable
  */
-export function usePopupManager(name) {
+export function usePopupManager(name: string) {
   const isOpen = computed({
     get: () => activePopup.value === name,
     set: val => {

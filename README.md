@@ -14,7 +14,8 @@ An interactive web application to visualize water quality data across various sa
 
 ## Technology Stack
 
-- Vue 3 (Composition API with JavaScript)
+- Vue 3 (Composition API with TypeScript)
+- TypeScript for type safety and better developer experience
 - Leaflet for interactive maps
 - Tailwind CSS for styling
 - Vite for fast development and building
@@ -43,8 +44,14 @@ npm install
 # Start development server
 npm run dev
 
-# Build for production
+# Type checking
+npm run type-check
+
+# Build for production (includes type checking)
 npm run build
+
+# Build for production (skip type checking)
+npm run build:fast
 
 # Enrich data from CSV files
 npm run enrich
@@ -130,8 +137,34 @@ With `VITE_POSTHOG_KEY` set, basic page views will be recorded automatically.
 
 The project has seen significant improvements:
 
-- Rainfall and water quality trend charts now include sticky axes and refined tick alignment.
-- Watcher callbacks in components are asynchronous to prevent rendering glitches.
-- JSDoc comments cover all chart utilities and composables.
-- Additional Jest tests verify map and popup behavior.
+- **TypeScript Migration**: Full conversion from JavaScript to TypeScript for enhanced type safety, better IDE support, and improved maintainability
+- Comprehensive type definitions for water quality data structures and component interfaces
+- Updated build pipeline with TypeScript compilation and type checking
+- Rainfall and water quality trend charts now include sticky axes and refined tick alignment
+- Watcher callbacks in components are asynchronous to prevent rendering glitches
+- JSDoc comments cover all chart utilities and composables
+- Additional Jest tests verify map and popup behavior
+
+## TypeScript Features
+
+The application now uses TypeScript throughout:
+
+- **Type-safe data structures**: Complete typing for GeoJSON water quality data
+- **Component interfaces**: Strongly typed props and emits for all Vue components
+- **Composable return types**: Well-defined return types for all reusable logic
+- **IDE support**: Enhanced IntelliSense, auto-completion, and refactoring capabilities
+- **Build-time checks**: Catch potential runtime errors during development
+
+### TypeScript Development
+
+```bash
+# Type check without emitting files
+npm run type-check
+
+# Build with full type checking (recommended)
+npm run build
+
+# Fast build without type checking (development only)
+npm run build:fast
+```
 

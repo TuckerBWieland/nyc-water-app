@@ -8,7 +8,7 @@ import { track, EVENT_OPEN_POPUP } from '../services/analytics';
  * @param {string} component - Component name for analytics events.
  * @param {string} [buttonEvent] - Optional analytics event for button clicks.
  */
-export function usePopupAnalytics(name, component, buttonEvent) {
+export function usePopupAnalytics(name: string, component: any, buttonEvent: string) {
   const { isOpen, togglePopup: baseToggle, closePopup } = usePopupManager(name);
 
   /**
