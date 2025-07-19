@@ -1,4 +1,3 @@
-// @ts-nocheck
 // Utility functions for the MapViewer component
 import L from 'leaflet';
 import type { Ref } from 'vue';
@@ -19,6 +18,28 @@ const COLOR_RED = COLORS.RED;
 
 const LIGHT_TILE_URL = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
 const DARK_TILE_URL = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
+
+// Type definitions for function parameters
+interface UpdateTileLayerParams {
+  map: Ref<any>;
+  tileLayer: Ref<any>;
+  markers: Ref<any>;
+  isDarkMode: boolean;
+}
+
+interface UpdateMapParams {
+  map: Ref<any>;
+  markers: Ref<any>;
+  hasAutoFitted: Ref<boolean>;
+  isDarkMode: boolean;
+  data: WaterQualityGeoJSON;
+}
+
+interface UpdatePopupStylesParams {
+  map: Ref<any>;
+  markers: Ref<any>;
+  isDarkMode: boolean;
+}
 
 function getColorForMPN(mpn: MPNValue): ColorString {
   if (mpn === null) return COLOR_YELLOW;
@@ -53,7 +74,7 @@ export function generateRainChart(data: (number | null)[], isDarkMode: boolean):
   const dayLabels = ['F', 'S', 'S', 'M', 'T', 'W', 'Th'];
   const numeric = (data || []).filter((v): v is number => typeof v === 'number' && !Number.isNaN(v));
   const max = numeric.length ? Math.max(...numeric) : 0;
-  const getColor = (value: number | null) => {
+  const getColor = (value: number | null): string => {
     if (value === null || value === undefined)
       return isDarkMode ? 'bg-gray-500' : 'bg-gray-300';
     if (value < 0.5) return isDarkMode ? 'bg-green-600' : 'bg-green-500';
@@ -83,9 +104,9 @@ function formatSampleDate(timestamp: string): string {
   return `Sampled on ${date.getMonth() + 1}/${date.getDate()} at ${time}`;
 }
 
-export function updatePopupStyles({ map, markers, isDarkMode }: { map: Ref<L.Map | null>, markers: Ref<L.Marker[]>, isDarkMode: boolean }) {
-if (!map.value) return;
-  markers.value.forEach(marker => {
+export function updatePopupStyles({ map, markers, isDarkMode }: UpdatePopupStylesParams): void {
+  if (!map.value) return;
+  markers.value.forEach((marker: any) => {
     const popup = marker.getPopup();
     if (popup) {
       const content = popup.getContent();
@@ -95,7 +116,7 @@ if (!map.value) return;
   });
 }
 
-export function updateTileLayer({ map, tileLayer, markers, isDarkMode }) {
+export function updateTileLayer({ map, tileLayer, markers, isDarkMode }: UpdateTileLayerParams): void {
   if (!map.value) return;
   if (tileLayer.value) {
     map.value.removeLayer(tileLayer.value);
@@ -109,7 +130,7 @@ export function updateTileLayer({ map, tileLayer, markers, isDarkMode }) {
   updatePopupStyles({ map, markers, isDarkMode });
 }
 
-export function updateMap({ map, markers, hasAutoFitted, isDarkMode, data }) {
+export function updateMap({ map, markers, hasAutoFitted, isDarkMode, data }: UpdateMapParams): void {
   if (!map.value) {
     console.error('Map instance is not available');
     return;
@@ -152,7 +173,7 @@ export function updateMap({ map, markers, hasAutoFitted, isDarkMode, data }) {
       const bottleIcon = createWaterBottleIcon(mpnValue);
       bottleIcon.options.popupAnchor = [0, -40];
 
-      let qualityColor, qualityMessage;
+      let qualityColor: string, qualityMessage: string;
       const mpnNumber = Number(mpnValue);
       if (mpnNumber < 35) {
         qualityColor = 'text-green-500';
@@ -165,7 +186,7 @@ export function updateMap({ map, markers, hasAutoFitted, isDarkMode, data }) {
         qualityMessage = 'Unacceptable for swimming';
       }
 
-      const sanitize = str => String(str)
+      const sanitize = (str: unknown): string => String(str)
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
@@ -231,13 +252,13 @@ export function updateMap({ map, markers, hasAutoFitted, isDarkMode, data }) {
         track(EVENT_CLICK_SITE_MARKER, { site_name: siteName });
       });
 
-      marker.on('popupopen', e => {
+      marker.on('popupopen', (e: L.PopupEvent) => {
         featurePopupOpen.value = true;
         const container = e.popup.getElement();
-        const toggle = container.querySelector('.rain-toggle');
+        const toggle = container?.querySelector('.rain-toggle');
         if (toggle) {
           toggle.addEventListener('click', () => {
-            const details = container.querySelector('.rain-details');
+            const details = container?.querySelector('.rain-details');
             if (details) details.classList.toggle('hidden');
           });
         }

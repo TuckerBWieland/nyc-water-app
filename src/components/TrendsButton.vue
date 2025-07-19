@@ -13,29 +13,24 @@
   </button>
 </template>
 
-<script>
+<script setup lang="ts">
 import { useRouter } from 'vue-router';
 
-export default {
-  name: 'TrendsButton',
-  props: {
-    isDarkMode: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  setup() {
-    const router = useRouter();
+interface Props {
+  isDarkMode?: boolean;
+}
 
-    /**
-     * Navigate to the trends page.
-     */
-    const goToTrends = () => {
-      router.push('/trends');
-    };
+withDefaults(defineProps<Props>(), {
+  isDarkMode: false,
+});
 
-    return { goToTrends };
-  },
+const router = useRouter();
+
+/**
+ * Navigate to the trends page.
+ */
+const goToTrends = (): void => {
+  router.push('/trends');
 };
 </script>
 
