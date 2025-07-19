@@ -183,6 +183,109 @@ export default {
       },
     };
 
+    // Memoize expensive chart options calculation
+    const chartOptions = computed(() => {
+      const textColor = props.isDarkMode ? '#e5e7eb' : '#1f2937';
+      const gridColor = props.isDarkMode ? 'rgba(75, 85, 99, 0.3)' : 'rgba(229, 231, 235, 0.5)';
+      
+      return {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index' },
+        animation: {
+          duration: 400, // Reduced from 800 for better performance
+          easing: 'easeInOutCubic',
+        },
+        plugins: {
+          legend: { display: false },
+          title: {
+            display: false,
+          },
+          tooltip: {
+            callbacks: {
+              label: context => {
+                const entry = flattened.value[context.dataIndex];
+                if (context.dataset.type === 'line') {
+                  return `Rainfall: ${context.parsed.y} in`;
+                }
+                if (!entry || !entry.sampleSummary) return '';
+                const total =
+                  entry.sampleSummary.good +
+                  entry.sampleSummary.caution +
+                  entry.sampleSummary.unsafe;
+                const count = entry.sampleSummary[context.dataset.label.toLowerCase()];
+                const pct = total ? Math.round((count / total) * 100) : 0;
+                return `${context.dataset.label}: ${count} (${pct}%)`;
+              },
+              afterBody: ctx => {
+                const entry = flattened.value[ctx[0].dataIndex];
+                if (!entry || !entry.sampleSummary) return [];
+                const total =
+                  entry.sampleSummary.good +
+                  entry.sampleSummary.caution +
+                  entry.sampleSummary.unsafe;
+                return [`Total samples: ${total}`];
+              },
+            },
+          },
+        },
+        scales: {
+          ySample: {
+            type: 'linear',
+            stacked: true,
+            position: 'left',
+            beginAtZero: true,
+            max: 100,
+            ticks: { color: textColor },
+            grid: { color: gridColor },
+            title: {
+              display: true,
+              text: 'Sample Quality (%)',
+              color: textColor,
+              font: { size: 10 },
+            },
+          },
+          yRain: {
+            type: 'linear',
+            position: 'right',
+            beginAtZero: true,
+            ticks: { color: textColor },
+            grid: { display: false },
+            title: {
+              display: true,
+              text: 'Rainfall (in)',
+              color: textColor,
+              font: { size: 10 },
+            },
+          },
+          x: {
+            ticks: {
+              color: textColor,
+              maxTicksLimit: 12,
+              callback: function (value, index) {
+                const date = this.getLabelForValue(value);
+                const dayOfWeek = new Date(date + 'T00:00:00Z').getUTCDay();
+                return dayOfWeek === 4 ? date.slice(5) : '';
+              },
+            },
+            grid: { color: gridColor },
+          },
+        },
+      };
+    });
+
+    // Debounce chart creation to prevent rapid re-renders
+    let chartCreationTimeout = null;
+    
+    const debouncedCreateChart = (delay = 100) => {
+      if (chartCreationTimeout) {
+        clearTimeout(chartCreationTimeout);
+      }
+      chartCreationTimeout = setTimeout(async () => {
+        await createChart();
+      }, delay);
+    };
+
     /**
      * Initialize the rainfall and sample results chart.
      *
@@ -205,146 +308,54 @@ export default {
         chartInstance = null;
       }
       
-      // ChartJS.register(overlayAxesPlugin); // Temporarily disable custom plugin
-      const ctx = chartCanvas.value.getContext('2d');
-      const labels = flattened.value.map(h => h.date);
-      const { rainfall, good, caution, unsafe } = buildDatasets();
-      const textColor = props.isDarkMode ? '#e5e7eb' : '#1f2937';
-      const gridColor = props.isDarkMode ? 'rgba(75, 85, 99, 0.3)' : 'rgba(229, 231, 235, 0.5)';
-      
-
       try {
+        // ChartJS.register(overlayAxesPlugin); // Temporarily disable custom plugin
+        const ctx = chartCanvas.value.getContext('2d');
+        const labels = flattened.value.map(h => h.date);
+        const { rainfall, good, caution, unsafe } = buildDatasets();
+
         chartInstance = new ChartJS(ctx, {
-        type: 'bar',
-        data: {
-          labels,
-          datasets: [
-            {
-              type: 'line',
-              label: 'Rainfall (in)',
-              data: rainfall,
-              borderColor: '#3b82f6',
-              backgroundColor: '#3b82f6',
-              yAxisID: 'yRain',
-              tension: 0.3,
-            },
-            {
-              type: 'bar',
-              label: 'Good',
-              data: good,
-              backgroundColor: '#16a34a',
-              stack: 'samples',
-              yAxisID: 'ySample',
-            },
-            {
-              type: 'bar',
-              label: 'Caution',
-              data: caution,
-              backgroundColor: '#eab308',
-              stack: 'samples',
-              yAxisID: 'ySample',
-            },
-            {
-              type: 'bar',
-              label: 'Unsafe',
-              data: unsafe,
-              backgroundColor: '#dc2626',
-              stack: 'samples',
-              yAxisID: 'ySample',
-            },
-          ],
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          interaction: { mode: 'index' },
-          animation: {
-            duration: 800,
-            easing: 'easeInOutCubic',
+          type: 'bar',
+          data: {
+            labels,
+            datasets: [
+              {
+                type: 'line',
+                label: 'Rainfall (in)',
+                data: rainfall,
+                borderColor: '#3b82f6',
+                backgroundColor: '#3b82f6',
+                yAxisID: 'yRain',
+                tension: 0.3,
+              },
+              {
+                type: 'bar',
+                label: 'Good',
+                data: good,
+                backgroundColor: '#16a34a',
+                stack: 'samples',
+                yAxisID: 'ySample',
+              },
+              {
+                type: 'bar',
+                label: 'Caution',
+                data: caution,
+                backgroundColor: '#eab308',
+                stack: 'samples',
+                yAxisID: 'ySample',
+              },
+              {
+                type: 'bar',
+                label: 'Unsafe',
+                data: unsafe,
+                backgroundColor: '#dc2626',
+                stack: 'samples',
+                yAxisID: 'ySample',
+              },
+            ],
           },
-          plugins: {
-            legend: { display: false },
-            title: {
-              display: false,
-            },
-            tooltip: {
-              callbacks: {
-                label: context => {
-                  const entry = flattened.value[context.dataIndex];
-                  if (context.dataset.type === 'line') {
-                    return `Rainfall: ${context.parsed.y} in`;
-                  }
-                  if (!entry || !entry.sampleSummary) return '';
-                  const total =
-                    entry.sampleSummary.good +
-                    entry.sampleSummary.caution +
-                    entry.sampleSummary.unsafe;
-                  const count = entry.sampleSummary[context.dataset.label.toLowerCase()];
-                  const pct = total ? Math.round((count / total) * 100) : 0;
-                  return `${context.dataset.label}: ${count} (${pct}%)`;
-                },
-                afterBody: ctx => {
-                  const entry = flattened.value[ctx[0].dataIndex];
-                  if (!entry || !entry.sampleSummary) return [];
-                  const total =
-                    entry.sampleSummary.good +
-                    entry.sampleSummary.caution +
-                    entry.sampleSummary.unsafe;
-                  return [`Total samples: ${total}`];
-                },
-              },
-            },
-          },
-          scales: {
-            x: {
-              stacked: true,
-              ticks: {
-                display: true,
-                color: textColor,
-                callback: (_, idx) => {
-                  const label = labels[idx];
-                  if (isThursday(label)) {
-                    const [, m, d] = label.split('-');
-                    return `${m}/${d}`;
-                  }
-                  return '';
-                },
-              },
-              grid: { color: gridColor, drawBorder: false, lineWidth: 0.5 },
-            },
-            yRain: {
-              type: 'linear',
-              position: 'left',
-              beginAtZero: true,
-              title: {
-                display: true,
-                text: 'Rainfall (in)',
-                color: textColor,
-              },
-              ticks: { display: true, color: textColor },
-              grid: { color: gridColor, drawBorder: false, lineWidth: 0.5 },
-            },
-            ySample: {
-              type: 'linear',
-              position: 'right',
-              stacked: true,
-              min: 0,
-              max: 100,
-              title: {
-                display: true,
-                text: 'Sample Results (%)',
-                color: textColor,
-              },
-              ticks: {
-                callback: value => `${value}%`,
-                display: true,
-                color: textColor,
-              },
-              grid: { color: gridColor, drawBorder: false, lineWidth: 0.5 },
-            },
-          },
-        },
-      });
+          options: chartOptions.value,
+        });
       } catch (error) {
         console.error('Error creating chart:', error);
       }
@@ -369,7 +380,7 @@ export default {
     watch(
       () => props.history,
       async () => {
-        await createChart();
+        debouncedCreateChart();
         scrollToLatest();
       },
       { deep: true }
@@ -378,7 +389,7 @@ export default {
     watch(
       () => props.isDarkMode,
       async () => {
-        await createChart();
+        debouncedCreateChart();
       }
     );
 
@@ -388,6 +399,10 @@ export default {
       }
       if (scrollContainer.value) {
         scrollContainer.value.removeEventListener('scroll', onScroll);
+      }
+      // Clean up debounce timeout
+      if (chartCreationTimeout) {
+        clearTimeout(chartCreationTimeout);
       }
     });
 
