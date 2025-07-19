@@ -14,6 +14,6 @@ module.exports = {
   transformIgnorePatterns: [
     'node_modules/(?!(vue|@vue|posthog-js)/)',
   ],
-  setupFilesAfterEnv: ['<rootDir>/tests/setup.js'],
+  setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'],
   moduleFileExtensions: ['js', 'ts', 'vue', 'json'],
 };

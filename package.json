@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/gen-latest.js && vue-tsc && vite build",
-    "build:fast": "node scripts/gen-latest.js && vite build",
+    "build": "npx ts-node scripts/gen-latest.ts && vue-tsc && vite build",
+    "build:fast": "npx ts-node scripts/gen-latest.ts && vite build",
     "preview": "vite preview",
     "test": "jest",
     "type-check": "vue-tsc --noEmit",
     "enrich": "node scripts/enrich-data.js",
     "cleanup": "node scripts/cleanup-branches.js",
-    "predeploy": "npm run build && node scripts/copy-404.js",
+    "predeploy": "npm run build && npx ts-node scripts/copy-404.ts",
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
@@ -41,6 +41,7 @@
     "tailwindcss": "^3.3.0",
     "test-exclude": "^7.0.1",
     "ts-jest": "^29.4.0",
+    "ts-node": "^10.9.2",
     "typescript": "^5.8.3",
     "vite": "^6.3.5",
     "vue-tsc": "^3.0.3"
