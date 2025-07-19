@@ -134,7 +134,7 @@ export function updateMap({ map, markers, hasAutoFitted, isDarkMode, data }) {
       }
       const siteName = feature.properties.siteName || '';
       const mpnValue = feature.properties.mpn;
-      const sampleTimeValue = feature.properties.sampleTime || '';
+      const timestampValue = feature.properties.timestamp || '';
       if (mpnValue === undefined) {
         console.warn('Feature is missing MPN property:', feature);
         continue;
@@ -185,8 +185,8 @@ export function updateMap({ map, markers, hasAutoFitted, isDarkMode, data }) {
       if (isDetectionLimit) {
         popupContent += `<div class="text-xs opacity-75 mt-1">*Sample reached the instrument detection limit.</div>`;
       }
-      if (sampleTimeValue) {
-        const formatted = formatSampleDate(sampleTimeValue);
+      if (timestampValue) {
+        const formatted = formatSampleDate(timestampValue);
         popupContent += `<div class="text-xs opacity-75 mt-1">${sanitize(formatted)}</div>`;
       }
 
