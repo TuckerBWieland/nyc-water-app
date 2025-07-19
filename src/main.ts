@@ -4,6 +4,7 @@ import App from './App.vue'
 import './index.css'
 import { initAnalytics, track } from './services/analytics'
 import { basePath } from './utils/basePath'
+import latestDate from './generated/latest-date.ts'
 
 // Pages
 import IndexPage from './pages/index.vue'
@@ -16,7 +17,8 @@ const base: string = `${basePath}/`
 const router: Router = createRouter({
   history: createWebHistory(base),
   routes: [
-    { path: '/', component: IndexPage },
+    { path: '/', redirect: `/${latestDate}` },
+    { path: '/index', component: IndexPage },
     { path: '/:date', component: DatePage },
     { path: '/trends', component: TrendsPage },
   ],
