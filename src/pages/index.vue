@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import latestDate from '../generated/latest-date.js';
+import latestDate from '../generated/latest-date.ts';
 
 const router = useRouter();
 

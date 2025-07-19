@@ -66,29 +66,36 @@ a {
   border-radius: 8px;
   box-shadow: 0 3px 14px rgba(0, 0, 0, 0.2);
   padding: 0;
+  position: relative;
+  /* Expand wrapper to accommodate close button without affecting content layout */
+  min-width: 340px !important;
+  min-height: 60px !important;
 }
 
 .leaflet-popup-content {
-  margin: 18px 20px;
+  margin: 18px 20px 18px 20px;
   font-family: inherit;
   line-height: 1.5;
   width: 280px;
-  max-width: 320px;
+  max-width: 280px;
 }
 
-/* Fix close button position */
+/* Simplified close button styling - wrapper now accommodates default position */
 .leaflet-popup-close-button {
-  top: 8px !important;
-  right: 8px !important;
   color: inherit !important;
   opacity: 0.7;
   transition: opacity 0.2s ease;
-  width: 18px !important;
-  height: 18px !important;
+  width: 20px !important;
+  height: 20px !important;
   padding: 0 !important;
   display: flex !important;
   align-items: center;
   justify-content: center;
+  background: transparent !important;
+  border: none !important;
+  font-size: 18px !important;
+  line-height: 1 !important;
+  margin: 0 !important;
 }
 
 .leaflet-popup-close-button:hover {
