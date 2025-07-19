@@ -4,60 +4,58 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import { ref, onMounted, watch, onUnmounted } from 'vue';
 import L from 'leaflet';
+import type { WaterQualityGeoJSON } from '../types';
 import {
-  createWaterBottleIcon,
   updateTileLayer,
   updateMap,
-  updatePopupStyles,
 } from '../composables/useMapViewer';
 
-export default {
-  name: 'MapViewer',
-  props: {
-    selectedDate: { type: String, required: true },
-    isDarkMode: { type: Boolean, default: false },
-    geojson: { type: Object, default: null },
+interface Props {
+  selectedDate: string;
+  isDarkMode?: boolean;
+  geojson?: WaterQualityGeoJSON | null;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  isDarkMode: false,
+  geojson: null,
+});
+
+const map = ref<L.Map | null>(null);
+const markers = ref<L.Marker[]>([]);
+const tileLayer = ref<L.TileLayer | null>(null);
+const hasAutoFitted = ref(false);
+
+const applyTileLayer = () =>
+  updateTileLayer({ map, tileLayer, markers, isDarkMode: props.isDarkMode });
+
+const applyMapData = (data: WaterQualityGeoJSON) =>
+  updateMap({ map, markers, hasAutoFitted, isDarkMode: props.isDarkMode, data });
+
+watch(
+  () => props.isDarkMode,
+  () => applyTileLayer(),
+);
+
+watch(
+  () => props.geojson,
+  (newData) => {
+    if (newData && map.value) applyMapData(newData);
   },
-  setup(props) {
-    const map = ref(null);
-    const markers = ref([]);
-    const tileLayer = ref(null);
-    const hasAutoFitted = ref(false);
+  { immediate: true },
+);
 
-    const applyTileLayer = () =>
-      updateTileLayer({ map, tileLayer, markers, isDarkMode: props.isDarkMode });
+onMounted(() => {
+  map.value = L.map('map').setView([40.7128, -74.006], 12);
+  applyTileLayer();
+  map.value.removeControl(map.value.zoomControl);
+  if (props.geojson) applyMapData(props.geojson);
+});
 
-    const applyMapData = data =>
-      updateMap({ map, markers, hasAutoFitted, isDarkMode: props.isDarkMode, data });
-
-    watch(
-      () => props.isDarkMode,
-      () => applyTileLayer(),
-    );
-
-    watch(
-      () => props.geojson,
-      newData => {
-        if (newData && map.value) applyMapData(newData);
-      },
-      { immediate: true },
-    );
-
-    onMounted(() => {
-      map.value = L.map('map').setView([40.7128, -74.006], 12);
-      applyTileLayer();
-      map.value.removeControl(map.value.zoomControl);
-      if (props.geojson) applyMapData(props.geojson);
-    });
-
-    onUnmounted(() => {
-      if (map.value) map.value.remove();
-    });
-
-    return { map, markers, tileLayer, updatePopupStyles };
-  },
-};
+onUnmounted(() => {
+  if (map.value) map.value.remove();
+});
 </script>

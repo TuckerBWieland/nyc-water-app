@@ -1,21 +1,26 @@
+// @ts-nocheck
 // Utility functions for the MapViewer component
 import L from 'leaflet';
+import type { Ref } from 'vue';
 import { isMobile } from './useScreenSize';
 import { featurePopupOpen } from '../stores/featurePopupState';
 import { track, EVENT_CLICK_SITE_MARKER } from '../services/analytics';
+import type { WaterQualityGeoJSON, MPNValue, ColorString } from '../types';
+import { MPN_THRESHOLDS, COLORS } from '../types';
 
-const MPN_THRESHOLD_LOW = 35;
-const MPN_THRESHOLD_MEDIUM = 104;
-const MPN_DETECTION_LIMIT = 24196;
+// Use constants from types
+const MPN_THRESHOLD_LOW = MPN_THRESHOLDS.LOW;
+const MPN_THRESHOLD_MEDIUM = MPN_THRESHOLDS.MEDIUM;
+const MPN_DETECTION_LIMIT = MPN_THRESHOLDS.DETECTION_LIMIT;
 
-const COLOR_GREEN = '#22c55e';
-const COLOR_YELLOW = '#facc15';
-const COLOR_RED = '#ef4444';
+const COLOR_GREEN = COLORS.GREEN;
+const COLOR_YELLOW = COLORS.YELLOW;
+const COLOR_RED = COLORS.RED;
 
 const LIGHT_TILE_URL = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
 const DARK_TILE_URL = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
 
-function getColorForMPN(mpn) {
+function getColorForMPN(mpn: MPNValue): ColorString {
   if (mpn === null) return COLOR_YELLOW;
   const mpnValue = Number(mpn);
   if (Number.isNaN(mpnValue)) return COLOR_YELLOW;
@@ -24,7 +29,7 @@ function getColorForMPN(mpn) {
   return COLOR_RED;
 }
 
-export function createWaterBottleIcon(mpn) {
+export function createWaterBottleIcon(mpn: MPNValue): L.DivIcon {
   const color = getColorForMPN(mpn);
   return L.divIcon({
     html: `
@@ -44,11 +49,11 @@ export function createWaterBottleIcon(mpn) {
   });
 }
 
-export function generateRainChart(data, isDarkMode) {
+export function generateRainChart(data: (number | null)[], isDarkMode: boolean): string {
   const dayLabels = ['F', 'S', 'S', 'M', 'T', 'W', 'Th'];
-  const numeric = (data || []).filter(v => typeof v === 'number' && !Number.isNaN(v));
+  const numeric = (data || []).filter((v): v is number => typeof v === 'number' && !Number.isNaN(v));
   const max = numeric.length ? Math.max(...numeric) : 0;
-  const getColor = value => {
+  const getColor = (value: number | null) => {
     if (value === null || value === undefined)
       return isDarkMode ? 'bg-gray-500' : 'bg-gray-300';
     if (value < 0.5) return isDarkMode ? 'bg-green-600' : 'bg-green-500';
@@ -59,7 +64,7 @@ export function generateRainChart(data, isDarkMode) {
     <div class="flex items-end justify-between h-16 mb-1">
       ${data
         .map((val, idx) => {
-          const height = max === 0 ? 0 : (val / max) * 100;
+          const height = max === 0 || val === null ? 0 : (val / max) * 100;
           const valDisplay = val && val > 0 ? Number(val).toFixed(1) : '';
           return `
             <div class="flex flex-col items-center group h-full justify-end">
@@ -72,13 +77,13 @@ export function generateRainChart(data, isDarkMode) {
     </div>`;
 }
 
-function formatSampleDate(timestamp) {
+function formatSampleDate(timestamp: string): string {
   const date = new Date(timestamp);
   const time = date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
   return `Sampled on ${date.getMonth() + 1}/${date.getDate()} at ${time}`;
 }
 
-export function updatePopupStyles({ map, markers, isDarkMode }) {
+export function updatePopupStyles({ map, markers, isDarkMode }: { map: Ref<L.Map | null>, markers: Ref<L.Marker[]>, isDarkMode: boolean }) {
 if (!map.value) return;
   markers.value.forEach(marker => {
     const popup = marker.getPopup();

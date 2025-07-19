@@ -11,17 +11,16 @@
   </button>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { toggleDarkMode } from '../stores/theme';
 
-defineProps({
-  isDarkMode: {
-    type: Boolean,
-    default: false,
-  },
-  sticky: {
-    type: Boolean,
-    default: true,
-  },
+interface Props {
+  isDarkMode?: boolean;
+  sticky?: boolean;
+}
+
+withDefaults(defineProps<Props>(), {
+  isDarkMode: false,
+  sticky: true,
 });
 </script>
