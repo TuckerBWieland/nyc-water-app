@@ -71,11 +71,19 @@ onMounted(async () => {
         before Thursday is the biggest factor in poor water quality.
       </p>
 
-      <router-link to="/" class="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50">
-        <button class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-black dark:text-white rounded-full shadow-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
-          ← Back to Map
-        </button>
-      </router-link>
+      <!-- Dual CTA buttons -->
+      <div class="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 flex gap-3">
+        <router-link to="/">
+          <button class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-black dark:text-white rounded-full shadow-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+            🏠 Home
+          </button>
+        </router-link>
+        <router-link to="/map">
+          <button class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-black dark:text-white rounded-full shadow-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+            📍 Map
+          </button>
+        </router-link>
+      </div>
     </div>
   </div>
 </template>
