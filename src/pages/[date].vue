@@ -113,7 +113,7 @@ watch(
       </div>
     </div>
 
-    <div v-else class="text-center h-screen flex items-center justify-center flex-col">
+    <div v-else class="text-center h-screen flex items-center justify-center flex-col" :class="isDarkMode ? 'bg-gray-800 text-gray-100' : 'bg-white text-gray-900'">
       <div v-if="loading" class="text-lg">Loading water quality data...</div>
       <div v-else-if="error" class="text-red-500">
         <p class="text-lg">Error: {{ error }}</p>

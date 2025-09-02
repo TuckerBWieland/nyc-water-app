@@ -1,6 +1,6 @@
 <template>
-  <div class="w-full h-full">
-    <div id="map" class="absolute inset-0"></div>
+  <div class="w-full h-full" :class="isDarkMode ? 'bg-gray-800' : 'bg-white'">
+    <div id="map" class="absolute inset-0" :class="isDarkMode ? 'bg-gray-800' : 'bg-white'"></div>
   </div>
 </template>
 

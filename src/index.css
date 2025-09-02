@@ -36,6 +36,11 @@ a {
   z-index: 0;
 }
 
+/* Ensure map has proper background during loading in dark mode */
+.dark #map {
+  background-color: #1f2937; /* gray-800 */
+}
+
 /* Ensure Leaflet tiles display correctly */
 .leaflet-tile-pane {
   z-index: 0;
