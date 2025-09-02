@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-full" :class="isDarkMode ? 'bg-gray-800' : 'bg-white'">
-    <div id="map" class="absolute inset-0" :class="isDarkMode ? 'bg-gray-800' : 'bg-white'"></div>
+    <div ref="mapContainer" class="absolute inset-0 z-0"></div>
   </div>
 </template>
 
@@ -24,6 +24,7 @@ const props = withDefaults(defineProps<Props>(), {
   geojson: null,
 });
 
+const mapContainer = ref<HTMLElement | null>(null);
 const map = ref<L.Map | null>(null);
 const markers = ref<L.Marker[]>([]);
 const tileLayer = ref<L.TileLayer | null>(null);
@@ -37,7 +38,11 @@ const applyMapData = (data: WaterQualityGeoJSON) =>
 
 watch(
   () => props.isDarkMode,
-  () => applyTileLayer(),
+  () => {
+    if (map.value && mapContainer.value) {
+      applyTileLayer();
+    }
+  },
 );
 
 watch(
@@ -49,10 +54,12 @@ watch(
 );
 
 onMounted(() => {
-  map.value = L.map('map').setView([40.7128, -74.006], 12);
-  applyTileLayer();
-  map.value.removeControl(map.value.zoomControl);
-  if (props.geojson) applyMapData(props.geojson);
+  if (mapContainer.value) {
+    map.value = L.map(mapContainer.value).setView([40.7128, -74.006], 12);
+    applyTileLayer();
+    map.value.removeControl(map.value.zoomControl);
+    if (props.geojson) applyMapData(props.geojson);
+  }
 });
 
 onUnmounted(() => {
