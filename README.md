@@ -7,10 +7,15 @@ An interactive web application to visualize water quality data across various sa
 - Interactive map showing water quality sampling sites
 - Historical data navigation with a date scroller
 - Detailed information for each sampling site
+- **Welcome page with yearly statistics** - Shows total samples collected and unsafe counts
+- **Real-time yearly data aggregation** - Automatically calculates statistics from all available datasets
 - Seasonal history showing counts in each quality bucket
-- Mobile-friendly responsive design
+- Mobile-friendly responsive design with safe area support
 - Light and dark theme support (defaults to dark)
+- **Enhanced mobile experience** - Sticky CTA buttons and improved touch interactions
+- **Progressive Web App features** - Mobile app capabilities with proper meta tags
 - Evenly spaced info, data, and donate buttons for quick access
+- **Improved popup styling** - Better dark mode support and responsive design
 
 ## Technology Stack
 
@@ -28,10 +33,16 @@ scripts/          - Data enrichment and utility scripts
   input/         - Folder for raw CSV files
 src/              - Application source code
   components/    - Vue components for UI and map display
-  composables/   - Reusable logic functions
+  composables/   - Reusable logic functions (including useYearlyStats)
+  generated/     - Auto-generated files (latest-date.ts)
   pages/         - Route components including dynamic date pages
+    welcome.vue  - New landing page with yearly statistics
+    [date].vue   - Dynamic date-based map views
+    index.vue    - Redirects to welcome page
+    trends.vue   - Data trend analysis page
   services/      - External integrations (e.g., analytics)
   stores/        - Small reactive state modules
+  types/         - TypeScript type definitions
 tests/            - Jest unit tests
 ```
 
@@ -137,13 +148,28 @@ With `VITE_POSTHOG_KEY` set, basic page views will be recorded automatically.
 
 The project has seen significant improvements:
 
+### User Experience Enhancements
+- **New Welcome Page**: Added a landing page (`welcome.vue`) with compelling yearly statistics display
+- **Yearly Statistics Integration**: New `useYearlyStats` composable aggregates data across all available datasets
+- **Enhanced Mobile Experience**: Improved touch interactions, sticky buttons with safe area support
+- **Progressive Web App Features**: Added comprehensive meta tags for mobile app-like experience
+- **Improved Popup Styling**: Better dark mode support and responsive design for map popups
+
+### Technical Improvements
 - **TypeScript Migration**: Full conversion from JavaScript to TypeScript for enhanced type safety, better IDE support, and improved maintainability
+- **Centralized Type System**: All types now organized in `src/types/index.ts` for better maintainability
 - Comprehensive type definitions for water quality data structures and component interfaces
 - Updated build pipeline with TypeScript compilation and type checking
 - Rainfall and water quality trend charts now include sticky axes and refined tick alignment
 - Watcher callbacks in components are asynchronous to prevent rendering glitches
 - JSDoc comments cover all chart utilities and composables
 - Additional Jest tests verify map and popup behavior
+
+### UI/UX Improvements
+- **Enhanced CSS Architecture**: Improved z-index management and responsive styling
+- **Better Dark Mode Support**: Consistent theming across all components including popups
+- **Mobile-First Design**: Safe area support for modern mobile devices
+- **Accessible Design**: Improved focus states and keyboard navigation
 
 ## TypeScript Features
 
@@ -167,4 +193,19 @@ npm run build
 # Fast build without type checking (development only)
 npm run build:fast
 ```
+
+## New Welcome Page
+
+The application now features a compelling welcome page that showcases the impact of the water quality monitoring program:
+
+- **Dynamic Statistics**: Real-time aggregation of yearly sample counts and safety metrics
+- **Compelling Messaging**: Large-format display highlighting the scale of data collection
+- **Mobile-Optimized**: Responsive design with proper safe area handling
+- **Direct Action**: Prominent call-to-action button to view the latest map data
+
+### Welcome Page Features
+- Loads and aggregates metadata from all available datasets
+- Calculates total samples and unsafe sample counts across the year
+- Provides context about water quality monitoring and its importance
+- Seamlessly transitions users to the interactive map experience
 

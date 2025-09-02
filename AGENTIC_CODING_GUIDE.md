@@ -2,6 +2,18 @@
 
 This document provides comprehensive guidance for AI coding agents working with this repository. Follow these instructions to understand the codebase deeply and make effective changes.
 
+## 🎯 Core Philosophy: SIMPLE SOLUTIONS FIRST
+
+**CRITICAL**: This codebase prioritizes simplicity and maintainability over complexity. Always choose the most straightforward approach that solves the problem effectively.
+
+### Simplicity Principles
+1. **Prefer built-in solutions** over custom implementations
+2. **Use existing patterns** rather than inventing new ones
+3. **Minimal abstractions** - only abstract when you have 3+ similar uses
+4. **Direct approaches** - avoid over-engineering and unnecessary layers
+5. **Clear, readable code** over clever optimizations
+6. **Standard Vue 3 patterns** - stick to well-established practices
+
 ## 🚀 Critical First Steps for Any Agent
 
 ### 1. Repository Understanding (ALWAYS DO THIS FIRST)
@@ -14,9 +26,13 @@ npm run test     # Run existing tests to ensure baseline functionality
 **Essential Files to Review:**
 - `package.json` - Dependencies and available scripts
 - `src/App.vue` - Main application entry point
-- `src/pages/index.vue` - Homepage component
+- `src/pages/welcome.vue` - New landing page with yearly statistics
+- `src/pages/index.vue` - Redirects to welcome page
+- `src/pages/[date].vue` - Dynamic date-based map views
+- `src/composables/useYearlyStats.ts` - Yearly data aggregation logic
+- `src/types/index.ts` - Centralized TypeScript type definitions
 - `public/data/latest.txt` - Current dataset being displayed
-- `vite.config.js` - Build configuration
+- `vite.config.ts` - Build configuration (TypeScript)
 
 ### 2. Data Flow Comprehension
 This is a **data-driven mapping application**. Always understand:
@@ -55,14 +71,16 @@ npm run dev
 - **Legend components**: Visual indicators for data interpretation
 
 #### `/src/composables/` - Reusable Logic
-- **useMapViewer.js**: Map state and interactions
-- **useStaticData.js**: Data fetching and processing
-- **usePopupManager.js**: Popup state management
-- **useScreenSize.js**: Responsive design utilities
+- **useMapViewer.ts**: Map state and interactions with TypeScript
+- **useStaticData.ts**: Data fetching and processing with type safety
+- **usePopupManager.ts**: Popup state management
+- **useScreenSize.ts**: Responsive design utilities
+- **useYearlyStats.ts**: NEW - Aggregates yearly statistics across all datasets
 
 #### `/src/pages/` - Route Components
-- **index.vue**: Homepage with latest data
-- **[date].vue**: Dynamic route for historical data views
+- **welcome.vue**: New landing page with yearly statistics and impact messaging
+- **index.vue**: Redirects to welcome page for better user onboarding
+- **[date].vue**: Dynamic route for historical data views with enhanced mobile experience
 - **trends.vue**: Data trend analysis page
 
 #### `/src/stores/` - State Management
@@ -70,9 +88,14 @@ npm run dev
 - **featurePopupState.js**: Map feature interaction state
 
 #### `/scripts/` - Data Processing
-- **enrich-data.js**: Main data processing pipeline
-- **tide-services.js**: NOAA tide data integration
-- **data-utils.js**: Utility functions for data manipulation
+- **enrich-data.ts**: Main data processing pipeline (TypeScript)
+- **tide-services.ts**: NOAA tide data integration
+- **data-utils.ts**: Utility functions for data manipulation
+- **gen-latest.ts**: Generates latest date TypeScript file for build-time inclusion
+- **copy-404.ts**: Copies index.html to 404.html for GitHub Pages SPA support
+
+#### `/src/types/` - TypeScript Definitions
+- **index.ts**: Centralized type definitions for all data structures and component interfaces
 
 ### Key Design Patterns
 
@@ -151,6 +174,194 @@ const handleUserAction = (actionData: ActionData): void => {
 }
 ```
 
+#### 4. Yearly Statistics Aggregation Pattern
+```typescript
+// NEW: Pattern for aggregating data across multiple datasets
+import { ref, computed, type Ref } from 'vue'
+import type { DataMetadata } from '@/types'
+
+export interface YearlyStats {
+  totalSamples: number
+  unsafeSamples: number
+  safeSamples: number
+  loading: boolean
+  error: string | null
+}
+
+export function useYearlyStats() {
+  const loading = ref<boolean>(true)
+  const error = ref<string | null>(null)
+  const allMetadata = ref<DataMetadata[]>([])
+
+  // Computed property aggregates all data
+  const stats = computed((): YearlyStats => {
+    if (allMetadata.value.length === 0) {
+      return {
+        totalSamples: 0,
+        unsafeSamples: 0,
+        safeSamples: 0,
+        loading: loading.value,
+        error: error.value
+      }
+    }
+
+    // Aggregate across all datasets
+    const totalSamples = allMetadata.value.reduce((sum, metadata) => 
+      sum + metadata.totalSites, 0)
+    const unsafeSamples = allMetadata.value.reduce((sum, metadata) => 
+      sum + metadata.cautionSites + metadata.poorSites, 0)
+    
+    return { totalSamples, unsafeSamples, ... }
+  })
+
+  const loadYearlyStats = async (): Promise<void> => {
+    // Load and process all available datasets
+    // This pattern handles multiple async operations with proper error handling
+  }
+
+  return { stats, loadYearlyStats }
+}
+```
+
+#### 5. Progressive Web App Pattern
+```typescript
+// Enhanced meta tags for mobile app experience
+// In index.html - comprehensive PWA setup
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="theme-color" content="#1f2937" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+
+// In CSS - Safe area support for modern mobile devices
+.fixed-bottom-button {
+  bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+}
+```
+
+#### 6. Simple Theme Management Pattern
+```typescript
+// SIMPLE: Global reactive theme state - no store library needed
+import { ref, watch } from 'vue'
+
+export const isDarkMode = ref(true)
+
+// Direct DOM manipulation - simple and effective
+if (typeof document !== 'undefined') {
+  document.body.classList.toggle('dark', isDarkMode.value)
+}
+
+// Watch for changes and update DOM directly
+watch(isDarkMode, (val: boolean) => {
+  if (typeof document !== 'undefined') {
+    document.documentElement.classList.toggle('dark', val)
+    document.body.classList.toggle('dark', val)
+  }
+})
+
+export const toggleDarkMode = (): void => {
+  isDarkMode.value = !isDarkMode.value
+}
+```
+
+#### 7. Simple Routing Pattern
+```typescript
+// SIMPLE: Straightforward Vue Router setup
+import { createRouter, createWebHistory } from 'vue-router'
+import latestDate from './generated/latest-date.ts'
+
+const router = createRouter({
+  history: createWebHistory(basePath),
+  routes: [
+    { path: '/', component: WelcomePage },
+    { path: '/map', redirect: `/${latestDate}` },
+    { path: '/:date', component: DatePage },
+    { path: '/trends', component: TrendsPage },
+  ],
+})
+
+// Simple analytics tracking
+router.afterEach(() => {
+  track('$pageview')
+})
+```
+
+#### 8. Simple Error Handling Pattern
+```typescript
+// SIMPLE: Consistent error handling across composables
+const error = ref<string | null>(null)
+const loading = ref<boolean>(false)
+
+const fetchData = async (): Promise<void> => {
+  try {
+    loading.value = true
+    error.value = null
+    
+    const response = await fetch(url)
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`)
+    }
+    
+    data.value = await response.json()
+  } catch (err) {
+    // Simple error message extraction
+    error.value = err instanceof Error ? err.message : 'Unknown error'
+  } finally {
+    loading.value = false
+  }
+}
+```
+
+#### 9. Simple Caching Pattern
+```typescript
+// SIMPLE: SessionStorage caching with graceful fallbacks
+const cacheKey = `data-${identifier}`
+
+try {
+  const cached = sessionStorage?.getItem(cacheKey)
+  if (cached) {
+    return JSON.parse(cached)
+  }
+} catch (err) {
+  console.warn('Cache read failed:', err)
+  // Continue without cache - no complex error handling needed
+}
+
+// After successful fetch
+try {
+  sessionStorage?.setItem(cacheKey, JSON.stringify(data))
+} catch (err) {
+  console.warn('Cache write failed:', err)
+  // App continues working - cache is optional
+}
+```
+
+#### 10. Simple Popup Management Pattern
+```typescript
+// SIMPLE: Global popup state - one popup open at a time
+import { ref, computed } from 'vue'
+
+const activePopup = ref<string | null>(null)
+export const anyPopupOpen = computed(() => activePopup.value !== null)
+
+export function usePopupManager(name: string) {
+  const isOpen = computed({
+    get: () => activePopup.value === name,
+    set: (val: boolean) => {
+      activePopup.value = val ? name : null
+    }
+  })
+
+  const togglePopup = (): void => {
+    isOpen.value = !isOpen.value
+  }
+
+  return { isOpen, togglePopup }
+}
+
+// Usage in component - simple and direct
+const { isOpen, togglePopup } = usePopupManager('info-popup')
+```
+
 ## 🛠️ Development Workflow
 
 ### Making Changes Safely
@@ -168,13 +379,19 @@ npm run dev
 # Manually test the features you'll be modifying
 ```
 
-#### 2. Development Process
+#### 2. Development Process (SIMPLE APPROACH)
 1. **Understand the Change Request**: Read requirements carefully
-2. **Identify Affected Components**: Use `grep` or `codebase_search` to find related code
-3. **Check Dependencies**: Look for components that import/use what you're changing
-4. **Plan Your Approach**: Consider backward compatibility and data flow
-5. **Implement Incrementally**: Make small, testable changes
-6. **Test Continuously**: Run tests after each significant change
+2. **Find the simplest solution**: Look for existing patterns to reuse
+3. **Identify Affected Components**: Use `grep` or `codebase_search` to find related code
+4. **Check Dependencies**: Look for components that import/use what you're changing
+5. **Choose the direct approach**: Avoid complex abstractions unless absolutely necessary
+6. **Implement Incrementally**: Make small, testable changes
+7. **Test Continuously**: Run tests after each significant change
+
+**SIMPLICITY REMINDER**: Before implementing, ask:
+- Is there already a pattern for this in the codebase?
+- Can I solve this with built-in Vue/browser features?
+- Am I over-engineering this solution?
 
 #### 3. Testing Strategy
 ```bash
@@ -188,21 +405,20 @@ npm test -- --watch
 npm run test
 ```
 
-### Code Style Requirements
+### Code Style Requirements (SIMPLE & CONSISTENT)
 
-#### TypeScript Vue Components
+#### TypeScript Vue Components - SIMPLE PATTERN
 ```vue
-<!-- ALWAYS follow this structure with TypeScript -->
+<!-- SIMPLE: Follow this basic structure - don't over-complicate -->
 <template>
-  <!-- Use semantic HTML -->
+  <!-- Use semantic HTML with Tailwind classes -->
   <main class="container mx-auto px-4">
-    <!-- Tailwind classes preferred over custom CSS -->
-    <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <!-- Conditional rendering with v-if/v-show -->
-      <div v-if="isLoading" class="loading-spinner">Loading...</div>
-      <div v-else-if="error" class="error-message">{{ error }}</div>
-      <div v-else>{{ content }}</div>
-    </section>
+    <!-- SIMPLE: Standard loading/error/content pattern -->
+    <div v-if="loading" class="text-center">Loading...</div>
+    <div v-else-if="error" class="text-red-500">{{ error }}</div>
+    <div v-else>
+      <!-- Your content here -->
+    </div>
   </main>
 </template>
 
@@ -513,24 +729,52 @@ describe('ComponentName', () => {
 - **API Mocking**: Mock external API calls in `__mocks__/` directory
 - **Async Testing**: Always use `await` for async operations
 
-## 🔧 Common Tasks & Approaches
+## 🔧 Common Tasks & Approaches (SIMPLE SOLUTIONS FIRST)
 
-### Task: Adding a New TypeScript Component
-1. **Create Component File**: `src/components/NewComponent.vue` with `<script setup lang="ts">`
-2. **Follow Template Structure**: Use the TypeScript Vue component template above
-3. **Define Types**: Create interfaces for props, emits, and internal data structures
-4. **Add Type Definitions**: Update `src/types/index.ts` if introducing new data types
-5. **Import and Use**: Add to parent components with proper typing
-6. **Write Tests**: Create `tests/NewComponent.test.ts` with TypeScript
-7. **Type Check**: Run `npm run type-check` to verify type safety
-8. **Update Documentation**: Add to this guide if it's a major component
+### ⚠️ AVOID OVER-ENGINEERING
 
-### Task: Modifying Data Display
-1. **Understand Current Data Flow**: Trace from data source to display
-2. **Identify Display Logic**: Find where rendering decisions are made
-3. **Update Processing**: Modify data transformation if needed
-4. **Update Components**: Change display components
+Before starting any task, ask yourself:
+1. **Is there already a simple solution in the codebase?** → Use it
+2. **Can I solve this with standard Vue/browser features?** → Do that
+3. **Do I really need a new abstraction?** → Probably not
+4. **Am I making this more complex than needed?** → Step back and simplify
+
+### Task: Adding a New TypeScript Component (SIMPLE APPROACH)
+1. **Look for similar components first** - reuse existing patterns
+2. **Create Component File**: `src/components/NewComponent.vue` with `<script setup lang="ts">`
+3. **Use the simplest structure** - follow existing component patterns
+4. **Define minimal types** - only what you actually need
+5. **Add types to `src/types/index.ts`** - only if reused elsewhere
+6. **Import and use** - straightforward integration
+7. **Write simple tests** - test behavior, not implementation
+8. **Type check**: `npm run type-check`
+
+**SIMPLE COMPONENT CHECKLIST**:
+- [ ] Does it follow an existing pattern?
+- [ ] Is the logic as simple as possible?
+- [ ] Are you only abstracting what's actually reused?
+
+### Task: Creating a New Landing Page (Welcome Page Pattern)
+1. **Create Page Component**: `src/pages/new-page.vue` with TypeScript
+2. **Create Data Composable**: If needed, create `src/composables/usePageData.ts`
+3. **Define Data Interfaces**: Add types to `src/types/index.ts`
+4. **Implement Responsive Design**: Use Tailwind with safe area support
+5. **Add Progressive Web App Features**: Include proper meta tags and mobile optimization
+6. **Test Mobile Experience**: Verify touch interactions and responsive behavior
+7. **Add Route**: Update router configuration if needed
+8. **Test Loading States**: Implement proper loading and error handling
+
+### Task: Modifying Data Display (SIMPLE APPROACH)
+1. **Find the existing pattern** - look at how similar data is displayed
+2. **Understand Current Data Flow**: Trace from data source to display
+3. **Use the simplest change** - modify existing logic rather than creating new abstractions
+4. **Update Components**: Make minimal changes to achieve the goal
 5. **Test with Real Data**: Use actual dataset for testing
+
+**SIMPLE DATA DISPLAY CHECKLIST**:
+- [ ] Am I reusing existing display patterns?
+- [ ] Is this the minimal change needed?
+- [ ] Am I avoiding unnecessary data transformations?
 
 ### Task: Adding New Analytics Events
 1. **Define Event**: Add to `src/services/analytics/index.js`
@@ -551,6 +795,39 @@ describe('ComponentName', () => {
    - Use `computed` properties for expensive calculations
    - Debounce user inputs
    - Lazy load non-critical components
+
+### Task: Mobile-First Design Implementation
+1. **Safe Area Support**: Use `env(safe-area-inset-*)` for modern devices
+2. **Touch-Friendly Interactions**: Ensure buttons are at least 44px touch targets
+3. **Responsive Typography**: Use responsive text sizing (`text-lg md:text-xl`)
+4. **Sticky Elements**: Position with safe area calculations
+5. **Viewport Configuration**: Set proper viewport meta tags
+6. **Test on Multiple Devices**: Verify experience across different screen sizes
+
+Example Mobile-First CSS Pattern:
+```css
+/* Mobile-first responsive design */
+.welcome-heading {
+  @apply text-3xl leading-tight;
+}
+
+@media (min-width: 768px) {
+  .welcome-heading {
+    @apply text-5xl;
+  }
+}
+
+@media (min-width: 1024px) {
+  .welcome-heading {
+    @apply text-7xl;
+  }
+}
+
+/* Safe area support for sticky elements */
+.sticky-cta {
+  bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+}
+```
 
 ## 🚀 Deployment & Release
 
@@ -697,23 +974,36 @@ const logDebugInfo = (info: DebugInfo): void => {
 
 ## 🎯 Agent Success Patterns
 
-### Before Starting Any Task
+### Before Starting Any Task (SIMPLICITY FIRST)
 1. **Read the request completely** - understand the full scope
-2. **Run type checker** - ensure current codebase is type-safe: `npm run type-check`
-3. **Identify affected components** - use search tools to map dependencies
-4. **Check existing tests** - understand current behavior
-5. **Review type definitions** - check `src/types/index.ts` for relevant interfaces
-6. **Plan your approach** - consider type safety and multiple solutions
-7. **Start with smallest changes** - iterate incrementally with type checking
+2. **Look for existing patterns** - find similar solutions already in the codebase
+3. **Choose the simplest approach** - avoid over-engineering from the start
+4. **Run type checker** - ensure current codebase is type-safe: `npm run type-check`
+5. **Identify affected components** - use search tools to map dependencies
+6. **Check existing tests** - understand current behavior
+7. **Review type definitions** - check `src/types/index.ts` for relevant interfaces
+8. **Consider mobile experience** - verify changes work on mobile devices
+9. **Start with smallest changes** - iterate incrementally with type checking
 
-### During Development
-1. **Type check continuously** - run `npm run type-check` after significant changes
-2. **Test continuously** - run tests after each change
-3. **Check the live app** - verify changes work in browser
-4. **Follow established TypeScript patterns** - use existing interfaces and types
-5. **Maintain type safety** - avoid `any` types unless absolutely necessary
-6. **Consider edge cases** - handle loading states, errors, empty data with proper typing
-7. **Think about performance** - especially for map and data operations
+**SIMPLICITY QUESTIONS** (ask these first):
+- Is there already a pattern for this in the codebase?
+- Can I solve this by modifying existing code instead of creating new abstractions?
+- Am I choosing the most direct approach?
+
+### During Development (KEEP IT SIMPLE)
+1. **Stay focused on the simple solution** - resist the urge to over-engineer
+2. **Type check continuously** - run `npm run type-check` after significant changes
+3. **Test continuously** - run tests after each change
+4. **Check the live app** - verify changes work in browser
+5. **Follow established patterns** - use existing interfaces and approaches
+6. **Maintain type safety** - avoid `any` types unless absolutely necessary
+7. **Handle basics well** - loading states, errors, empty data
+8. **Keep performance in mind** - but don't optimize prematurely
+
+**DEVELOPMENT REMINDERS**:
+- Am I still following the simplest approach?
+- Have I introduced unnecessary complexity?
+- Can I remove any abstractions I don't actually need?
 
 ### Before Completing
 1. **Run TypeScript type checking** - `npm run type-check` must pass
