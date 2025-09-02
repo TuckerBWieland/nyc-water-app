@@ -7,6 +7,7 @@ import { basePath } from './utils/basePath'
 import latestDate from './generated/latest-date.ts'
 
 // Pages
+import WelcomePage from './pages/welcome.vue'
 import IndexPage from './pages/index.vue'
 import DatePage from './pages/[date].vue'
 import TrendsPage from './pages/trends.vue'
@@ -17,8 +18,9 @@ const base: string = `${basePath}/`
 const router: Router = createRouter({
   history: createWebHistory(base),
   routes: [
-    { path: '/', redirect: `/${latestDate}` },
+    { path: '/', component: WelcomePage },
     { path: '/index', component: IndexPage },
+    { path: '/map', redirect: `/${latestDate}` },
     { path: '/:date', component: DatePage },
     { path: '/trends', component: TrendsPage },
   ],

@@ -9,6 +9,7 @@ import InfoPopup from '../components/InfoPopup.vue';
 import DataInfoPopup from '../components/DataInfoPopup.vue';
 import DonatePopup from '../components/DonatePopup.vue';
 import TrendsButton from '../components/TrendsButton.vue';
+import HomeButton from '../components/HomeButton.vue';
 import ThemeToggleButton from '../components/ThemeToggleButton.vue';
 import { useStaticData } from '../composables/useStaticData';
 import { anyPopupOpen } from '../composables/usePopupManager';
@@ -101,6 +102,7 @@ watch(
       <div
         class="fixed bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] inset-x-0 flex flex-nowrap overflow-x-auto scrollbar-stable justify-center gap-4 px-4 z-[300]"
       >
+        <HomeButton :isDarkMode="isDarkMode" />
         <InfoPopup :isDarkMode="isDarkMode" />
         <DataInfoPopup
           :isDarkMode="isDarkMode"
