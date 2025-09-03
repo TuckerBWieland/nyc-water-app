@@ -83,29 +83,26 @@ const viewMap = () => {
         </div>
       </main>
 
-      <!-- Footer -->
+      <!-- Footer with CTA -->
       <footer class="px-6 py-8 text-center">
-        <!-- Footer content removed - moved to sticky CTA -->
+        <div class="flex flex-col items-center space-y-4">
+          <button 
+            @click="viewMap"
+            class="inline-flex items-center px-8 py-4 text-xl font-semibold rounded-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500/50 shadow-lg hover:shadow-xl"
+            :class="isDarkMode 
+              ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+              : 'bg-blue-600 hover:bg-blue-700 text-white'"
+          >
+            <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 4m0 13V4m0 0L9 7"></path>
+            </svg>
+            View Latest Map Data
+          </button>
+          <p class="text-sm" :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'">
+            Last update: {{ new Date().toLocaleDateString() }}
+          </p>
+        </div>
       </footer>
-    </div>
-
-    <!-- Sticky CTA button -->
-    <div class="fixed bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] inset-x-0 flex flex-col items-center px-4 z-[300]">
-      <button 
-        @click="viewMap"
-        class="inline-flex items-center px-8 py-4 text-xl font-semibold rounded-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500/50 shadow-lg hover:shadow-xl"
-        :class="isDarkMode 
-          ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-          : 'bg-blue-600 hover:bg-blue-700 text-white'"
-      >
-        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 4m0 13V4m0 0L9 7"></path>
-        </svg>
-        View Latest Map Data
-      </button>
-      <p class="text-sm mt-2" :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'">
-        Last update: {{ new Date().toLocaleDateString() }}
-      </p>
     </div>
   </div>
 </template>
