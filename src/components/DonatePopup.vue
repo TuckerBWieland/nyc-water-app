@@ -9,15 +9,6 @@
     <ul class="list-disc pl-5">
       <li>
         <a
-          href="https://www.billionoysterproject.org/donate"
-          target="_blank"
-          rel="noopener"
-          @click="trackOutbound('https://www.billionoysterproject.org/donate')"
-          >Billion Oyster Project</a
-        >
-      </li>
-      <li>
-        <a
           href="https://www.newtowncreekalliance.org/donate/"
           target="_blank"
           rel="noopener"
