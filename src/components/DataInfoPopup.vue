@@ -5,14 +5,19 @@
     title="About the Data"
     @close="isOpen = false"
   >
-    <p class="font-semibold mb-2">Why heavy rain leads to poor water quality samples:</p>
+    <p class="font-semibold mb-2">Key Finding: Location Matters More Than Rain</p>
+    <p>
+      Statistical analysis reveals that <strong>where you swim matters 3x more than when</strong> (after rain). 
+      Location explains 20.5% of water quality variance while rainfall only explains 6.9%. Some sites are 
+      chronically polluted due to poor water circulation, nearby outfalls, or wildlife, regardless of weather.
+    </p>
+    <p class="mt-3 font-semibold mb-2">Why rain still impacts water quality:</p>
     <p>
       When it rains heavily, New York City's sewer system—which combines sewage and stormwater in the same
       pipes—can become overwhelmed. To prevent backups into homes and streets, this excess mixture is
       discharged directly into waterways like Newtown Creek and the East River through Combined Sewer
       Overflows (CSOs). These overflows carry untreated sewage, bacteria, and other pollutants into the water,
-      significantly reducing water quality. That's why samples collected after major rain events often show
-      poor results.
+      reducing water quality at affected sites.
     </p>
     <p class="mt-2 font-semibold mb-2">Where our rainfall and tide data come from:</p>
     <p>
