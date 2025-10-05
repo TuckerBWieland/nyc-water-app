@@ -50,41 +50,24 @@ export function useYearlyStats() {
       }
       const dates: string[] = await datesResponse.json()
 
-      // Load metadata for each date
-      const metadataPromises = dates.map(async (date) => {
+      // Load ALL dates for full year stats - optimized with parallel loading and cache
+      const enrichedMetadataPromises = dates.map(async (date) => {
         try {
-          const response = await fetch(`${import.meta.env.BASE_URL}data/${date}/metadata.json`)
-          if (!response.ok) {
-            throw new Error(`Failed to load metadata for ${date}`)
-          }
-          const metadata = await response.json()
+          // Check sessionStorage cache first
+          const cacheKey = `staticData-${date}`
+          const cached = typeof sessionStorage !== 'undefined' && sessionStorage.getItem(cacheKey)
           
-          // Convert metadata to match DataMetadata interface
-          return {
-            date: metadata.date,
-            totalSites: metadata.sampleCount || 0,
-            goodSites: 0, // We'll need to calculate this from the actual data
-            cautionSites: 0,
-            poorSites: 0,
-            lastUpdated: metadata.date
-          } as DataMetadata
-        } catch (err) {
-          console.warn(`Failed to load metadata for ${date}:`, err)
-          return null
-        }
-      })
-
-      const results = await Promise.all(metadataPromises)
-      const validMetadata = results.filter((metadata): metadata is DataMetadata => metadata !== null)
-
-      // Now we need to load the actual GeoJSON data to get the safety counts
-      const enrichedMetadataPromises = validMetadata.map(async (metadata) => {
-        try {
-          const response = await fetch(`${import.meta.env.BASE_URL}data/${metadata.date}/enriched.geojson`)
-          if (!response.ok) {
-            throw new Error(`Failed to load GeoJSON for ${metadata.date}`)
+          let geojson
+          let sampleCount = 0
+          
+          if (cached) {
+            geojson = JSON.parse(cached).geojson
+          } else {
+            // Load just this one geojson for stats
+            const response = await fetch(`${import.meta.env.BASE_URL}data/${date}/enriched.geojson`)
+            if (!response.ok) return null
+            geojson = await response.json()
           }
-          const geojson = await response.json()
           
           let goodCount = 0
           let cautionCount = 0
@@ -93,6 +76,7 @@ export function useYearlyStats() {
           geojson.features.forEach((feature: any) => {
             const mpn = feature.properties.mpn
             if (mpn === null || mpn === undefined) return
+            sampleCount++
             
             if (mpn <= 35) {
               goodCount++
@@ -104,19 +88,21 @@ export function useYearlyStats() {
           })
 
           return {
-            ...metadata,
+            date,
+            totalSites: sampleCount,
             goodSites: goodCount,
             cautionSites: cautionCount,
-            poorSites: poorCount
-          }
+            poorSites: poorCount,
+            lastUpdated: date
+          } as DataMetadata
         } catch (err) {
-          console.warn(`Failed to process GeoJSON for ${metadata.date}:`, err)
-          return metadata // Return original metadata if GeoJSON fails
+          console.warn(`Failed to process data for ${date}:`, err)
+          return null
         }
       })
 
       const enrichedResults = await Promise.all(enrichedMetadataPromises)
-      allMetadata.value = enrichedResults
+      allMetadata.value = enrichedResults.filter((m): m is DataMetadata => m !== null)
 
     } catch (err) {
       console.error('Failed to load yearly stats:', err)

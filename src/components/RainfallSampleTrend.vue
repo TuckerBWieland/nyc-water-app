@@ -1,32 +1,70 @@
 <template>
-  <div class="relative">
-    <div ref="scrollContainer" class="p-4 relative overflow-x-auto">
-      <div class="min-w-[600px] w-full h-80">
-        <canvas ref="chartCanvas" class="w-full h-full"></canvas>
+  <div class="heatmap-container">
+    <!-- Correlation Info Box -->
+    <div class="correlation-info" :class="{ 'dark-mode': isDarkMode }">
+      <div class="info-icon">📊</div>
+      <div class="info-content">
+        <strong>Key Finding: Location Matters More Than Rain</strong>
+        <p>Statistical analysis reveals that <strong>WHERE you swim matters 3x more than WHEN</strong> (after rain). Location explains 20.5% of water quality variance while rainfall only explains 6.9%. Some sites are chronically polluted due to poor water circulation, nearby outfalls, or wildlife, regardless of weather.</p>
+      </div>
+    </div>
+
+    <!-- Header Row -->
+    <div class="heatmap-grid">
+      <div class="header-cell">Date</div>
+      <div class="header-cell">Rain (1-2 days prior)</div>
+      <div class="header-cell">Avg Water Quality (MPN)</div>
+    </div>
+
+    <!-- Data Rows -->
+    <div v-for="week in history" :key="week.date" class="heatmap-grid data-row">
+      <div class="date-cell">{{ formatDate(week.date) }}</div>
+      <div 
+        class="value-cell rainfall-cell" 
+        :style="{ backgroundColor: getRainfallColor(week.recent2DayRainfall) }"
+        :title="`${week.recent2DayRainfall.toFixed(2)} inches in 1-2 days before sampling`"
+      >
+        {{ week.recent2DayRainfall.toFixed(2)}}″
+      </div>
+      <div 
+        class="value-cell mpn-cell" 
+        :style="{ backgroundColor: getMpnColor(week.avgMpn) }"
+        :title="`Average MPN: ${Math.round(week.avgMpn)}`"
+      >
+        {{ Math.round(week.avgMpn) }}
+      </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend">
+      <div class="legend-section">
+        <div class="legend-title">Rainfall 1-2 days before sampling (inches)</div>
+        <div class="legend-gradient">
+          <div class="gradient-bar rainfall-gradient"></div>
+          <div class="gradient-labels">
+            <span>0</span>
+            <span>2.0+</span>
+          </div>
+        </div>
+      </div>
+      <div class="legend-section">
+        <div class="legend-title">Average Water Quality (MPN bacteria count)</div>
+        <div class="legend-gradient">
+          <div class="gradient-bar mpn-gradient"></div>
+          <div class="gradient-labels">
+            <span>Good (0-35)</span>
+            <span>Unsafe (200+)</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-import { ref, watch, onMounted, onBeforeUnmount, computed, nextTick } from 'vue';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  LineElement,
-  PointElement,
-  Title,
-  Tooltip,
-  Legend,
-  LineController,
-  BarController,
-} from 'chart.js';
+<script setup>
+import { computed } from 'vue';
 
-export default {
-  name: 'RainfallSampleTrend',
-  props: {
+const props = defineProps({
     history: {
       type: Array,
       required: true,
@@ -35,384 +73,239 @@ export default {
       type: Boolean,
       default: false,
     },
-  },
-  setup(props) {
-    const chartCanvas = ref(null);
-    const axesCanvas = ref(null);
-    const scrollContainer = ref(null);
-    let chartInstance = null;
+});
 
-    const isThursday = dateStr => {
-      const d = new Date(dateStr + 'T00:00:00Z');
-      return d.getUTCDay() === 4; // Thursday
-    };
+const formatDate = (dateStr) => {
+  const date = new Date(dateStr + 'T00:00:00Z');
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+};
 
-    // Register Chart.js components
-    ChartJS.register(
-      CategoryScale,
-      LinearScale,
-      BarElement,
-      LineElement,
-      PointElement,
-      Title,
-      Tooltip,
-      Legend,
-      LineController,
-      BarController
-    );
+// Color scale for rainfall (light blue to dark blue)
+const getRainfallColor = (rainfall) => {
+  // Max rainfall for scaling - adjusted for 1-2 day window
+  const maxRainfall = 2.0; // Lower max since it's only 2 days
+  const normalized = Math.min(rainfall / maxRainfall, 1);
+  
+  // HSL: light blue to dark blue
+  const lightness = 85 - (normalized * 50); // 85% (very light) to 35% (dark)
+  return `hsl(210, 100%, ${lightness}%)`;
+};
 
-    const flattened = computed(() => {
-      const map = new Map();
-      for (const week of props.history) {
-        const base = new Date(week.date + 'T00:00:00Z');
-        const rain = week.rainfallByDay || [];
-        
-        // Process each day in the rainfall data
-        for (let i = 0; i < rain.length; i++) {
-          const d = new Date(base);
-          d.setUTCDate(d.getUTCDate() - (rain.length - 1 - i));
-          const key = d.toISOString().slice(0, 10);
-          if (!map.has(key)) {
-            map.set(key, {
-              date: key,
-              rainfall: rain[i] || 0,
-              sampleSummary: i === (rain.length - 1) ? week.sampleSummary : null,
-            });
-          }
-        }
-      }
-      return Array.from(map.values()).sort((a, b) => a.date.localeCompare(b.date));
-    });
-
-
-    const scrollToLatest = () => {
-      if (scrollContainer.value) {
-        scrollContainer.value.scrollLeft = scrollContainer.value.scrollWidth;
-      }
-    };
-
-    const buildDatasets = () => {
-      const rainfall = [];
-      const good = [];
-      const caution = [];
-      const unsafe = [];
-
-      for (const entry of flattened.value) {
-        rainfall.push(entry.rainfall);
-        if (entry.sampleSummary) {
-          const total =
-            entry.sampleSummary.good + entry.sampleSummary.caution + entry.sampleSummary.unsafe;
-          good.push((entry.sampleSummary.good / total) * 100);
-          caution.push((entry.sampleSummary.caution / total) * 100);
-          unsafe.push((entry.sampleSummary.unsafe / total) * 100);
-        } else {
-          good.push(null);
-          caution.push(null);
-          unsafe.push(null);
-        }
-      }
-
-      return { rainfall, good, caution, unsafe };
-    };
-
-    /**
-     * Chart.js plugin that draws static axes on an overlay canvas.
-     *
-     * @param {Chart} chart - Chart instance being drawn.
-     * @returns {void}
-     */
-    const overlayAxesPlugin = {
-      id: 'overlayAxes',
-      afterDraw(chart) {
-        const canvas = axesCanvas.value;
-        const sc = scrollContainer.value;
-        if (!canvas || !sc) return;
-        const ctx = canvas.getContext('2d');
-        const { chartArea, scales } = chart;
-        canvas.width = sc.clientWidth;
-        canvas.height = chartCanvas.value.height;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.save();
-        ctx.translate(chartArea.left - sc.scrollLeft, 0);
-        if (ChartJS?.defaults?.font?.string) {
-          ctx.font = ChartJS.defaults.font.string;
-        }
-        const textColor = props.isDarkMode ? '#e5e7eb' : '#1f2937';
-        ctx.strokeStyle = textColor;
-        ctx.fillStyle = textColor;
-        ctx.lineWidth = 1;
-        const x = scales.x;
-        ctx.beginPath();
-        ctx.moveTo(0, chartArea.bottom);
-        ctx.lineTo(chartArea.right - chartArea.left, chartArea.bottom);
-        ctx.stroke();
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'top';
-        // Use the loop index when converting ticks to pixel positions so that
-        // labels stay aligned while the chart scrolls.
-        x.ticks.forEach((t, idx) => {
-          const pos = x.getPixelForTick(idx) - chartArea.left;
-          ctx.beginPath();
-          ctx.moveTo(pos, chartArea.bottom);
-          ctx.lineTo(pos, chartArea.bottom + 4);
-          ctx.stroke();
-          ctx.fillText(t.label, pos, chartArea.bottom + 6);
-        });
-        ctx.textBaseline = 'middle';
-        const yL = scales.yRain;
-        ctx.textAlign = 'right';
-        yL.ticks.forEach(t => {
-          const pos = yL.getPixelForValue(t.value);
-          ctx.beginPath();
-          ctx.moveTo(-4, pos);
-          ctx.lineTo(0, pos);
-          ctx.stroke();
-          ctx.fillText(t.label, -6, pos);
-        });
-        const yR = scales.ySample;
-        ctx.textAlign = 'left';
-        yR.ticks.forEach(t => {
-          const pos = yR.getPixelForValue(t.value);
-          ctx.beginPath();
-          ctx.moveTo(chartArea.right - chartArea.left, pos);
-          ctx.lineTo(chartArea.right - chartArea.left + 4, pos);
-          ctx.stroke();
-          ctx.fillText(t.label, chartArea.right - chartArea.left + 6, pos);
-        });
-        ctx.restore();
-      },
-    };
-
-    // Memoize expensive chart options calculation
-    const chartOptions = computed(() => {
-      const textColor = props.isDarkMode ? '#e5e7eb' : '#1f2937';
-      const gridColor = props.isDarkMode ? 'rgba(75, 85, 99, 0.3)' : 'rgba(229, 231, 235, 0.5)';
-      
-      return {
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: { mode: 'index' },
-        animation: {
-          duration: 400, // Reduced from 800 for better performance
-          easing: 'easeInOutCubic',
-        },
-        plugins: {
-          legend: { display: false },
-          title: {
-            display: false,
-          },
-          tooltip: {
-            callbacks: {
-              label: context => {
-                const entry = flattened.value[context.dataIndex];
-                if (context.dataset.type === 'line') {
-                  return `Rainfall: ${context.parsed.y} in`;
-                }
-                if (!entry || !entry.sampleSummary) return '';
-                const total =
-                  entry.sampleSummary.good +
-                  entry.sampleSummary.caution +
-                  entry.sampleSummary.unsafe;
-                const count = entry.sampleSummary[context.dataset.label.toLowerCase()];
-                const pct = total ? Math.round((count / total) * 100) : 0;
-                return `${context.dataset.label}: ${count} (${pct}%)`;
-              },
-              afterBody: ctx => {
-                const entry = flattened.value[ctx[0].dataIndex];
-                if (!entry || !entry.sampleSummary) return [];
-                const total =
-                  entry.sampleSummary.good +
-                  entry.sampleSummary.caution +
-                  entry.sampleSummary.unsafe;
-                return [`Total samples: ${total}`];
-              },
-            },
-          },
-        },
-        scales: {
-          ySample: {
-            type: 'linear',
-            stacked: true,
-            position: 'left',
-            beginAtZero: true,
-            max: 100,
-            ticks: { color: textColor },
-            grid: { color: gridColor },
-            title: {
-              display: true,
-              text: 'Sample Quality (%)',
-              color: textColor,
-              font: { size: 10 },
-            },
-          },
-          yRain: {
-            type: 'linear',
-            position: 'right',
-            beginAtZero: true,
-            ticks: { color: textColor },
-            grid: { display: false },
-            title: {
-              display: true,
-              text: 'Rainfall (in)',
-              color: textColor,
-              font: { size: 10 },
-            },
-          },
-          x: {
-            ticks: {
-              color: textColor,
-              maxTicksLimit: 12,
-              callback: function (value, index) {
-                const date = this.getLabelForValue(value);
-                const dayOfWeek = new Date(date + 'T00:00:00Z').getUTCDay();
-                return dayOfWeek === 4 ? date.slice(5) : '';
-              },
-            },
-            grid: { color: gridColor },
-          },
-        },
-      };
-    });
-
-    // Debounce chart creation to prevent rapid re-renders
-    let chartCreationTimeout = null;
-    
-    const debouncedCreateChart = (delay = 100) => {
-      if (chartCreationTimeout) {
-        clearTimeout(chartCreationTimeout);
-      }
-      chartCreationTimeout = setTimeout(async () => {
-        await createChart();
-      }, delay);
-    };
-
-    /**
-     * Initialize the rainfall and sample results chart.
-     *
-     * @returns {Promise<void>} Resolves when the chart has been created.
-     */
-    const createChart = async () => {
-      if (!chartCanvas.value) {
-        console.warn('Chart canvas not available');
-        return;
-      }
-      
-      if (props.history.length === 0) {
-        console.warn('No history data available for chart');
-        return;
-      }
-      
-      // Destroy existing chart if it exists
-      if (chartInstance) {
-        chartInstance.destroy();
-        chartInstance = null;
-      }
-      
-      try {
-        // ChartJS.register(overlayAxesPlugin); // Temporarily disable custom plugin
-        const ctx = chartCanvas.value.getContext('2d');
-        const labels = flattened.value.map(h => h.date);
-        const { rainfall, good, caution, unsafe } = buildDatasets();
-
-        chartInstance = new ChartJS(ctx, {
-          type: 'bar',
-          data: {
-            labels,
-            datasets: [
-              {
-                type: 'line',
-                label: 'Rainfall (in)',
-                data: rainfall,
-                borderColor: '#3b82f6',
-                backgroundColor: '#3b82f6',
-                yAxisID: 'yRain',
-                tension: 0.3,
-              },
-              {
-                type: 'bar',
-                label: 'Good',
-                data: good,
-                backgroundColor: '#16a34a',
-                stack: 'samples',
-                yAxisID: 'ySample',
-              },
-              {
-                type: 'bar',
-                label: 'Caution',
-                data: caution,
-                backgroundColor: '#eab308',
-                stack: 'samples',
-                yAxisID: 'ySample',
-              },
-              {
-                type: 'bar',
-                label: 'Unsafe',
-                data: unsafe,
-                backgroundColor: '#dc2626',
-                stack: 'samples',
-                yAxisID: 'ySample',
-              },
-            ],
-          },
-          options: chartOptions.value,
-        });
-      } catch (error) {
-        console.error('Error creating chart:', error);
-      }
-    };
-
-    /**
-     * Redraws the chart as the container scrolls so the overlay axes stay aligned.
-     *
-     * @returns {void}
-     */
-    const onScroll = () => {
-      if (chartInstance) chartInstance.draw();
-    };
-
-    onMounted(async () => {
-      await nextTick();
-      await createChart();
-      scrollToLatest();
-      scrollContainer.value.addEventListener('scroll', onScroll);
-    });
-
-    watch(
-      () => props.history,
-      async () => {
-        debouncedCreateChart();
-        scrollToLatest();
-      },
-      { deep: true }
-    );
-
-    watch(
-      () => props.isDarkMode,
-      async () => {
-        debouncedCreateChart();
-      }
-    );
-
-    onBeforeUnmount(() => {
-      if (chartInstance) {
-        chartInstance.destroy();
-      }
-      if (scrollContainer.value) {
-        scrollContainer.value.removeEventListener('scroll', onScroll);
-      }
-      // Clean up debounce timeout
-      if (chartCreationTimeout) {
-        clearTimeout(chartCreationTimeout);
-      }
-    });
-
-    return { chartCanvas, axesCanvas, scrollContainer };
-  },
+// Color scale for MPN (green → yellow → red)
+const getMpnColor = (mpn) => {
+  if (mpn <= 35) {
+    // Good: shades of green
+    const intensity = mpn / 35;
+    const lightness = 75 - (intensity * 25); // 75% (light green) to 50% (darker green)
+    return `hsl(140, 70%, ${lightness}%)`;
+  } else if (mpn <= 104) {
+    // Caution: green to yellow to orange
+    const range = 104 - 35;
+    const position = (mpn - 35) / range;
+    // Hue: 140 (green) → 45 (yellow) → 30 (orange)
+    const hue = 140 - (position * 110);
+    const lightness = 70 - (position * 15);
+    return `hsl(${hue}, 80%, ${lightness}%)`;
+  } else {
+    // Unsafe: orange to red
+    const position = Math.min((mpn - 104) / 200, 1); // Cap at 304 for color scaling
+    const hue = 30 - (position * 25); // 30 (orange) → 5 (red)
+    const lightness = 55 - (position * 10); // Darker as it gets worse
+    return `hsl(${hue}, 85%, ${lightness}%)`;
+  }
 };
 </script>
 
 <style scoped>
-canvas {
-  max-height: 300px;
+.heatmap-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.correlation-info {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  background-color: rgba(59, 130, 246, 0.1);
+  border-left: 4px solid rgb(59, 130, 246);
+  border-radius: 0.5rem;
+}
+
+/* Dark mode styles */
+.correlation-info.dark-mode {
+  background-color: rgba(30, 58, 138, 0.3);
+  border-left-color: rgb(147, 197, 253);
+}
+
+.correlation-info.dark-mode .info-content strong {
+  color: rgb(255, 255, 255);
+}
+
+.correlation-info.dark-mode .info-content p {
+  color: rgb(229, 231, 235);
+}
+
+.info-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.info-content {
+  flex: 1;
+}
+
+.info-content strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: rgb(30, 64, 175);
+}
+
+.info-content p {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: inherit; /* Inherit parent text color for consistency */
+}
+
+.heatmap-grid {
+  display: grid;
+  grid-template-columns: 100px 1fr 1fr;
+  gap: 2px;
+  margin-bottom: 2px;
+}
+
+.header-cell {
+  font-weight: 600;
+  padding: 0.75rem 0.5rem;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.05);
+  font-size: 0.85rem;
+}
+
+:global(.dark) .header-cell {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.data-row {
+  transition: transform 0.15s ease;
+}
+
+.data-row:hover {
+  transform: scale(1.02);
+  z-index: 10;
+}
+
+.date-cell {
+  padding: 0.75rem 0.5rem;
+  text-align: center;
+  font-weight: 500;
+  font-size: 0.875rem;
+  background-color: rgba(0, 0, 0, 0.02);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:global(.dark) .date-cell {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.value-cell {
+  padding: 1rem 0.5rem;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: help;
+  transition: opacity 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.value-cell:hover {
+  opacity: 0.85;
+}
+
+/* Legend */
+.legend {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.02);
+  border-radius: 0.5rem;
+}
+
+:global(.dark) .legend {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.legend-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.legend-title {
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.legend-gradient {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.gradient-bar {
+  height: 20px;
+  border-radius: 4px;
+}
+
+.rainfall-gradient {
+  background: linear-gradient(to right, hsl(210, 100%, 85%), hsl(210, 100%, 35%));
+}
+
+.mpn-gradient {
+  background: linear-gradient(to right, 
+    hsl(140, 70%, 75%),   /* Good: light green */
+    hsl(140, 70%, 50%),   /* Good: darker green */
+    hsl(90, 80%, 55%),    /* Transitioning */
+    hsl(45, 80%, 55%),    /* Caution: yellow */
+    hsl(30, 85%, 55%),    /* Orange */
+    hsl(5, 85%, 45%)      /* Unsafe: red */
+  );
+}
+
+.gradient-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .heatmap-grid {
+    grid-template-columns: 80px 1fr 1fr;
+    gap: 1px;
+  }
+  
+  .header-cell,
+  .date-cell {
+    font-size: 0.75rem;
+    padding: 0.5rem 0.25rem;
+  }
+  
+  .value-cell {
+    font-size: 0.875rem;
+    padding: 0.75rem 0.25rem;
+  }
 }
 </style>
