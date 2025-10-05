@@ -74,11 +74,11 @@ watch(
 </script>
 
 <template>
-  <div>
+  <div class="fixed inset-0 overflow-hidden">
     <!-- Theme toggle button -->
     <ThemeToggleButton :isDarkMode="isDarkMode" />
 
-    <div v-if="data && metadata">
+    <div v-if="data && metadata" class="w-full h-full">
       <DateScroller
         v-if="!anyPopupOpen"
         :dates="availableDates"
