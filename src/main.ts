@@ -26,9 +26,6 @@ const router: Router = createRouter({
   ],
 })
 
-// Initialize analytics
-initAnalytics()
-
 // Track page views
 router.afterEach((): void => {
   track('$pageview')
@@ -37,4 +34,37 @@ router.afterEach((): void => {
 // Create and mount the app
 const app = createApp(App)
 app.use(router)
-app.mount('#app') 
+app.mount('#app')
+
+// Prefetch the latest date's data in the background for instant map loading
+// This happens after the app mounts so it doesn't block initial render
+setTimeout(() => {
+  const dataUrl = `${basePath}/data/${latestDate}/enriched.geojson`
+  const metadataUrl = `${basePath}/data/${latestDate}/metadata.json`
+  
+  // Prefetch in parallel
+  Promise.all([
+    fetch(dataUrl).then(r => r.ok ? r.json() : null),
+    fetch(metadataUrl).then(r => r.ok ? r.json() : null)
+  ]).then(([geojson, metadata]) => {
+    // Store in sessionStorage for instant retrieval
+    if (geojson && metadata) {
+      try {
+        sessionStorage.setItem(
+          `staticData-${latestDate}`,
+          JSON.stringify({ geojson, metadata })
+        )
+      } catch (err) {
+        console.warn('Failed to cache prefetched data:', err)
+      }
+    }
+  }).catch(err => {
+    console.warn('Failed to prefetch latest data:', err)
+  })
+}, 100)
+
+// Defer analytics initialization until after the app is mounted
+// This reduces initial bundle size and speeds up initial page load
+setTimeout(() => {
+  initAnalytics()
+}, 1000) 

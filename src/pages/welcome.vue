@@ -8,7 +8,6 @@ import latestDate from '@/generated/latest-date'
 
 const router = useRouter()
 const { stats, loadYearlyStats } = useYearlyStats()
-// Theme is imported directly as isDarkMode ref
 
 onMounted(() => {
   loadYearlyStats()
@@ -41,8 +40,8 @@ const viewMap = () => {
           <!-- Large impact text -->
           <div class="space-y-6">
             <div v-if="stats.loading" class="animate-pulse">
-              <div class="h-16 md:h-24 bg-gray-300 rounded mb-4"></div>
-              <div class="h-16 md:h-24 bg-gray-300 rounded"></div>
+              <div class="h-16 md:h-24 bg-gray-300 dark:bg-gray-700 rounded mb-4"></div>
+              <div class="h-16 md:h-24 bg-gray-300 dark:bg-gray-700 rounded"></div>
             </div>
             
             <div v-else-if="stats.error" class="text-red-500">
