@@ -84,7 +84,7 @@ const viewMap = () => {
 
       <!-- Footer with CTA -->
       <footer class="px-6 py-8 text-center">
-        <div class="flex flex-col items-center space-y-4">
+        <div class="flex flex-col items-center space-y-6">
           <button 
             @click="viewMap"
             class="inline-flex items-center px-8 py-4 text-xl font-semibold rounded-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500/50 shadow-lg hover:shadow-xl"
@@ -97,6 +97,25 @@ const viewMap = () => {
             </svg>
             View Latest Map Data
           </button>
+          
+          <!-- Secondary navigation links -->
+          <div class="flex gap-6 text-sm">
+            <router-link 
+              to="/trends"
+              class="transition-colors hover:underline"
+              :class="isDarkMode ? 'text-gray-400 hover:text-gray-200' : 'text-gray-600 hover:text-gray-900'"
+            >
+              📊 View Trends
+            </router-link>
+            <router-link 
+              to="/research"
+              class="transition-colors hover:underline"
+              :class="isDarkMode ? 'text-gray-400 hover:text-gray-200' : 'text-gray-600 hover:text-gray-900'"
+            >
+              🔬 Statistical Analysis
+            </router-link>
+          </div>
+          
           <p class="text-sm" :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'">
             Last update: {{ new Date().toLocaleDateString() }}
           </p>

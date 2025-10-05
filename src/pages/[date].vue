@@ -9,6 +9,7 @@ import InfoPopup from '../components/InfoPopup.vue';
 import DataInfoPopup from '../components/DataInfoPopup.vue';
 import DonatePopup from '../components/DonatePopup.vue';
 import TrendsButton from '../components/TrendsButton.vue';
+import ResearchButton from '../components/ResearchButton.vue';
 import HomeButton from '../components/HomeButton.vue';
 import ThemeToggleButton from '../components/ThemeToggleButton.vue';
 import { useStaticData } from '../composables/useStaticData';
@@ -110,6 +111,7 @@ watch(
         />
         <DonatePopup :isDarkMode="isDarkMode" />
         <TrendsButton :isDarkMode="isDarkMode" />
+        <ResearchButton :isDarkMode="isDarkMode" />
       </div>
     </div>
 

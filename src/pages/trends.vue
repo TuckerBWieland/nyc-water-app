@@ -3,6 +3,9 @@ import { ref, onMounted } from 'vue';
 import RainfallSampleTrend from '../components/RainfallSampleTrend.vue';
 import { isDarkMode } from '../stores/theme';
 import ThemeToggleButton from '../components/ThemeToggleButton.vue';
+import HomeButton from '../components/HomeButton.vue';
+import MapButton from '../components/MapButton.vue';
+import ResearchButton from '../components/ResearchButton.vue';
 import { basePath } from '../utils/basePath';
 
 
@@ -129,6 +132,18 @@ onMounted(async () => {
         moderate correlation, <strong>individual location matters much more</strong>. Some sites are consistently 
         unsafe due to poor circulation, nearby outfalls, or wildlife—regardless of weather.
       </p>
+
+      <!-- Research Link -->
+      <div class="mt-6 text-center">
+        <router-link to="/research">
+          <button class="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 dark:bg-blue-700 text-white rounded-lg shadow-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors font-semibold">
+            🔬 View Detailed Statistical Analysis
+          </button>
+        </router-link>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+          Deep dive into correlation analysis, ANOVA, and research methods
+        </p>
+      </div>
       
       <!-- Location Insights -->
       <div v-if="locationStats.length > 0" class="mt-8 max-w-screen-lg mx-auto">
@@ -176,18 +191,11 @@ onMounted(async () => {
         Rain matters, but <strong>where you swim matters more</strong>.</p>
       </div>
 
-      <!-- Dual CTA buttons -->
-      <div class="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 flex gap-3">
-        <router-link to="/">
-          <button class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-black dark:text-white rounded-full shadow-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
-            🏠 Home
-          </button>
-        </router-link>
-        <router-link to="/map">
-          <button class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-black dark:text-white rounded-full shadow-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
-            📍 Map
-          </button>
-        </router-link>
+      <!-- Navigation buttons -->
+      <div class="fixed bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] left-1/2 transform -translate-x-1/2 z-50 flex gap-4">
+        <HomeButton :isDarkMode="isDarkMode" />
+        <MapButton :isDarkMode="isDarkMode" />
+        <ResearchButton :isDarkMode="isDarkMode" />
       </div>
     </div>
   </div>
