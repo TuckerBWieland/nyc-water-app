@@ -11,6 +11,7 @@ import WelcomePage from './pages/welcome.vue'
 import IndexPage from './pages/index.vue'
 import DatePage from './pages/[date].vue'
 import TrendsPage from './pages/trends.vue'
+import ResearchPage from './pages/research.vue'
 
 // Create router with correct base path for GitHub Pages
 const base: string = `${basePath}/`
@@ -23,6 +24,7 @@ const router: Router = createRouter({
     { path: '/map', redirect: `/${latestDate}` },
     { path: '/:date', component: DatePage },
     { path: '/trends', component: TrendsPage },
+    { path: '/research', component: ResearchPage },
   ],
 })
 
